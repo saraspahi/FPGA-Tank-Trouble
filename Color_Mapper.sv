@@ -13,40 +13,56 @@
 //-------------------------------------------------------------------------
 
 
-module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
+module  color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2,BallY2,
                        output logic [7:0]  Red, Green, Blue );
     
-    logic ball_on;
+    logic ball1_on;
+	 logic ball2_on;
 	 
- /* Old Ball: Generated square box by checking if the current pixel is within a square of length
-    2*Ball_Size, centered at (BallX, BallY).  Note that this requires unsigned comparisons.
+//  Old Ball: Generated square box by checking if the current pixel is within a square of length
+//    2*Ball_Size, centered at (BallX, BallY).  Note that this requires unsigned comparisons.
 	 
-    if ((DrawX >= BallX - Ball_size) &&
-       (DrawX <= BallX + Ball_size) &&
-       (DrawY >= BallY - Ball_size) &&
-       (DrawY <= BallY + Ball_size))
 
-     New Ball: Generates (pixelated) circle by using the standard circle formula.  Note that while 
-     this single line is quite powerful descriptively, it causes the synthesis tool to use up three
-     of the 12 available multipliers on the chip!  Since the multiplicants are required to be signed,
-	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
+
+//     New Ball: Generates (pixelated) circle by using the standard circle formula.  Note that while 
+//     this single line is quite powerful descriptively, it causes the synthesis tool to use up three
+//     of the 12 available multipliers on the chip!  Since the multiplicants are required to be signed,
+//	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
 	  
-    int DistX, DistY, Size;
-	 assign DistX = DrawX - BallX;
-    assign DistY = DrawY - BallY;
-    assign Size = Ball_size;
+//    int DistX, DistY, Size;
+//	 assign DistX = DrawX - BallX;
+//    assign DistY = DrawY - BallY;
+//    assign Size = Ball_size;
 	  
     always_comb
     begin:Ball_on_proc
-        if ( ( DistX*DistX + DistY*DistY) <= (Size * Size) ) 
-            ball_on = 1'b1;
+        if ((DrawX >= BallX1 - Ball_size) &&
+				(DrawX <= BallX1 + Ball_size) &&
+				(DrawY >= BallY1 - Ball_size) &&
+				(DrawY <= BallY1 + Ball_size))
+				begin
+            ball1_on = 1'b1;
+				ball2_on = 1'b0;
+				end
         else 
-            ball_on = 1'b0;
+        if ((DrawX >= BallX2 - Ball_size) &&
+				(DrawX <= BallX2 + Ball_size) &&
+				(DrawY >= BallY2 - Ball_size) &&
+				(DrawY <= BallY2 + Ball_size))
+				begin
+            ball1_on = 1'b0;
+				ball2_on = 1'b1;
+				end
+			else 
+			begin 
+			   ball1_on = 1'b0;
+				ball2_on = 1'b0;
+			end 
      end 
        
     always_comb
     begin:RGB_Display
-        if ((ball_on == 1'b1)) 
+        if ((ball1_on || ball2_on) == 1'b1)
         begin 
             Red = 8'hff;
             Green = 8'h55;

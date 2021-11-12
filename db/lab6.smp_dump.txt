@@ -1,4 +1,20 @@
 
+State Machine - |lab62|ball2:b2|key
+Name key.01010010 key.01010001 key.01010000 key.00000000 key.01001111 
+key.00000000 0 0 0 0 0 
+key.01001111 0 0 0 1 1 
+key.01010000 0 0 1 1 0 
+key.01010001 0 1 0 1 0 
+key.01010010 1 0 0 1 0 
+
+State Machine - |lab62|ball1:b1|key
+Name key.00010110 key.00000100 key.00000000 key.00011010 key.00000111 
+key.00000000 0 0 0 0 0 
+key.00000100 0 1 1 0 0 
+key.00000111 0 0 1 0 1 
+key.00010110 1 0 1 0 0 
+key.00011010 0 0 1 1 0 
+
 State Machine - |lab62|lab62_soc:u0|lab62_soc_sdram:sdram|m_next
 Name m_next.010000000 m_next.000010000 m_next.000001000 m_next.000000001 
 m_next.000000001 0 0 0 0 
