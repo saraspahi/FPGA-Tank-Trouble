@@ -163,10 +163,9 @@ HEX0=keycode[31:28];
 HEX1=keycode[27:24];
 HEX2=keycode[23:20];
 HEX4=keycode[19:16];
-
-
-
 end 
+
+localparam ball_size = 100;
 
 vga_controller v1(.Clk(MAX10_CLK1_50),.Reset(Reset_h),.hs(VGA_HS),.vs(VGA_VS),.pixel_clk(VGA_Clk),.blank(blank),.sync(sync),.DrawX(drawxsig),.DrawY(drawysig));
 //instantiate a vga_controller, ball, and color_mapper here with the ports.
@@ -179,7 +178,7 @@ ball2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig2),
 
 //module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 //                       output logic [7:0]  Red, Green, Blue );
-color_mapper c1(.BallX1(ballxsig1),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig),
+color_mapper  c1(.BallX1(ballxsig1),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
 						.BallX2(ballxsig2),.BallY2(ballysig2),.Red(Red),.Blue(Blue),.Green(Green));
 
 

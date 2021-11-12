@@ -29,7 +29,7 @@ module ball2 ( input Reset, frame_clk,
     parameter [9:0] Ball_X_Step=1;      // Step size on the X axis
     parameter [9:0] Ball_Y_Step=1;      // Step size on the Y axis
 
-    assign Ball_Size = 4;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
+    assign Ball_Size = 100;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
     always_ff @ (posedge Reset or posedge frame_clk )
     begin: Move_Ball
@@ -57,6 +57,7 @@ module ball2 ( input Reset, frame_clk,
 					  
 				 else 
 					  Ball_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't bounce, just keep moving
+					  Ball_X_Motion <= 10'd0;
 				 
 				 if ((keycode[31:24] ==8'h52 )||(keycode[23:16]==8'h52)||(keycode[15:8] ==8'h52)||(keycode[7:0]==8'h52))
 					  key <= 8'h52;

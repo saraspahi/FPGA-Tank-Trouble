@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------
 
 
-module  color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2,BallY2,
+module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2,BallY2,
                        output logic [7:0]  Red, Green, Blue );
     
     logic ball1_on;
