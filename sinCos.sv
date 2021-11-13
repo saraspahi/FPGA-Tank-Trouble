@@ -104,6 +104,8 @@ module sinCos(input[5:0] AngleI,
     
 
 	end
-
+	
+	assign sin = AnglesSin[AngleI][7:0];
+	assign cos = AnglesCos[AngleI][7:0];
 
 endmodule

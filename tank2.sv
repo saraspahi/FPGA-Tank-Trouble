@@ -19,7 +19,7 @@ module tank2 ( input Reset, frame_clk,
                output [9:0]  BallX, BallY, BallS,
 					output [5:0] Angle);//inxe
     
-    logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Motion, Ball_Y_Pos, Ball_Size;
+   logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Motion, Ball_Y_Pos, Ball_Size;
 	logic [5:0] Angle_Motion,Angle_new;
 	
 	logic [7:0] key;
@@ -27,8 +27,8 @@ module tank2 ( input Reset, frame_clk,
 
     always_comb
     begin
-        Ball_X_Comp[15:0] = {Ball_X_Step, 4'b0}*cos;
-        Ball_Y_Comp[15:0] = {Ball_Y_Step, 4'b0}*sin;
+        Ball_X_Comp[15:0] = Ball_X_Step*cos;
+        Ball_Y_Comp[15:0] = Ball_Y_Step*sin;
 
     end    
 
@@ -38,11 +38,11 @@ module tank2 ( input Reset, frame_clk,
     parameter [9:0] Ball_X_Max=639;     // Rightmost point on the X axis
     parameter [9:0] Ball_Y_Min=0;       // Topmost point on the Y axis
     parameter [9:0] Ball_Y_Max=479;     // Bottommost point on the Y axis
-    parameter [7:0] Ball_X_Step=7'b00000101;      // Step size on the X axis
-    parameter [7:0] Ball_Y_Step=7'b00000101;      // Step size on the Y axis
+    parameter [7:0] Ball_X_Step=7'b01010000;      // Step size on the X axis
+    parameter [7:0] Ball_Y_Step=7'b01010000;      // Step size on the Y axis
     parameter [5:0] AngleStep= 6'b0000001;				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
 
-    assign Ball_Size = 100;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
+    assign Ball_Size = 10;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
     always_ff @ (posedge Reset or posedge frame_clk )
     begin: Move_Ball
@@ -73,6 +73,7 @@ module tank2 ( input Reset, frame_clk,
 					  begin
 					  Ball_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't move
 					  Ball_X_Motion <= 10'd0;
+					  Angle_Motion <= 5'd0;
 
 					  end
 				 
@@ -106,7 +107,7 @@ module tank2 ( input Reset, frame_clk,
 								begin
 									Ball_X_Motion <= 0;//D
 									Ball_Y_Motion <= 0;
-									Angle_Motion <= Angle_Motion - AngleStep;      // Descreases the angle
+									Angle_Motion <=  ~(AngleStep) + 1;      // Descreases the angle
 								end
 							  end
 							  
@@ -117,6 +118,7 @@ module tank2 ( input Reset, frame_clk,
 							  begin
 									Ball_Y_Motion <= {6'b0, Ball_Y_Comp[11:8]};//S
 									Ball_X_Motion <= {6'b0, Ball_X_Comp[11:8]};
+									Angle_Motion <=0;
 								end
 							 end
 							  
@@ -125,8 +127,9 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= Ball_Y_Step;
 								else
 								begin
-									Ball_Y_Motion <= ~{6'b0, Ball_Y_Comp[11:8]} + 1;//S
-									Ball_X_Motion <= ~{6'b0, Ball_X_Comp[11:8]} + 1;
+									Ball_Y_Motion <= {6'b111111, ~Ball_Y_Comp[11:8]} + 1;//S
+									Ball_X_Motion <= {6'b111111, ~Ball_X_Comp[11:8]} + 1;
+									Angle_Motion <=0;
 								end
 							end
 								  
@@ -139,7 +142,7 @@ module tank2 ( input Reset, frame_clk,
 		
 				 
 				 begin 
-				 if(Angle_new == 45) //Need to handle ngative angles
+				 if(Angle_new <= 45) //Need to handle ngative angles
 				 
 					Angle_new <=0;
 				 

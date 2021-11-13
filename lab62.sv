@@ -184,7 +184,10 @@ always_comb
 begin
    
    if(Angle2 < 23 || Angle2 > 11)
+	begin
        cos2 = ~cos2u + 1;
+		 sin2 = sin2u;
+	end
    else if(Angle2 > 23 || Angle2 > 34)
    begin
        cos2 = ~cos2u + 1;

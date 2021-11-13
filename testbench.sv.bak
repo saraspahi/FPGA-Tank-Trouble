@@ -1,0 +1,79 @@
+module testbench();
+
+timeunit 10ns;	// Half clock cycle at 50 MHz
+timeprecision 1ns;
+
+logic Clk = 0;
+logic Run,ClearA_LoadB;
+logic [7:0] SW;
+logic [7:0] Aval,
+		 Bval;
+logic [6:0] HEX3,
+		 HEX2,
+		 HEX0,
+		 HEX1; 
+		 
+														
+multiplier multiplier1(.*);
+
+always begin : CLOCK_GENERATION
+#1 Clk = ~Clk;
+end
+
+initial begin: CLOCK_INITIALIZATION
+    Clk = 0;
+end 
+
+initial begin: TEST_VECTORS
+Run = 1;					// make sure run is unpressed
+ClearA_LoadB = 1;		// make sure clearA_LoadB is unpressed
+
+//Multiply 2*5  result 0A
+
+SW = 8'h02;				// put numbers in the switches
+
+#2 ClearA_LoadB = 0;	//press the button
+#8 ClearA_LoadB = 1;	//unpress it 
+
+SW = 8'h05;				// Change the switches  
+
+#2 Run = 0;       	//multiply
+
+#20 Run =1;
+
+//Multiply -2*5  result FB
+#40
+SW = 8'hFE;	
+#2 ClearA_LoadB = 0;	//press the button
+#8 ClearA_LoadB = 1;	//unpress it 
+SW = 8'h05;				// Change the switches  
+
+#2 Run = 0;       	//multiply
+
+#20 Run =1;
+
+//Multiply -5 with 2 result F6
+#40
+SW = 8'hFB;	
+#2 ClearA_LoadB = 0;	//press the button
+#8 ClearA_LoadB = 1;	//unpress it 
+SW = 8'h02;				// Change the switches  
+
+#2 Run = 0;       	//multiply
+
+#20 Run =1;
+//Multiply -5 with -2 result 0A
+#40
+SW = 8'hFB;	
+#2 ClearA_LoadB = 0;	//press the button
+#8 ClearA_LoadB = 1;	//unpress it 
+SW = 8'hFE;				// Change the switches  
+
+#2 Run = 0;       	//multiply
+
+#20 Run =1;
+
+
+
+end
+endmodule
