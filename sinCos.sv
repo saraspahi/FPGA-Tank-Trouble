@@ -1,9 +1,13 @@
 module sinCos(input[5:0] AngleI,
               output[15:0] sin, cos);
-begin
+
+
     
     logic [7:0] AnglesCos[45];
     logic [7:0] AnglesSin[45];
+	 
+	 always_comb
+	 begin
 
     AnglesSin[ 0 ] = 8'd 0 ;
     AnglesSin[ 1 ] = 8'd 36 ;
@@ -97,6 +101,8 @@ begin
     AnglesCos[ 43 ] = 8'd 246 ;
     AnglesCos[ 44 ] = 8'd 254 ;
     
-    assign cos = {8'b0, AnglesCos[AngleI][7:0]};
-    assign sin = {8'b0, AnglesSin[AngleI][7:0]};
+
 end
+  assign cos = {7'b0, AnglesCos[AngleI][7:0]};
+  assign sin = {7'b0, AnglesSin[AngleI][7:0]};
+endmodule

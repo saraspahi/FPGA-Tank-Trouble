@@ -29,7 +29,7 @@ module tank1 ( input Reset, frame_clk,
     parameter [9:0] Ball_X_Step=1;      // Step size on the X axis
     parameter [9:0] Ball_Y_Step=1;      // Step size on the Y axis
 
-    assign Ball_Size = 100;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
+    assign Ball_Size = 10;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
     always_ff @ (posedge Reset or posedge frame_clk )
     begin: Move_Ball
