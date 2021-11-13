@@ -1,5 +1,5 @@
 
-State Machine - |lab62|ball2:b2|key
+State Machine - |lab62|tank2:b2|key
 Name key.01010010 key.01010001 key.01010000 key.00000000 key.01001111 
 key.00000000 0 0 0 0 0 
 key.01001111 0 0 0 1 1 
@@ -7,7 +7,7 @@ key.01010000 0 0 1 1 0
 key.01010001 0 1 0 1 0 
 key.01010010 1 0 0 1 0 
 
-State Machine - |lab62|ball1:b1|key
+State Machine - |lab62|tank1:b1|key
 Name key.00010110 key.00000100 key.00000000 key.00011010 key.00000111 
 key.00000000 0 0 0 0 0 
 key.00000100 0 1 1 0 0 

@@ -13,11 +13,14 @@
 //-------------------------------------------------------------------------
 
 
-module ball2 ( input Reset, frame_clk,
+module tank2 ( input Reset, frame_clk,
 					input [31:0] keycode,
-               output [9:0]  BallX, BallY, BallS );
+               output [9:0]  BallX, BallY, BallS,
+					output [4:0] Angle);//inxe
     
     logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion, Ball_Size;
+	 logic [5:0] Angle_Motion,Angle_new;
+	
 	 logic [7:0] key;
 	 
     parameter [9:0] Ball_X_Center=300;  // Center position on the X axis
@@ -28,6 +31,7 @@ module ball2 ( input Reset, frame_clk,
     parameter [9:0] Ball_Y_Max=479;     // Bottommost point on the Y axis
     parameter [9:0] Ball_X_Step=1;      // Step size on the X axis
     parameter [9:0] Ball_Y_Step=1;      // Step size on the Y axis
+	 parameter [4:0] AngleStep=1;				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
 
     assign Ball_Size = 100;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
@@ -37,6 +41,7 @@ module ball2 ( input Reset, frame_clk,
         begin 
             Ball_Y_Motion <= 10'd0; //Ball_Y_Step;
 				Ball_X_Motion <= 10'd0; //Ball_X_Step;
+				Angle_Motion <=   5'd0;	      //Ball angle step;
 				Ball_Y_Pos <= Ball_Y_Center;
 				Ball_X_Pos <= Ball_X_Center;
         end
@@ -56,8 +61,10 @@ module ball2 ( input Reset, frame_clk,
 					  Ball_X_Motion <= Ball_X_Step;
 					  
 				 else 
+					  begin
 					  Ball_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't bounce, just keep moving
 					  Ball_X_Motion <= 10'd0;
+					  end
 				 
 				 if ((keycode[31:24] ==8'h52 )||(keycode[23:16]==8'h52)||(keycode[15:8] ==8'h52)||(keycode[7:0]==8'h52))
 					  key <= 8'h52;
@@ -68,8 +75,7 @@ module ball2 ( input Reset, frame_clk,
 				 else if ((keycode[31:24] ==8'h4f )||(keycode[23:16]==8'h4f)||(keycode[15:8] ==8'h4f)||(keycode[7:0]==8'h4f))
 					  key <= 8'h4f;
 				 else 
-					  key <= 8'h00;
-					  
+					  key <= 8'h00;  
 				 
 				 case (key)
 					8'h50 : begin
@@ -79,6 +85,7 @@ module ball2 ( input Reset, frame_clk,
 								begin
 									Ball_X_Motion <= -1;//A
 									Ball_Y_Motion<= 0;
+									Angle_Motion <=  AngleStep;
 								end
 							  end
 					        
@@ -89,9 +96,9 @@ module ball2 ( input Reset, frame_clk,
 								begin
 									Ball_X_Motion <= 1;//D
 									Ball_Y_Motion <= 0;
+									Angle_Motion <= (~(AngleStep) + 1'b1) ;      // Descreases the angle
 								end
 							  end
-
 							  
 					8'h51 : begin
 								if ( (Ball_Y_Pos + Ball_Size) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
@@ -111,12 +118,22 @@ module ball2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= -1;//W
 									Ball_X_Motion <= 0;
 								end
-							 end	  
+							end
+								  
 					default: ;
 			   endcase
 				 
 				 Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
+				 Angle_new <= (Angle_new +Angle_Motion);      //change it to 0 when 360
+		
+				 
+				 begin 
+				 if(Angle_new == 22) //Need to handle ngative angles
+				 
+					Angle_new <=0;
+				 
+				 end
 			
 			
 	  /**************************************************************************************
@@ -137,6 +154,8 @@ module ball2 ( input Reset, frame_clk,
     assign BallY = Ball_Y_Pos;
    
     assign BallS = Ball_Size;
+	 
+	 assign Angle = Angle_new;
     
 
 endmodule
