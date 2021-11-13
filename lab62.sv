@@ -167,14 +167,41 @@ end
 
 localparam ball_size = 100;
 
+logic [5:0] AngleI;
+logic [15:0] sin1, cos1, sin2, cos2;
+
 vga_controller v1(.Clk(MAX10_CLK1_50),.Reset(Reset_h),.hs(VGA_HS),.vs(VGA_VS),.pixel_clk(VGA_Clk),.blank(blank),.sync(sync),.DrawX(drawxsig),.DrawY(drawysig));
 //instantiate a vga_controller, ball, and color_mapper here with the ports.
 //What is the frame clock?
 
 tank1 b1(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig1),.BallY(ballysig1),.BallS(ballsizesig1));
 
-tank2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2));
+tank2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2),.AngleI(Angle2)
+        .sin(sin2), .cos(cos2));
 
+tank2 sinCos(.AngleI(Angle2), .sin(sin2), .cos(cos2));
+
+always_comb
+begin
+   
+   if(Angle2 < 23 || Angle2 > 11)
+       cos2 = ~cos2 + 1;
+   else if(Angle2 > 23 || Angle2 > 34)
+   begin
+       cos2 = ~cos2 + 1;
+       sin2 = ~sin2 + 1;
+   end
+   else if(Angle2 > 33)
+   begin
+       cos2 = cos2;
+       sin2 = ~sin2+1;
+   end
+   else
+   begin
+       cos2 = cos2;
+       sin2 = sin2;
+   end
+end
 
 //module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 //                       output logic [7:0]  Red, Green, Blue );

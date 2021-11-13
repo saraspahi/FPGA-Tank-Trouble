@@ -14,24 +14,33 @@
 
 
 module tank2 ( input Reset, frame_clk,
+               input [15:0] sin, cos,
 					input [31:0] keycode,
                output [9:0]  BallX, BallY, BallS,
 					output [4:0] Angle);//inxe
     
-    logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion, Ball_Size;
-	 logic [5:0] Angle_Motion,Angle_new;
+    logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Motion, Ball_Y_Pos, Ball_Size;
+	logic [5:0] Angle_Motion,Angle_new;
 	
-	 logic [7:0] key;
-	 
+	logic [7:0] key;
+    logic [15:0] sinFixed, cosFixed, Ball_X_Comp, Ball_Y_Comp;
+
+    always_comb
+    begin
+        Ball_X_Motion = {3'b0, AngleStep, 8'b0}*cos;
+        Ball_Y_Motion = {3'b0, AngleStep, 8'b0}*sin;
+
+    end    
+
     parameter [9:0] Ball_X_Center=300;  // Center position on the X axis
     parameter [9:0] Ball_Y_Center=250;  // Center position on the Y axis
     parameter [9:0] Ball_X_Min=0;       // Leftmost point on the X axis
     parameter [9:0] Ball_X_Max=639;     // Rightmost point on the X axis
     parameter [9:0] Ball_Y_Min=0;       // Topmost point on the Y axis
     parameter [9:0] Ball_Y_Max=479;     // Bottommost point on the Y axis
-    parameter [9:0] Ball_X_Step=1;      // Step size on the X axis
-    parameter [9:0] Ball_Y_Step=1;      // Step size on the Y axis
-	 parameter [4:0] AngleStep=1;				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
+    parameter [9:0] Ball_X_Step=5;      // Step size on the X axis
+    parameter [9:0] Ball_Y_Step=5;      // Step size on the Y axis
+    parameter [5:0] AngleStep= 5'b000101;				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
 
     assign Ball_Size = 100;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
@@ -62,7 +71,7 @@ module tank2 ( input Reset, frame_clk,
 					  
 				 else 
 					  begin
-					  Ball_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't bounce, just keep moving
+					  Ball_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't move
 					  Ball_X_Motion <= 10'd0;
 					  end
 				 
@@ -83,7 +92,7 @@ module tank2 ( input Reset, frame_clk,
 									Ball_X_Motion <= Ball_X_Step;
 								else
 								begin
-									Ball_X_Motion <= -1;//A
+									Ball_X_Motion <= 0;//A
 									Ball_Y_Motion<= 0;
 									Angle_Motion <=  AngleStep;
 								end
@@ -94,7 +103,7 @@ module tank2 ( input Reset, frame_clk,
 									Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);
 								else
 								begin
-									Ball_X_Motion <= 1;//D
+									Ball_X_Motion <= 0;//D
 									Ball_Y_Motion <= 0;
 									Angle_Motion <= (~(AngleStep) + 1'b1) ;      // Descreases the angle
 								end
@@ -105,8 +114,8 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);
 							  else
 							  begin
-									Ball_Y_Motion <= 1;//S
-									Ball_X_Motion <= 0;
+									Ball_Y_Motion <= ~Ball_Y_Comp[15:8] + 1;//S
+									Ball_X_Motion <= ~Ball_X_Comp[15:8] + 1;
 								end
 							 end
 							  
@@ -115,8 +124,8 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= Ball_Y_Step;
 								else
 								begin
-									Ball_Y_Motion <= -1;//W
-									Ball_X_Motion <= 0;
+									Ball_Y_Motion <= Ball_Y_Comp[15:8];//W
+									Ball_X_Motion <= Ball_X_Comp[15:8];
 								end
 							end
 								  
@@ -125,11 +134,11 @@ module tank2 ( input Reset, frame_clk,
 				 
 				 Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
-				 Angle_new <= (Angle_new +Angle_Motion);      //change it to 0 when 360
+				 Angle_new <= (Angle_new + Angle_Motion);      //change it to 0 when 360
 		
 				 
 				 begin 
-				 if(Angle_new == 22) //Need to handle ngative angles
+				 if(Angle_new == 45) //Need to handle ngative angles
 				 
 					Angle_new <=0;
 				 
@@ -155,7 +164,7 @@ module tank2 ( input Reset, frame_clk,
    
     assign BallS = Ball_Size;
 	 
-	 assign Angle = Angle_new;
+	assign Angle = Angle_new;
     
 
 endmodule
