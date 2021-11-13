@@ -14,7 +14,7 @@
 
 
 module tank2 ( input Reset, frame_clk,
-               input [15:0] sin, cos,
+               input [7:0] sin, cos,
 					input [31:0] keycode,
                output [9:0]  BallX, BallY, BallS,
 					output [5:0] Angle);//inxe
@@ -23,12 +23,12 @@ module tank2 ( input Reset, frame_clk,
 	logic [5:0] Angle_Motion,Angle_new;
 	
 	logic [7:0] key;
-    logic [15:0] sinFixed, cosFixed, Ball_X_Comp, Ball_Y_Comp;
+    logic [15:0] Ball_X_Comp, Ball_Y_Comp;
 
     always_comb
     begin
-        Ball_X_Comp[15:0] = {Ball_X_Step, 7'b0}*cos;
-        Ball_Y_Comp[15:0] = {Ball_Y_Step, 7'b0}*sin;
+        Ball_X_Comp[15:0] = {Ball_X_Step, 4'b0}*cos;
+        Ball_Y_Comp[15:0] = {Ball_Y_Step, 4'b0}*sin;
 
     end    
 
@@ -106,7 +106,7 @@ module tank2 ( input Reset, frame_clk,
 								begin
 									Ball_X_Motion <= 0;//D
 									Ball_Y_Motion <= 0;
-									Angle_Motion <= AngleStep;      // Descreases the angle
+									Angle_Motion <= Angle_Motion - AngleStep;      // Descreases the angle
 								end
 							  end
 							  
@@ -115,8 +115,8 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);
 							  else
 							  begin
-									Ball_Y_Motion <= Ball_Y_Comp[15:8];//S
-									Ball_X_Motion <= Ball_X_Comp[15:8];
+									Ball_Y_Motion <= {6'b0, Ball_Y_Comp[11:8]};//S
+									Ball_X_Motion <= {6'b0, Ball_X_Comp[11:8]};
 								end
 							 end
 							  
@@ -125,8 +125,8 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= Ball_Y_Step;
 								else
 								begin
-									Ball_Y_Motion <= ~Ball_Y_Comp[15:8] + 1;//W
-									Ball_X_Motion <= ~Ball_X_Comp[15:8] + 1;
+									Ball_Y_Motion <= ~{6'b0, Ball_Y_Comp[11:8]} + 1;//S
+									Ball_X_Motion <= ~{6'b0, Ball_X_Comp[11:8]} + 1;
 								end
 							end
 								  

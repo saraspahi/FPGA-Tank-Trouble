@@ -168,7 +168,7 @@ end
 localparam ball_size = 100;
 
 logic [5:0] AngleI;
-logic [15:0] sin1, cos1, sin2, cos2;
+logic [7:0] sin1, cos1, sin2, cos2;
 
 vga_controller v1(.Clk(MAX10_CLK1_50),.Reset(Reset_h),.hs(VGA_HS),.vs(VGA_VS),.pixel_clk(VGA_Clk),.blank(blank),.sync(sync),.DrawX(drawxsig),.DrawY(drawysig));
 //instantiate a vga_controller, ball, and color_mapper here with the ports.
@@ -176,8 +176,7 @@ vga_controller v1(.Clk(MAX10_CLK1_50),.Reset(Reset_h),.hs(VGA_HS),.vs(VGA_VS),.p
 
 tank1 b1(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig1),.BallY(ballysig1),.BallS(ballsizesig1));
 
-tank2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.sin(sin2), .cos(cos2),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2),.Angle(Angle2)
-        );
+tank2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.sin(sin2), .cos(cos2),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2),.Angle(Angle2));
 
 sinCos sincos1(.AngleI(Angle2), .sin(sin2u), .cos(cos2u));
 
