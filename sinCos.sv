@@ -9,7 +9,7 @@ module sinCos(input[5:0] AngleI,
     always_comb
     begin
     
-    AnglesSin[0] = 8'b0000_0000 ;                                                                                                                                                                     [0/441]
+    AnglesSin[0] = 8'b0000_0000;  
     AnglesSin[1] = 8'b0000_0010 ;                                                                                                                                                                           
     AnglesSin[2] = 8'b0000_0100 ;                                                                                                                                                                           
     AnglesSin[3] = 8'b0000_0111 ;
@@ -100,8 +100,8 @@ module sinCos(input[5:0] AngleI,
     AnglesCos[42] = 8'b0000_1111;
     AnglesCos[43] = 8'b0000_1111;
     AnglesCos[44] = 8'b0001_0000;
+	 end
 
-	end
 	
 	assign sin = AnglesSin[AngleI][7:0];
 	assign cos = AnglesCos[AngleI][7:0];

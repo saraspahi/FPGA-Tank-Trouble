@@ -38,8 +38,8 @@ module tank2 ( input Reset, frame_clk,
     parameter [9:0] Ball_X_Max=639;     // Rightmost point on the X axis
     parameter [9:0] Ball_Y_Min=0;       // Topmost point on the Y axis
     parameter [9:0] Ball_Y_Max=479;     // Bottommost point on the Y axis
-    parameter [7:0] Ball_X_Step=7'b01010000;      // Step size on the X axis
-    parameter [7:0] Ball_Y_Step=7'b01010000;      // Step size on the Y axis
+    parameter [7:0] Ball_X_Step=7'b0101_0000;      // Step size on the X axis
+    parameter [7:0] Ball_Y_Step=7'b0101_0000;      // Step size on the Y axis
     parameter [5:0] AngleStep= 6'b0000001;				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
 
     assign Ball_Size = 10;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
@@ -101,7 +101,7 @@ module tank2 ( input Reset, frame_clk,
 							  end
 					        
 					8'h4f : begin
-								if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  // Ball is at the Right edge, BOUNCE!
+								if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  //Right  Ball is at the Right edge, BOUNCE!
 									Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);
 								else
 								begin
@@ -116,14 +116,14 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);
 							  else
 							  begin
-									Ball_Y_Motion <= {6'b0, Ball_Y_Comp[11:8]};//S
-									Ball_X_Motion <= {6'b0, Ball_X_Comp[11:8]};
+									Ball_Y_Motion <=  Ball_Y_Comp[11:8];//S
+									Ball_X_Motion <=  Ball_X_Comp[11:8];
 									Angle_Motion <=0;
 								end
 							 end
 							  
 					8'h52 : begin
-								if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
+								if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  //up Ball is at the top edge, BOUNCE!
 									Ball_Y_Motion <= Ball_Y_Step;
 								else
 								begin
@@ -142,9 +142,9 @@ module tank2 ( input Reset, frame_clk,
 		
 				 
 				 begin 
-				 if(Angle_new <= 45) //Need to handle ngative angles
+				 if(Angle_new <= 45 || Angle_new <= 0) //Need to handle ngative angles
 				 
-					Angle_new <=0;
+					Angle_new <=22;
 				 
 				 end
 			
