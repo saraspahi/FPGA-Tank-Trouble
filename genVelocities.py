@@ -7,11 +7,8 @@ def main():
     for i in range(0,360, accuracy):
         decompX = vel*math.cos(i*(math.pi/180))
         decompY = vel*math.sin(i*(math.pi/180))
-        unsigned = int(format(round((decompY)*2**4)))
-        if(unsigned < 0):
-            print("AnglesSin[",int(i/8),"] = 8'd", unsigned, ";")
-        else:
-            print("AnglesSin[",int(i/8),"] = 8'd", unsigned, ";")
+        unsigned = "{0:04b}".format(abs(round((decompX)*2**4)))
+        print("AnglesCos[",int(i/8),"] = 8'd0000_", unsigned, ";")
 
         #print("Angles[",i,"] = ", "{0:b}".format(round((decompY)*2**8)))
         
