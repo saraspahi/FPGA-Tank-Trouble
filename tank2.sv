@@ -55,6 +55,7 @@ module tank2 ( input Reset, frame_clk,
 				Angle_Motion <=   5'd0;	      //Ball angle step;
 				Ball_Y_Pos <= Ball_Y_Center;
 				Ball_X_Pos <= Ball_X_Center;
+				Angle_New = 0;
         end
            
         else 

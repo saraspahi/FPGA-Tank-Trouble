@@ -38,15 +38,17 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 	
     logic[63:0] DrawXs2;
     logic[63:0] DrawYs2;
-	 logic[31:0] BallY2e;
-	 logic[31:0] BallX2e;
+	 logic[31:0] BallY2e, BallX2em DrawXe, DrawYe;
 	 
-	 assign BallY2e = {6'b0, BallY2, 16'b0};
-	 assign BallX2e = {6'b0, BallX2, 16'b0};
-	
-	 assign DrawXs2[63:0] = ({6'b0, DrawX, 16'b0}-BallX2e)*{12'h0, cos2, 12'h0} - ({6'b0, DrawY, 16'b0}-BallY2e)*{12'h0, sin2, 12'h0};
-    assign DrawYs2[63:0] = ({6'b0, DrawX, 16'b0}-BallX2e)*{12'h0, sin2, 12'h0} + ({6'b0, DrawY, 16'b0}-BallY2e)*{12'h0, cos2, 12'h0};
-	 
+	 always_comb
+	 begin
+			BallY2e[31:0] = {6'b0, BallY2, 16'b0};
+			BallX2e[31:0] = {6'b0, BallX2, 16'b0};
+	        DrawXe[31:0] = {6'b0, DrawX, 16'b0};
+            DrawYe[31:0] = {6'b0, DrawY, 16'b0};
+			DrawXs2[63:0] = (DrawXe-BallX2e)*{{12{cos2[7]}}, cos2[7:0], 12'h0} - (DrawYe-BallY2e)*{{12{sin2[7]}}, sin2[7:0], 12'h0};
+			DrawYs2[63:0] = (DrawXe-BallX2e)*{{12{sin2[7]}}, sin2[7:0], 12'h0} + (DrawYe-BallY2e)*{{12{cos2[7]}}, cos2[7:0], 12'h0};
+	 end
 	 
     always_comb
     begin:Ball_on_proc
@@ -58,10 +60,10 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
             ball1_on = 1'b1;
 				ball2_on = 1'b0;
 				end
-        else if ((DrawX >= BallX2 - Ball_size) &&
-				(DrawX <= BallX2 + Ball_size) &&
-				(DrawY >= BallY2 - Ball_size ) &&
-				(DrawY <= BallY2 + Ball_size))
+        else if ((DrawXs2[41:32] >= BallX2 - Ball_size) &&
+				(DrawXs2[41:32] <= BallX2 + Ball_size) &&
+				(DrawYs2[41:32] >= BallY2 - Ball_size ) &&
+				(DrawYs2[41:32] <= BallY2 + Ball_size))
 				begin
                 ball1_on = 1'b0;
 					ball2_on = 1'b1;
