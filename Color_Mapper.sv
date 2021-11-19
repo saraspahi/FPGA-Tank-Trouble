@@ -38,16 +38,30 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 	
     logic[63:0] DrawXs2;
     logic[63:0] DrawYs2;
-	 logic[31:0] BallY2e, BallX2em DrawXe, DrawYe;
-	 
+	 logic[31:0] BallY2e, BallX2e, DrawXe, DrawYe, sin2e, cos2e, BallXsp, BallYsp;
+	 logic Xsign, Ysign;
+    
+
 	 always_comb
 	 begin
+            // sign extend ball cords    
 			BallY2e[31:0] = {6'b0, BallY2, 16'b0};
 			BallX2e[31:0] = {6'b0, BallX2, 16'b0};
+            // sign extend draw cords
 	        DrawXe[31:0] = {6'b0, DrawX, 16'b0};
             DrawYe[31:0] = {6'b0, DrawY, 16'b0};
-			DrawXs2[63:0] = (DrawXe-BallX2e)*{{12{cos2[7]}}, cos2[7:0], 12'h0} - (DrawYe-BallY2e)*{{12{sin2[7]}}, sin2[7:0], 12'h0};
-			DrawYs2[63:0] = (DrawXe-BallX2e)*{{12{sin2[7]}}, sin2[7:0], 12'h0} + (DrawYe-BallY2e)*{{12{cos2[7]}}, cos2[7:0], 12'h0};
+            // sign extend cos sin
+			cos2e[31:0] = {{12{cos2[7]}}, cos2[7:0], 12'h0};
+			sin2e[31:0] = {{12{sin2[7]}}, sin2[7:0], 12'h0};
+
+			BallXsp[31:0] = DrawXe + ~BallX2e+1'b1;
+			BallYsp[31:0] = DrawYe + ~BallY2e+1'b1;
+            
+            Xsign = BallXsp[31]^cos2e[31];
+            Ysign = BallYsp[31]^cos2e[31];
+
+			DrawXs2[62:0] = ((DrawXe-BallX2e)*cos2e) - ((DrawYe-BallY2e)*sin2e);
+			DrawYs2[62:0] = ((DrawXe-BallX2e)*sin2e) + ((DrawYe-BallY2e)*cos2e);
 	 end
 	 
     always_comb
@@ -66,7 +80,7 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 				(DrawYs2[41:32] <= BallY2 + Ball_size))
 				begin
                 ball1_on = 1'b0;
-					ball2_on = 1'b1;
+					 ball2_on = 1'b1;
 				end
 			else 
 			begin 
