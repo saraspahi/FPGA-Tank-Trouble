@@ -36,10 +36,9 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 //    assign DistY = DrawY - BallY;
 //    assign Size = Ball_size;
 	
-    logic[63:0] DrawXs2;
-    logic[63:0] DrawYs2;
-	 logic[31:0] BallY2e, BallX2e, DrawXe, DrawYe, sin2e, cos2e, BallXsp, BallYsp;
-	 logic Xsign, Ysign;
+     logic[63:0] XmultCos, YmultSin, XmultSin, YmultCos;
+	 logic[31:0] DrawXs2, DrawYs2, BallY2e, BallX2e, DrawXe, DrawYe, sin2e, cos2e, BallXsp, BallYsp;
+	 logic XMCsign, YMCsign, XMSsign, YMSsign;
     
 
 	 always_comb
@@ -57,11 +56,23 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 			BallXsp[31:0] = DrawXe + ~BallX2e+1'b1;
 			BallYsp[31:0] = DrawYe + ~BallY2e+1'b1;
             
-            Xsign = BallXsp[31]^cos2e[31];
-            Ysign = BallYsp[31]^cos2e[31];
+            XMCsign = BallXsp[31]^cos2e[31];
+            YMCsign = BallYsp[31]^cos2e[31];
+            XMSsign = BallXsp[31]^sin2e[31];
+            YMSsign = BallYsp[31]^sin2e[31]l
 
-			DrawXs2[62:0] = ((DrawXe-BallX2e)*cos2e) - ((DrawYe-BallY2e)*sin2e);
-			DrawYs2[62:0] = ((DrawXe-BallX2e)*sin2e) + ((DrawYe-BallY2e)*cos2e);
+            XmultCos[63] = XMCsign; 
+            XmultSin[63] = XMSsign;
+			YmultCos[63] = YMCsign; 
+            YmultSin[63] = YMSsign; 
+
+			XmultCos[62:0] = BallXsp[30:0]*cos2e[30:0]; 
+            XmultSin[62:0] = BallXsp[30:0]*sin2e[30:0];
+			YmultCos[62:0] = BallYsp[30:0]*cos2e[30:0]; 
+            YmultSin[62:0] = BallYsp[30:0]*sin2e[30:0]; 
+
+            DrawXs2[15:0] = {XMCsign, XmultCos[45:31]} + {~YMCsign, ~YmultSin[45:31]}+1'b1;
+            DrawYs2[15:0] = {XMSsign, XmultSin[45:31]} + {YMCsign, YmultCos[45:31]};
 	 end
 	 
     always_comb
@@ -74,10 +85,10 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
             ball1_on = 1'b1;
 				ball2_on = 1'b0;
 				end
-        else if ((DrawXs2[41:32] >= BallX2 - Ball_size) &&
-				(DrawXs2[41:32] <= BallX2 + Ball_size) &&
-				(DrawYs2[41:32] >= BallY2 - Ball_size ) &&
-				(DrawYs2[41:32] <= BallY2 + Ball_size))
+        else if ((DrawXs2[9:0] >= BallX2 - Ball_size) &&
+				(DrawXs2[9:0] <= BallX2 + Ball_size) &&
+				(DrawYs2[9:0] >= BallY2 - Ball_size ) &&
+				(DrawYs2[9:0] <= BallY2 + Ball_size))
 				begin
                 ball1_on = 1'b0;
 					 ball2_on = 1'b1;
