@@ -1745,3 +1745,15 @@ Caused by: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING
 
 !ENTRY com.altera.sbtgui.launch 1 0 2021-11-19 15:34:19.075
 !MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-19 15:53:58.480
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-19 15:54:00.206
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-19 15:59:20.687
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-19 15:59:22.340
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]

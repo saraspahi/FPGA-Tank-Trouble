@@ -63,16 +63,16 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 
             XmultCos[63] = XMCsign; 
             XmultSin[63] = XMSsign;
-			YmultCos[63] = YMCsign; 
+				YmultCos[63] = YMCsign; 
             YmultSin[63] = YMSsign; 
 
-			XmultCos[62:0] = BallXsp[30:0]*cos2e[30:0]; 
+				XmultCos[62:0] = BallXsp[30:0]*cos2e[30:0]; 
             XmultSin[62:0] = BallXsp[30:0]*sin2e[30:0];
-			YmultCos[62:0] = BallYsp[30:0]*cos2e[30:0]; 
+				YmultCos[62:0] = BallYsp[30:0]*cos2e[30:0]; 
             YmultSin[62:0] = BallYsp[30:0]*sin2e[30:0]; 
 
-            DrawXs2[15:0] = {XMCsign, XmultCos[45:31]} + {~YMCsign, ~YmultSin[45:31]}+1'b1;
-            DrawYs2[15:0] = {XMSsign, XmultSin[45:31]} + {YMCsign, YmultCos[45:31]};
+            DrawXs2[15:0] = {{3{XMCsign}}, XmultCos[45:32]} + {{3{~YMCsign}}, ~YmultSin[45:32]}+1'b1;
+            DrawYs2[15:0] = {{3{XMSsign}}, XmultSin[45:32]} + {{3{YMCsign}}, YmultCos[45:32]};
 	 end
 	 
     always_comb
