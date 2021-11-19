@@ -178,25 +178,25 @@ tank1 b1(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig1),
 
 tank2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.sin(sin2), .cos(cos2),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2),.Angle(AngleI2));
 
-sinCos sincos1(.AngleI(5'd7), .sin(sin2u), .cos(cos2u));
+sinCos sincos1(.AngleI(AngleI2), .sin(sin2u), .cos(cos2u));
 
 always_comb
 begin
    
-   if(AngleI2 < 23 || AngleI2 > 11)
+   if(AngleI2<23 && AngleI2>11)
 	begin
-       cos2 = ~cos2u + 1;
+       cos2 = ~cos2u+1'b1;
 		 sin2 = sin2u;
 	end
-   else if(AngleI2 > 23 || AngleI2 > 34)
+   else if(AngleI2>22 && AngleI2<34)
    begin
-       cos2 = ~cos2u + 1;
-       sin2 = ~sin2u + 1;
+       cos2 = ~cos2u+1'b1;
+       sin2 = ~sin2u+1'b1;
    end
-   else if(AngleI2 > 33)
+   else if(AngleI2>33)
    begin
        cos2 = cos2u;
-       sin2 = ~sin2u+1;
+       sin2 = ~sin2u+1'b1;
    end
    else
    begin
@@ -208,7 +208,7 @@ end
 //module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 //                       output logic [7:0]  Red, Green, Blue );
 color_mapper  c1(.BallX1(ballxsig1),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
-						.BallX2(ballxsig2),.BallY2(ballysig2),.Red(Red),.Blue(Blue),.Green(Green));
+						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2), .cos2(cos2), .Red(Red),.Blue(Blue),.Green(Green));
 
 
 endmodule

@@ -19,7 +19,8 @@ module tank2 ( input Reset, frame_clk,
                output [9:0]  BallX, BallY, BallS,
 					output [5:0] Angle);//inxe
     
-   logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Motion, Ball_Y_Pos, Ball_Size;
+   logic [9:0] Ball_X_Pos, Ball_Y_Pos, Ball_Size;
+	logic [7:0] Ball_X_Motion, Ball_Y_Motion;
 	logic [5:0] Angle_Motion,Angle_new;
 	
 	logic [7:0] key;
@@ -29,7 +30,6 @@ module tank2 ( input Reset, frame_clk,
     begin
         Ball_X_Comp[15:0] = Ball_X_Step*cos;
         Ball_Y_Comp[15:0] = Ball_Y_Step*sin;
-
     end    
 
     parameter [9:0] Ball_X_Center=300;  // Center position on the X axis
@@ -38,9 +38,9 @@ module tank2 ( input Reset, frame_clk,
     parameter [9:0] Ball_X_Max=639;     // Rightmost point on the X axis
     parameter [9:0] Ball_Y_Min=0;       // Topmost point on the Y axis
     parameter [9:0] Ball_Y_Max=479;     // Bottommost point on the Y axis
-    parameter [7:0] Ball_X_Step=7'b0101_0000;      // Step size on the X axis
-    parameter [7:0] Ball_Y_Step=7'b0101_0000;      // Step size on the Y axis
-    parameter [5:0] AngleStep= 6'b0000001;				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
+    parameter [7:0] Ball_X_Step=8'b0101_0000;      // Step size on the X axis
+    parameter [7:0] Ball_Y_Step=8'b0101_0000;      // Step size on the Y axis
+    parameter [5:0] AngleStep= 5'b00001;				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
 
     assign Ball_Size = 10;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
@@ -91,7 +91,7 @@ module tank2 ( input Reset, frame_clk,
 				 case (key)
 					8'h50 : begin
 								if ( (Ball_X_Pos - Ball_Size) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
-									Ball_X_Motion <= Ball_X_Step;
+									Ball_X_Motion <= 0;
 								else
 								begin
 									Ball_X_Motion <= 0;//A
@@ -102,7 +102,7 @@ module tank2 ( input Reset, frame_clk,
 					        
 					8'h4f : begin
 								if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  //Right  Ball is at the Right edge, BOUNCE!
-									Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);
+									Ball_X_Motion <= 0;
 								else
 								begin
 									Ball_X_Motion <= 0;//D
@@ -113,22 +113,22 @@ module tank2 ( input Reset, frame_clk,
 							  
 					8'h51 : begin
 								if ( (Ball_Y_Pos + Ball_Size) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
-									Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);
+									Ball_Y_Motion <= 0;
 							  else
 							  begin
-									Ball_Y_Motion <=  Ball_Y_Comp[11:8];//S
-									Ball_X_Motion <=  Ball_X_Comp[11:8];
+									Ball_Y_Motion <=  Ball_Y_Comp[15:8];//S
+									Ball_X_Motion <=  Ball_X_Comp[15:8];
 									Angle_Motion <=0;
 								end
 							 end
 							  
 					8'h52 : begin
 								if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  //up Ball is at the top edge, BOUNCE!
-									Ball_Y_Motion <= Ball_Y_Step;
+									Ball_Y_Motion <= 0;
 								else
 								begin
-									Ball_Y_Motion <= {6'b111111, ~Ball_Y_Comp[11:8]} + 1;//S
-									Ball_X_Motion <= {6'b111111, ~Ball_X_Comp[11:8]} + 1;
+									Ball_Y_Motion <= ~Ball_Y_Comp[15:8] + 1'b1;//S
+									Ball_X_Motion <= ~Ball_X_Comp[15:8] + 1'b1;
 									Angle_Motion <=0;
 								end
 							end
@@ -138,15 +138,14 @@ module tank2 ( input Reset, frame_clk,
 				 
 				 Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
-				 Angle_new <= (Angle_new + Angle_Motion);      //change it to 0 when 360
 		
 				 
-				 begin 
-				 if(Angle_new <= 45 || Angle_new <= 0) //Need to handle ngative angles
-				 
-					Angle_new <=22;
-				 
-				 end
+				 if(Angle_new >= 45 && Angle_new <=48)
+					Angle_new <= 0;
+				 else if(Angle_new >= 51)
+					Angle_new <= 44;
+             else
+				   Angle_new <= Angle_new + Angle_Motion;      //change it to 0 when 360
 			
 			
 	  /**************************************************************************************

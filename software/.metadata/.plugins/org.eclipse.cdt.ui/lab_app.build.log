@@ -1,0 +1,9 @@
+16:51:55 **** Incremental Build of configuration Nios II for project lab_app ****
+make all 
+Info: Building ../lab_app_bsp/
+make --no-print-directory -C ../lab_app_bsp/
+[BSP build complete]
+[lab_app build complete]
+
+16:51:56 Build Finished (took 479ms)
+
