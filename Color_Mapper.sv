@@ -59,7 +59,7 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
             XMCsign = BallXsp[31]^cos2e[31];
             YMCsign = BallYsp[31]^cos2e[31];
             XMSsign = BallXsp[31]^sin2e[31];
-            YMSsign = BallYsp[31]^sin2e[31]l
+            YMSsign = BallYsp[31]^sin2e[31];
 
             XmultCos[63] = XMCsign; 
             XmultSin[63] = XMSsign;
