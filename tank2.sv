@@ -25,11 +25,13 @@ module tank2 ( input Reset, frame_clk,
 	
 	logic [7:0] key;
     logic [15:0] Ball_X_Comp, Ball_Y_Comp;
-
+	 logic signX, signY;
     always_comb
     begin
-        Ball_X_Comp[15:0] = Ball_X_Step*cos;
-        Ball_Y_Comp[15:0] = Ball_Y_Step*sin;
+		  signX = Ball_X_Step[7] ^ cos[7];
+		  signY = Ball_Y_Step[7] ^ sin[7];
+        Ball_X_Comp[15:0] = Ball_X_Step[6:0]*cos[6:0];
+        Ball_Y_Comp[15:0] = Ball_Y_Step[6:0]*sin[6:0];
     end    
 
     parameter [9:0] Ball_X_Center=300;  // Center position on the X axis
@@ -116,8 +118,10 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= 0;
 							  else
 							  begin
-									Ball_Y_Motion <=  Ball_Y_Comp[15:8];//S
-									Ball_X_Motion <=  Ball_X_Comp[15:8];
+									Ball_Y_Motion[9] <= signY;
+                           Ball_X_Motion[9] <= signX;
+									Ball_Y_Motion[8:0] <=  {{5{signY}},Ball_Y_Comp[11:8]};//S
+									Ball_X_Motion[8:0] <=  {{5{signX}},Ball_X_Comp[11:8]};
 									Angle_Motion <=0;
 								end
 							 end
@@ -127,8 +131,10 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= 0;
 								else
 								begin
-									Ball_Y_Motion <= {~{2{Ball_Y_Comp[15]}}, ~Ball_Y_Comp[15:8]} + 1'b1;//S
-									Ball_X_Motion <= {~{2{Ball_X_Comp[15]}}, ~Ball_X_Comp[15:8]} + 1'b1;
+                           Ball_Y_Motion[9] <= ~signY;
+                           Ball_X_Motion[9] <= ~signX;
+									Ball_Y_Motion[8:0] <= {~{5{signY}}, ~Ball_Y_Comp[11:8]} + 1'b1;//S
+									Ball_X_Motion[8:0] <= {~{5{signX}}, ~Ball_X_Comp[11:8]} + 1'b1;
 									Angle_Motion <=0;
 								end
 							end
