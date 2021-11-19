@@ -185,30 +185,30 @@ begin
    
    if(AngleI2<23 && AngleI2>11)
 	begin
-       cos2 = ~cos2u+1'b1;
-		 sin2 = sin2u;
+       cos2[7:0] = ~cos2u[7:0]+1'b1;
+		 sin2 = sin2u[7:0];
 	end
    else if(AngleI2>22 && AngleI2<34)
    begin
-       cos2 = ~cos2u+1'b1;
-       sin2 = ~sin2u+1'b1;
+       cos2[7:0] = ~cos2u[7:0]+1'b1;
+       sin2[7:0] = ~sin2u[7:0]+1'b1;
    end
    else if(AngleI2>33)
    begin
-       cos2 = cos2u;
-       sin2 = ~sin2u+1'b1;
+       cos2[7:0] = cos2u[7:0];
+       sin2[7:0] = ~sin2u[7:0]+1'b1;
    end
    else
    begin
-       cos2 = cos2u;
-       sin2 = sin2u;
+       cos2[7:0] = cos2u[7:0];
+       sin2[7:0] = sin2u[7:0];
    end
 end
 
 //module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 //                       output logic [7:0]  Red, Green, Blue );
 color_mapper  c1(.BallX1(ballxsig1),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
-						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2), .cos2(cos2), .Red(Red),.Blue(Blue),.Green(Green));
+						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2), .cos2(cos2), .Red(Red),.Blue(Blue),.Green(Green), .blank(blank));
 
 
 endmodule

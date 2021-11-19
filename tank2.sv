@@ -20,7 +20,7 @@ module tank2 ( input Reset, frame_clk,
 					output [5:0] Angle);//inxe
     
    logic [9:0] Ball_X_Pos, Ball_Y_Pos, Ball_Size;
-	logic [7:0] Ball_X_Motion, Ball_Y_Motion;
+	logic [9:0] Ball_X_Motion, Ball_Y_Motion;
 	logic [5:0] Angle_Motion,Angle_new;
 	
 	logic [7:0] key;
@@ -127,8 +127,8 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= 0;
 								else
 								begin
-									Ball_Y_Motion <= ~Ball_Y_Comp[15:8] + 1'b1;//S
-									Ball_X_Motion <= ~Ball_X_Comp[15:8] + 1'b1;
+									Ball_Y_Motion <= {~{2{Ball_Y_Comp[15]}}, ~Ball_Y_Comp[15:8]} + 1'b1;//S
+									Ball_X_Motion <= {~{2{Ball_X_Comp[15]}}, ~Ball_X_Comp[15:8]} + 1'b1;
 									Angle_Motion <=0;
 								end
 							end
