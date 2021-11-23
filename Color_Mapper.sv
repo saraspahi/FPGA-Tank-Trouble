@@ -85,10 +85,10 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
             ball1_on = 1'b1;
 				ball2_on = 1'b0;
 				end
-		  else if ((DrawXs2[9:0] >= BallX2 - 3'b110) &&
-				(DrawXs2[9:0] <= BallX2 + 3'b110) &&
-				(DrawYs2[9:0] >= BallY2 - Ball_size) &&
-				(DrawYs2[9:0] <= BallY2))
+		  else if ((DrawXs2[9:0] >= BallX2 - Ball_size) &&
+				(DrawXs2[9:0] <= BallX2) &&
+				(DrawYs2[9:0] >= BallY2 - 3'b110) &&
+				(DrawYs2[9:0] <= BallY2 + 3'b110))
 				begin
                 ball1_on = 1'b1;
 					 ball2_on = 1'b0;

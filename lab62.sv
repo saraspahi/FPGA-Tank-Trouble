@@ -179,7 +179,7 @@ tank1 b1(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig1),
 tank2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.sin(sin2), .cos(cos2),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2),.Angle(AngleI2));
 
 sinCos sincos1(.AngleI(AngleI2), .sin(sin2u), .cos(cos2u));
-sinCos sincos2(.AngleI(6'd44-AngleI2), .sin(sin2u1), .cos(cos2u1));
+sinCos sincos2(.AngleI(6'd44 + ~AngleI2 + 1'b1), .sin(sin2u1), .cos(cos2u1));
 
 
 //Mux that takes care of the negative sines and cosines in different quadrants
