@@ -71,7 +71,7 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 				YmultCos[62:0] = BallYsp[30:0]*cos2e[30:0]; 
             YmultSin[62:0] = BallYsp[30:0]*sin2e[30:0]; 
 
-            DrawXs2[15:0] = {{6{XMCsign}}, XmultCos[41:32]} + {{6{~YMCsign}}, ~YmultSin[41:32]}+1'b1 + BallX2;
+            DrawXs2[15:0] = {{6{XMCsign}}, XmultCos[41:32]} + {{6{~YMCsign}}, ~YmultSin[41:32]}+1'b1 +BallX2;
             DrawYs2[15:0] = {{6{XMSsign}}, XmultSin[41:32]} + {{6{YMCsign}}, YmultCos[41:32]} + BallY2;
 	 end
 	 
