@@ -4977,3 +4977,27 @@ Info: Building ../tank_trouble_bsp/
 make --no-print-directory -C ../tank_trouble_bsp/
 [BSP build complete]
 [tank_trouble build complete]
+16:07:43 **** Incremental Build of configuration Nios II for project tank_trouble ****
+make all 
+Info: Building ../tank_trouble_bsp/
+make --no-print-directory -C ../tank_trouble_bsp/
+[BSP build complete]
+[tank_trouble build complete]
+16:13:03 **** Incremental Build of configuration Nios II for project tank_trouble ****
+make all 
+Info: Building ../tank_trouble_bsp/
+make --no-print-directory -C ../tank_trouble_bsp/
+[BSP build complete]
+[tank_trouble build complete]
+18:44:22 **** Incremental Build of configuration Nios II for project tank_trouble ****
+make all 
+Info: Building ../tank_trouble_bsp/
+make --no-print-directory -C ../tank_trouble_bsp/
+[BSP build complete]
+[tank_trouble build complete]
+18:47:04 **** Incremental Build of configuration Nios II for project tank_trouble ****
+make all 
+Info: Building ../tank_trouble_bsp/
+make --no-print-directory -C ../tank_trouble_bsp/
+[BSP build complete]
+[tank_trouble build complete]
