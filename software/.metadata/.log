@@ -1807,3 +1807,78 @@ Caused by: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING
 
 !ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 18:47:08.254
 !MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 18:53:02.457
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 18:53:04.241
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 18:58:08.808
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 18:58:10.532
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:02:19.562
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:02:21.307
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:05:45.813
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:05:47.583
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:08:30.936
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 4 0 2021-11-22 19:08:32.495
+!MESSAGE Failed Executing: [nios2-download, '--cable=', --device=1, --instance=0, --stop, --sidp=0xe8, --id=0x0, --timestamp=1636663400] return code: 8
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:08:32.658
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 4 0 2021-11-22 19:08:34.244
+!MESSAGE Failed Executing: [nios2-download, '--cable=', --device=1, --instance=0, --go, --sidp=0xe8, --id=0x0, --timestamp=1636663400, /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf] return code: 8
+
+!ENTRY com.altera.sbtgui.launch 4 0 2021-11-22 19:08:34.248
+!MESSAGE Downloading ELF Process failed
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:08:47.840
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:08:49.607
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:13:21.055
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:13:22.798
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:17:50.837
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:17:52.597
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:25:58.669
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:26:00.431
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:29:19.607
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:29:21.382
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:43:49.135
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --stop --sidp=0xe8 --id=0x0 --timestamp=1636663400]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2021-11-22 19:43:50.930
+!MESSAGE Executing: [/bin/bash, -c, nios2-download '--cable=USB-Blaster on localhost [1-2]' --device=1 --instance=0 --go --sidp=0xe8 --id=0x0 --timestamp=1636663400 /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble/tank_trouble.elf]

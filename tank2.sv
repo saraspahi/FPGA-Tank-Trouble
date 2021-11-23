@@ -143,13 +143,13 @@ module tank2 ( input Reset, frame_clk,
 					default: ;
 			   endcase
 				 
-				 Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
-				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
+				 Ball_Y_Pos[9:0] <= (Ball_Y_Pos[9:0] + Ball_Y_Motion[9:0]);  // Update ball position
+				 Ball_X_Pos[9:0] <= (Ball_X_Pos[9:0] + Ball_X_Motion[9:0]);
 		
 				 
 				 if(Angle_new >= 45 && Angle_new <=48)
 					Angle_new <= 0;
-				 else if(Angle_new >= 51)
+				 else if(Angle_new == 6'b111111)
 					Angle_new <= 44;
              else
 				   Angle_new <= Angle_new + Angle_Motion;      //change it to 0 when 360

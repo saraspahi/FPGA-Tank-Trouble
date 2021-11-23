@@ -219,6 +219,6 @@ end
 
 
 color_mapper  c1(.BallX1(ballxsig1),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
-						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2p), .cos2(cos2p), .Red(Red),.Blue(Blue),.Green(Green), .blank(blank));
+						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2), .cos2(cos2), .Red(Red),.Blue(Blue),.Green(Green), .blank(blank));
 
 endmodule
