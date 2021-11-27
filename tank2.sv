@@ -119,10 +119,10 @@ module tank2 ( input Reset, frame_clk,
 									Ball_Y_Motion <= 0;
 							  else
 							  begin
-									Ball_Y_Motion[9] <= signY;
-                           Ball_X_Motion[9] <= signX;
-									Ball_Y_Motion[8:0] <=  {{5{signY}},Ball_Y_Comp[11:8]};//S
-									Ball_X_Motion[8:0] <=  {{5{signX}},Ball_X_Comp[11:8]};
+									//Ball_Y_Motion[9] <= signY;
+                           //Ball_X_Motion[9] <= signX;
+									Ball_Y_Motion[9:0] <=  {{6{~signY}},~Ball_Y_Comp[10:7]} + 1'b1;//S
+									Ball_X_Motion[9:0] <=  {{6{signX}},Ball_X_Comp[10:7]};
 									Angle_Motion <=0;
 								end
 							 end
@@ -134,8 +134,8 @@ module tank2 ( input Reset, frame_clk,
 								begin
                            //Ball_Y_Motion[9] <= ~signY;
                            //Ball_X_Motion[9] <= ~signX;
-									Ball_Y_Motion[8:0] <= {{6{~signY}}, ~Ball_Y_Comp[11:8]} + 1'b1;//S
-									Ball_X_Motion[8:0] <= {{6{~signX}}, ~Ball_X_Comp[11:8]} + 1'b1;
+									Ball_Y_Motion[9:0] <= {{6{signY}}, Ball_Y_Comp[10:7]};//S
+									Ball_X_Motion[9:0] <= {{6{~signX}}, ~Ball_X_Comp[10:7]} + 1'b1;
 									Angle_Motion <=0;
 								end
 							end
