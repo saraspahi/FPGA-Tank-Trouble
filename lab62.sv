@@ -44,9 +44,9 @@ module lab62 (
       ///////// VGA /////////
       output             VGA_HS,
       output             VGA_VS,
-      output   [ 3: 0]   VGA_R,
-      output   [ 3: 0]   VGA_G,
-      output   [ 3: 0]   VGA_B,
+      output   [ 7: 0]   VGA_R,
+      output   [ 7: 0]   VGA_G,
+      output   [ 7: 0]   VGA_B,
 
 
       ///////// ARDUINO /////////
@@ -115,9 +115,9 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 	assign {Reset_h}=~ (KEY[0]);
 
 	//Our A/D converter is only 12 bit
-	assign VGA_R = Red[7:4];
-	assign VGA_B = Blue[7:4];
-	assign VGA_G = Green[7:4];
+//	assign VGA_R = Red[7:4];
+//	assign VGA_B = Blue[7:4];
+//	assign VGA_G = Green[7:4];
 	
 	
 	lab62_soc u0 (
@@ -154,74 +154,86 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		//LEDs and HEX
 		.hex_digits_export({hex_num_4, hex_num_3, hex_num_1, hex_num_0}),
 		.leds_export({hundreds, signs, LEDR}),
-		.keycode_export(keycode)
+		.keycode_export(keycode),
+		
+		//keycodee input to the keycode port 
+		.keycode_port_new_signal(keycode1),
+		
+		
+		//VGA
+		.vga_port_new_signal_2 (VGA_R),
+		.vga_port_new_signal_1 (VGA_G),
+		.vga_port_new_signal (VGA_B),
+		.vga_port_new_signal_3 (VGA_HS),
+		.vga_port_new_signal_4 (VGA_VS)
+		
 		
 	 );
-always_comb
-begin 
-HEX0=keycode[31:28];
-HEX1=keycode[27:24];
-HEX2=keycode[23:20];
-HEX4=keycode[19:16];
-end 
-
-localparam ball_size = 100;
-
-logic [5:0] AngleI2;
-logic [7:0] sin2, cos2, sin2u, cos2u, sin2u1, cos2u1, sin2p, cos2p;
-
-vga_controller v1(.Clk(MAX10_CLK1_50),.Reset(Reset_h),.hs(VGA_HS),.vs(VGA_VS),.pixel_clk(VGA_Clk),.blank(blank),.sync(sync),.DrawX(drawxsig),.DrawY(drawysig));
-//instantiate a vga_controller, ball, and color_mapper here with the ports.
-//What is the frame clock?
-
-tank1 b1(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig1),.BallY(ballysig1),.BallS(ballsizesig1));
-
-tank2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.sin(sin2), .cos(cos2),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2),.Angle(AngleI2));
-
-sinCos sincos1(.AngleI(AngleI2), .sin(sin2u), .cos(cos2u));
-sinCos sincos2(.AngleI(AngleI2 ), .sin(sin2p), .cos(cos2p));
-
-
-//Mux that takes care of the negative sines and cosines in different quadrants
-always_comb
-begin
-   
-   if(AngleI2<23 && AngleI2>11)
-	begin
-       cos2[7:0] = ~cos2u[7:0]+1'b1;
-		 sin2 = ~sin2u[7:0]+1'b1;
-		 //The second pair corresponds to rotation angles
-		 
-		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
-		 sin2p[7:0] = sin2u1[7:0];
-	end
-   else if(AngleI2>22 && AngleI2<34)
-   begin
-       cos2[7:0] = ~cos2u[7:0]+1'b1;
-       sin2[7:0] = sin2u[7:0];
-		 
-		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
-       sin2p[7:0] = ~sin2u1[7:0]+1'b1;
-   end
-   else if(AngleI2>33)
-   begin
-       cos2[7:0] = cos2u[7:0];
-       sin2[7:0] = sin2u[7:0];
-		 cos2p[7:0] = cos2u1[7:0];
-       sin2p[7:0] = ~sin2u1[7:0]+1'b1;
-   end
-   else
-   begin
-       cos2[7:0] = cos2u[7:0];
-       sin2[7:0] = ~sin2u[7:0]+1'b1;
-		 cos2p[7:0] = cos2u1[7:0];
-       sin2p[7:0] = sin2u1[7:0];
-   end
-end
-
-
-
-color_mapper  c1(.BallX1(ballxsig1),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
-						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2), .cos2(cos2), .Red(Red),.Blue(Blue),.Green(Green), .blank(blank));
+	 
+	 logic [31:0] keycode1;
+	 assign keycode1=keycode;
+//always_comb
+//begin 
+//HEX0=keycode[31:28];
+//HEX1=keycode[27:24];
+//HEX2=keycode[23:20];
+//HEX4=keycode[19:16];
+//end 
+//
+//localparam ball_size = 100;
+//
+//logic [5:0] AngleI2;
+//logic [7:0] sin2, cos2, sin2u, cos2u, sin2u1, cos2u1, sin2p, cos2p;
+//
+//vga_controller v1(.Clk(MAX10_CLK1_50),.Reset(Reset_h),.hs(VGA_HS),.vs(VGA_VS),.pixel_clk(VGA_Clk),.blank(blank),.sync(sync),.DrawX(drawxsig),.DrawY(drawysig));
+////instantiate a vga_controller, ball, and color_mapper here with the ports.
+////What is the frame clock?
+//
+//tank1 b1(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig1),.BallY(ballysig1),.BallS(ballsizesig1));
+//
+//tank2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.sin(sin2), .cos(cos2),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2),.Angle(AngleI2));
+//
+//sinCos sincos1(.AngleI(AngleI2), .sin(sin2u), .cos(cos2u));
+//sinCos sincos2(.AngleI(6'd44 + ~AngleI2 + 1'b1), .sin(sin2u1), .cos(cos2u1));
+//
+//
+////Mux that takes care of the negative sines and cosines in different quadrants
+//always_comb
+//begin
+//   
+//   if(AngleI2<23 && AngleI2>11)
+//	begin
+//       cos2[7:0] = ~cos2u[7:0]+1'b1;
+//		 sin2 = sin2u[7:0];
+//		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
+//		 sin2p[7:0] = sin2u1[7:0];
+//	end
+//   else if(AngleI2>22 && AngleI2<34)
+//   begin
+//       cos2[7:0] = ~cos2u[7:0]+1'b1;
+//       sin2[7:0] = ~sin2u[7:0]+1'b1;
+//		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
+//       sin2p[7:0] = ~sin2u1[7:0]+1'b1;
+//   end
+//   else if(AngleI2>33)
+//   begin
+//       cos2[7:0] = cos2u[7:0];
+//       sin2[7:0] = ~sin2u[7:0]+1'b1;
+//		 cos2p[7:0] = cos2u1[7:0];
+//       sin2p[7:0] = ~sin2u1[7:0]+1'b1;
+//   end
+//   else
+//   begin
+//       cos2[7:0] = cos2u[7:0];
+//       sin2[7:0] = sin2u[7:0];
+//		 cos2p[7:0] = cos2u1[7:0];
+//       sin2p[7:0] = sin2u1[7:0];
+//   end
+//end
+//
+//
+//
+//color_mapper  c1(.BallX1(ballxsig1),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
+//						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2), .cos2(cos2), .Red(Red),.Blue(Blue),.Green(Green), .blank(blank));
 
 endmodule

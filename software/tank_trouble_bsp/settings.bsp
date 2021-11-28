@@ -2,11 +2,11 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Nov 23, 2021 3:08:32 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1637701712428</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/ece385user/FPGA-Tank-Trouble/software/tank_trouble_bsp</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>Nov 27, 2021 6:37:54 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1638059874075</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>C:\Users\Sara\UIUC\FinalProject\software\tank_trouble_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
-        <SopcDesignFile>../../lab62_soc.sopcinfo</SopcDesignFile>
+        <SopcDesignFile>..\..\lab62_soc.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>nios2_gen2_0</Cpu>
         <SchemaVersion>1.9</SchemaVersion>
@@ -975,6 +975,12 @@
                 <addressRange>0x000000F0 - 0x000000F7</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>VGA_text_mode_controller_0</slaveDescriptor>
+                <addressRange>0x00001000 - 0x00001FFF</addressRange>
+                <addressSpan>4096</addressSpan>
+                <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>sdram</slaveDescriptor>

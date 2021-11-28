@@ -22,7 +22,13 @@
 			spi0_SS_n                      : out   std_logic;                                        -- SS_n
 			usb_gpx_export                 : in    std_logic                     := 'X';             -- export
 			usb_irq_export                 : in    std_logic                     := 'X';             -- export
-			usb_rst_export                 : out   std_logic                                         -- export
+			usb_rst_export                 : out   std_logic;                                        -- export
+			vga_port_new_signal            : out   std_logic_vector(7 downto 0);                     -- new_signal
+			vga_port_new_signal_1          : out   std_logic_vector(7 downto 0);                     -- new_signal_1
+			vga_port_new_signal_2          : out   std_logic;                                        -- new_signal_2
+			vga_port_new_signal_3          : out   std_logic_vector(7 downto 0);                     -- new_signal_3
+			vga_port_new_signal_4          : out   std_logic;                                        -- new_signal_4
+			keycode_port_new_signal        : in    std_logic                     := 'X'              -- new_signal
 		);
 	end component lab62_soc;
 
@@ -50,6 +56,12 @@
 			spi0_SS_n                      => CONNECTED_TO_spi0_SS_n,                      --                        .SS_n
 			usb_gpx_export                 => CONNECTED_TO_usb_gpx_export,                 --                 usb_gpx.export
 			usb_irq_export                 => CONNECTED_TO_usb_irq_export,                 --                 usb_irq.export
-			usb_rst_export                 => CONNECTED_TO_usb_rst_export                  --                 usb_rst.export
+			usb_rst_export                 => CONNECTED_TO_usb_rst_export,                 --                 usb_rst.export
+			vga_port_new_signal            => CONNECTED_TO_vga_port_new_signal,            --                vga_port.new_signal
+			vga_port_new_signal_1          => CONNECTED_TO_vga_port_new_signal_1,          --                        .new_signal_1
+			vga_port_new_signal_2          => CONNECTED_TO_vga_port_new_signal_2,          --                        .new_signal_2
+			vga_port_new_signal_3          => CONNECTED_TO_vga_port_new_signal_3,          --                        .new_signal_3
+			vga_port_new_signal_4          => CONNECTED_TO_vga_port_new_signal_4,          --                        .new_signal_4
+			keycode_port_new_signal        => CONNECTED_TO_keycode_port_new_signal         --            keycode_port.new_signal
 		);
 

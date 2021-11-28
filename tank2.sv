@@ -124,7 +124,7 @@ module tank2 ( input Reset, frame_clk,
 				 Ball_X_Pos[9:0] <= (Ball_X_Pos[9:0] + Ball_X_Motion[9:0]);
 		
 				 
-				 if(Angle_new >= 45 && Angle_new <=48)
+				 if(Angle_new > 44 && Angle_new <=48)
 					Angle_new <= 0;
 				 else if(Angle_new >=51)
 					Angle_new <= 44;
