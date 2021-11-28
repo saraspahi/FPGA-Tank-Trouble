@@ -5169,3 +5169,35 @@ Info: Building ../tank_trouble_bsp/
 make --no-print-directory -C ../tank_trouble_bsp/
 [BSP build complete]
 [tank_trouble build complete]
+19:01:13 **** Incremental Build of configuration Nios II for project tank_trouble ****
+make all 
+Info: Building ../tank_trouble_bsp/
+make --no-print-directory -C ../tank_trouble_bsp/
+[BSP build complete]
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../tank_trouble_bsp//HAL/inc -I../tank_trouble_bsp/ -I../tank_trouble_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'main':
+main.c:140:7: warning: unused variable 'keycode' [-Wunused-variable]
+  WORD keycode;
+       ^
+Info: Compiling usb_kb/MAX3421E.c to obj/default/usb_kb/MAX3421E.o
+nios2-elf-gcc -xc -MP -MMD -c -I../tank_trouble_bsp//HAL/inc -I../tank_trouble_bsp/ -I../tank_trouble_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/usb_kb/MAX3421E.o usb_kb/MAX3421E.c
+usb_kb/MAX3421E.c: In function 'MaxGpxHandler':
+usb_kb/MAX3421E.c:236:7: warning: variable 'GPINIRQ' set but not used [-Wunused-but-set-variable]
+  BYTE GPINIRQ;
+       ^
+usb_kb/MAX3421E.c: In function 'SPI_wr':
+usb_kb/MAX3421E.c:29:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+Info: Linking tank_trouble.elf
+nios2-elf-g++  -T'../tank_trouble_bsp//linker.x' -msys-crt0='../tank_trouble_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../tank_trouble_bsp/   -Wl,-Map=tank_trouble.map   -O0 -g -Wall   -mno-hw-div -mno-hw-mul -mno-hw-mulx -mgpopt=global  -o tank_trouble.elf obj/default/main.o obj/default/usb_kb/HID.o obj/default/usb_kb/MAX3421E.o obj/default/usb_kb/transfer.o -lm -msys-lib=m
+nios2-elf-insert tank_trouble.elf --thread_model hal --cpu_name nios2_gen2_0 --qsys true --simulation_enabled false --id 0 --sidp 0xe8 --timestamp 1636663400 --stderr_dev jtag_uart_0 --stdin_dev jtag_uart_0 --stdout_dev jtag_uart_0 --sopc_system_name lab62_soc --quartus_project_dir "/home/ece385user/FPGA-Tank-Trouble" --sopcinfo /home/ece385user/FPGA-Tank-Trouble/software/tank_trouble_bsp/../../lab62_soc.sopcinfo
+Info: (tank_trouble.elf) 82 KBytes program size (code + initialized data).
+Info:                    65446 KBytes free for stack + heap.
+Info: Creating tank_trouble.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source tank_trouble.elf >tank_trouble.objdump
+[tank_trouble build complete]
+19:01:14 **** Incremental Build of configuration Nios II for project tank_trouble_bsp ****
+make all 
+[BSP build complete]
