@@ -179,7 +179,7 @@ tank1 b1(.Reset(Reset_h),.frame_clk(VGA_VS),.keycode(keycode),.BallX(ballxsig1),
 tank2 b2(.Reset(Reset_h),.frame_clk(VGA_VS),.sin(sin2), .cos(cos2),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2),.Angle(AngleI2));
 
 sinCos sincos1(.AngleI(AngleI2), .sin(sin2u), .cos(cos2u));
-sinCos sincos2(.AngleI(6'd44 + ~AngleI2 + 1'b1), .sin(sin2u1), .cos(cos2u1));
+sinCos sincos2(.AngleI(AngleI2 ), .sin(sin2p), .cos(cos2p));
 
 
 //Mux that takes care of the negative sines and cosines in different quadrants
@@ -189,28 +189,31 @@ begin
    if(AngleI2<23 && AngleI2>11)
 	begin
        cos2[7:0] = ~cos2u[7:0]+1'b1;
-		 sin2 = sin2u[7:0];
+		 sin2 = ~sin2u[7:0]+1'b1;
+		 //The second pair corresponds to rotation angles
+		 
 		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
 		 sin2p[7:0] = sin2u1[7:0];
 	end
    else if(AngleI2>22 && AngleI2<34)
    begin
        cos2[7:0] = ~cos2u[7:0]+1'b1;
-       sin2[7:0] = ~sin2u[7:0]+1'b1;
+       sin2[7:0] = sin2u[7:0];
+		 
 		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
        sin2p[7:0] = ~sin2u1[7:0]+1'b1;
    end
    else if(AngleI2>33)
    begin
        cos2[7:0] = cos2u[7:0];
-       sin2[7:0] = ~sin2u[7:0]+1'b1;
+       sin2[7:0] = sin2u[7:0];
 		 cos2p[7:0] = cos2u1[7:0];
        sin2p[7:0] = ~sin2u1[7:0]+1'b1;
    end
    else
    begin
        cos2[7:0] = cos2u[7:0];
-       sin2[7:0] = sin2u[7:0];
+       sin2[7:0] = ~sin2u[7:0]+1'b1;
 		 cos2p[7:0] = cos2u1[7:0];
        sin2p[7:0] = sin2u1[7:0];
    end

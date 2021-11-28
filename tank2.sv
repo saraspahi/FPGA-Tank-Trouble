@@ -60,25 +60,12 @@ module tank2 ( input Reset, frame_clk,
            
         else 
         begin 
-				 if ( (Ball_Y_Pos + Ball_Size) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
-					  Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);  // 2's complement.
-					  
-				 else if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
-					  Ball_Y_Motion <= Ball_Y_Step;
-					  
-				 else if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  // Ball is at the Right edge, BOUNCE!
-					  Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);  // 2's complement.
-					  
-				 else if ( (Ball_X_Pos - Ball_Size) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
-					  Ball_X_Motion <= Ball_X_Step;
-					  
-				 else 
-					  begin
+ 
+					 
 					  Ball_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't move
 					  Ball_X_Motion <= 10'd0;
 					  Angle_Motion <= 5'd0;
 
-					  end
 				 
 				 if ((keycode[31:24] ==8'h52 )||(keycode[23:16]==8'h52)||(keycode[15:8] ==8'h52)||(keycode[7:0]==8'h52))
 					  key <= 8'h52;
@@ -93,9 +80,7 @@ module tank2 ( input Reset, frame_clk,
 				 
 				 case (key)
 					8'h50 : begin
-								if ( (Ball_X_Pos - Ball_Size) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
-									Ball_X_Motion <= 0;
-								else
+							
 								begin
 									Ball_X_Motion <= 0;//A
 									Ball_Y_Motion<= 0;
@@ -104,9 +89,7 @@ module tank2 ( input Reset, frame_clk,
 							  end
 					        
 					8'h4f : begin
-								if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  //Right  Ball is at the Right edge, BOUNCE!
-									Ball_X_Motion <= 0;
-								else
+							
 								begin
 									Ball_X_Motion <= 0;//D
 									Ball_Y_Motion <= 0;
@@ -115,9 +98,6 @@ module tank2 ( input Reset, frame_clk,
 							  end
 							  
 					8'h52 : begin
-								if ( (Ball_Y_Pos + Ball_Size) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
-									Ball_Y_Motion <= 0;
-							  else
 							  begin
 									//Ball_Y_Motion[9] <= signY;
                            //Ball_X_Motion[9] <= signX;
@@ -128,9 +108,6 @@ module tank2 ( input Reset, frame_clk,
 							 end
 							  
 					8'h51 : begin
-								if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  //up Ball is at the top edge, BOUNCE!
-									Ball_Y_Motion <= 0;
-								else
 								begin
                            //Ball_Y_Motion[9] <= ~signY;
                            //Ball_X_Motion[9] <= ~signX;
@@ -149,7 +126,7 @@ module tank2 ( input Reset, frame_clk,
 				 
 				 if(Angle_new >= 45 && Angle_new <=48)
 					Angle_new <= 0;
-				 else if(Angle_new == 6'b111111)
+				 else if(Angle_new >=51)
 					Angle_new <= 44;
              else
 				   Angle_new <= Angle_new + Angle_Motion;      //change it to 0 when 360
