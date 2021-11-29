@@ -4,6 +4,7 @@ module lab62_soc (
 	hex_digits_export,
 	key_external_connection_export,
 	keycode_export,
+	keycode_port_new_signal,
 	leds_export,
 	reset_reset_n,
 	sdram_clk_clk,
@@ -27,13 +28,13 @@ module lab62_soc (
 	vga_port_new_signal_1,
 	vga_port_new_signal_2,
 	vga_port_new_signal_3,
-	vga_port_new_signal_4,
-	keycode_port_new_signal);	
+	vga_port_new_signal_4);	
 
 	input		clk_clk;
 	output	[15:0]	hex_digits_export;
 	input	[1:0]	key_external_connection_export;
 	output	[31:0]	keycode_export;
+	input		keycode_port_new_signal;
 	output	[13:0]	leds_export;
 	input		reset_reset_n;
 	output		sdram_clk_clk;
@@ -58,5 +59,4 @@ module lab62_soc (
 	output		vga_port_new_signal_2;
 	output	[7:0]	vga_port_new_signal_3;
 	output		vga_port_new_signal_4;
-	input		keycode_port_new_signal;
 endmodule

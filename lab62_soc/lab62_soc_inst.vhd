@@ -4,6 +4,7 @@
 			hex_digits_export              : out   std_logic_vector(15 downto 0);                    -- export
 			key_external_connection_export : in    std_logic_vector(1 downto 0)  := (others => 'X'); -- export
 			keycode_export                 : out   std_logic_vector(31 downto 0);                    -- export
+			keycode_port_new_signal        : in    std_logic                     := 'X';             -- new_signal
 			leds_export                    : out   std_logic_vector(13 downto 0);                    -- export
 			reset_reset_n                  : in    std_logic                     := 'X';             -- reset_n
 			sdram_clk_clk                  : out   std_logic;                                        -- clk
@@ -27,8 +28,7 @@
 			vga_port_new_signal_1          : out   std_logic_vector(7 downto 0);                     -- new_signal_1
 			vga_port_new_signal_2          : out   std_logic;                                        -- new_signal_2
 			vga_port_new_signal_3          : out   std_logic_vector(7 downto 0);                     -- new_signal_3
-			vga_port_new_signal_4          : out   std_logic;                                        -- new_signal_4
-			keycode_port_new_signal        : in    std_logic                     := 'X'              -- new_signal
+			vga_port_new_signal_4          : out   std_logic                                         -- new_signal_4
 		);
 	end component lab62_soc;
 
@@ -38,6 +38,7 @@
 			hex_digits_export              => CONNECTED_TO_hex_digits_export,              --              hex_digits.export
 			key_external_connection_export => CONNECTED_TO_key_external_connection_export, -- key_external_connection.export
 			keycode_export                 => CONNECTED_TO_keycode_export,                 --                 keycode.export
+			keycode_port_new_signal        => CONNECTED_TO_keycode_port_new_signal,        --            keycode_port.new_signal
 			leds_export                    => CONNECTED_TO_leds_export,                    --                    leds.export
 			reset_reset_n                  => CONNECTED_TO_reset_reset_n,                  --                   reset.reset_n
 			sdram_clk_clk                  => CONNECTED_TO_sdram_clk_clk,                  --               sdram_clk.clk
@@ -61,7 +62,6 @@
 			vga_port_new_signal_1          => CONNECTED_TO_vga_port_new_signal_1,          --                        .new_signal_1
 			vga_port_new_signal_2          => CONNECTED_TO_vga_port_new_signal_2,          --                        .new_signal_2
 			vga_port_new_signal_3          => CONNECTED_TO_vga_port_new_signal_3,          --                        .new_signal_3
-			vga_port_new_signal_4          => CONNECTED_TO_vga_port_new_signal_4,          --                        .new_signal_4
-			keycode_port_new_signal        => CONNECTED_TO_keycode_port_new_signal         --            keycode_port.new_signal
+			vga_port_new_signal_4          => CONNECTED_TO_vga_port_new_signal_4           --                        .new_signal_4
 		);
 

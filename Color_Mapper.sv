@@ -16,6 +16,7 @@
 module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2,BallY2,
                       input [7:0] sin2, cos2,
 							 input blank,
+							 input maze,
                        output logic [7:0]  Red, Green, Blue );
     
     logic ball1_on;
@@ -112,7 +113,13 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
     begin:RGB_Display
         if(blank)
         begin
-            if (ball1_on == 1'b1)
+				if (maze)
+				begin 
+					Red = 8'h00;
+               Green = 8'hbb;
+               Blue = 8'h00;
+				end
+            else if (ball1_on == 1'b1)
             begin 
                 Red = 8'hff;
                 Green = 8'hbb;

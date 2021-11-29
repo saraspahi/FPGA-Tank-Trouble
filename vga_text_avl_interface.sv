@@ -53,8 +53,10 @@ module vga_text_avl_interface (
 logic [31:0] data;
 logic [5:0] AngleI2;
 logic [7:0] sin2, cos2, sin2u, cos2u, sin2u1, cos2u1, sin2p, cos2p;
-logic [9:0] drawxsig, drawysig, ballxsig1, ballysig1, ballxsig2, ballysig2, ballsizesig;
+logic [9:0] drawxsig, drawysig, ballxsig1, ballysig1, ballxsig2, ballysig2, ballsizesig, Word_ADDR;
+logic [14:0] Byte_ADDR;
 logic [31:0] keycode;
+logic maze;
 assign keycode = keycode_signal;
 
 vga_controller v1(.Clk(CLK),.Reset(RESET),.hs(hs),.vs(vs),.blank(blank),.DrawX(drawxsig),.DrawY(drawysig));
@@ -104,7 +106,18 @@ end
 
 ram1 ram(.clock(CLK),.data(AVL_WRITEDATA),.rdaddress(Word_ADDR),.wraddresss(AVL_ADDR),.wren(AVL_WRITE && AVL_CS),.q(data));
 
-color_mapper  c1(.BallX1(ballxsig1),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
+always_comb
+begin 
+	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
+	Word_ADDR[9:0] = Byte_ADDR[14:5];
+	maze = data[Byte_ADDR[4:0]];
+
+end 
+
+
+
+
+color_mapper  c1(.BallX1(ballxsig1),.maze(maze),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
 						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2), .cos2(cos2), .Red(red),.Blue(blue),.Green(green), .blank(blank));
 
 endmodule

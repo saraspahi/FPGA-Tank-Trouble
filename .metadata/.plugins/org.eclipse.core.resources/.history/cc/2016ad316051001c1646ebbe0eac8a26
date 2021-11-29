@@ -134,7 +134,6 @@ void setKeycode(int keycode)
 }
 int main() {
 	genMaze();
-
 	BYTE rcode;
 	BOOT_MOUSE_REPORT buf;		//USB mouse report
 	BOOT_KBD_REPORT kbdbuf;
@@ -244,6 +243,5 @@ int main() {
 		}
 
 	}
-
 	return 0;
 }

@@ -1,4 +1,4 @@
-15:03:27 **** Build of configuration Nios II for project tank_trouble ****
+16:12:08 **** Incremental Build of configuration Nios II for project tank_trouble ****
 make all 
 The system cannot find the path specified.
 The system cannot find the path specified.
@@ -10,5 +10,5 @@ process_begin: CreateProcess(NULL, pwd, ...) failed.
 make[1]: *** No rule to make target `/system.h', needed by `all'.  Stop.
 make: *** [../tank_trouble_bsp/-recurs-make-lib] Error 2
 
-15:03:27 Build Finished (took 765ms)
+16:12:10 Build Finished (took 1s.167ms)
 
