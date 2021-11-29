@@ -22,7 +22,13 @@ module lab62_soc (
 	spi0_SS_n,
 	usb_gpx_export,
 	usb_irq_export,
-	usb_rst_export);	
+	usb_rst_export,
+	vga_port_new_signal,
+	vga_port_new_signal_1,
+	vga_port_new_signal_2,
+	vga_port_new_signal_3,
+	vga_port_new_signal_4,
+	keycode_port_new_signal);	
 
 	input		clk_clk;
 	output	[15:0]	hex_digits_export;
@@ -47,4 +53,10 @@ module lab62_soc (
 	input		usb_gpx_export;
 	input		usb_irq_export;
 	output		usb_rst_export;
+	output	[7:0]	vga_port_new_signal;
+	output	[7:0]	vga_port_new_signal_1;
+	output		vga_port_new_signal_2;
+	output	[7:0]	vga_port_new_signal_3;
+	output		vga_port_new_signal_4;
+	input		keycode_port_new_signal;
 endmodule

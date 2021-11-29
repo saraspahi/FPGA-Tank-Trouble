@@ -21,6 +21,12 @@
 		.spi0_SS_n                      (<connected-to-spi0_SS_n>),                      //                        .SS_n
 		.usb_gpx_export                 (<connected-to-usb_gpx_export>),                 //                 usb_gpx.export
 		.usb_irq_export                 (<connected-to-usb_irq_export>),                 //                 usb_irq.export
-		.usb_rst_export                 (<connected-to-usb_rst_export>)                  //                 usb_rst.export
+		.usb_rst_export                 (<connected-to-usb_rst_export>),                 //                 usb_rst.export
+		.vga_port_new_signal            (<connected-to-vga_port_new_signal>),            //                vga_port.new_signal
+		.vga_port_new_signal_1          (<connected-to-vga_port_new_signal_1>),          //                        .new_signal_1
+		.vga_port_new_signal_2          (<connected-to-vga_port_new_signal_2>),          //                        .new_signal_2
+		.vga_port_new_signal_3          (<connected-to-vga_port_new_signal_3>),          //                        .new_signal_3
+		.vga_port_new_signal_4          (<connected-to-vga_port_new_signal_4>),          //                        .new_signal_4
+		.keycode_port_new_signal        (<connected-to-keycode_port_new_signal>)         //            keycode_port.new_signal
 	);
 

@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_gen2_0' in SOPC Builder design 'lab62_soc'
  * SOPC Builder design path: ../../lab62_soc.sopcinfo
  *
- * Generated: Wed Nov 17 17:27:05 CST 2021
+ * Generated: Sat Nov 27 18:37:54 CST 2021
  */
 
 /*
@@ -142,6 +142,7 @@
 #define __ALTERA_AVALON_TIMER
 #define __ALTERA_NIOS2_GEN2
 #define __ALTPLL
+#define __VGA_TEXT_MODE_CONTROLLER
 
 
 /*
@@ -178,6 +179,20 @@
 #define ALT_STDOUT_PRESENT
 #define ALT_STDOUT_TYPE "altera_avalon_jtag_uart"
 #define ALT_SYSTEM_NAME "lab62_soc"
+
+
+/*
+ * VGA_text_mode_controller_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_VGA_text_mode_controller_0 VGA_text_mode_controller
+#define VGA_TEXT_MODE_CONTROLLER_0_BASE 0x1000
+#define VGA_TEXT_MODE_CONTROLLER_0_IRQ -1
+#define VGA_TEXT_MODE_CONTROLLER_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define VGA_TEXT_MODE_CONTROLLER_0_NAME "/dev/VGA_text_mode_controller_0"
+#define VGA_TEXT_MODE_CONTROLLER_0_SPAN 4096
+#define VGA_TEXT_MODE_CONTROLLER_0_TYPE "VGA_text_mode_controller"
 
 
 /*
@@ -442,7 +457,7 @@
 #define SYSID_QSYS_0_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_QSYS_0_NAME "/dev/sysid_qsys_0"
 #define SYSID_QSYS_0_SPAN 8
-#define SYSID_QSYS_0_TIMESTAMP 1636663400
+#define SYSID_QSYS_0_TIMESTAMP 1638057402
 #define SYSID_QSYS_0_TYPE "altera_avalon_sysid_qsys"
 
 
