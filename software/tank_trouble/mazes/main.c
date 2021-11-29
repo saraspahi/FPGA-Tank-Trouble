@@ -7,7 +7,7 @@
 #include "paired_stack.h"
 
 const int PATH_N = 0x01;
-const int PATH_E = 0x03;
+const int PATH_E = 0x02;
 const int PATH_S = 0x04;
 const int PATH_W = 0x08;
 const int VISITED = 0x10;
@@ -116,8 +116,6 @@ int main()
                     maze_screen_buffer[y*(pathWidth+1)+pathWidth][x*(pathWidth+1)+p] = ' ';
                 if(m_maze[y*mazeWidth + x] & PATH_E)
                     maze_screen_buffer[y*(pathWidth+1)+p][x*(pathWidth+1)+pathWidth] = ' ';
-                if((m_maze[y*mazeWidth + x] & PATH_E) && (m_maze[y*mazeWidth + x] & PATH_S))
-                    maze_screen_buffer[y*(pathWidth+1)+p+1][x*(pathWidth+1)+pathWidth] = ' ';
 
             }
             
