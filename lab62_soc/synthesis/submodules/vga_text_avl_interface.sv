@@ -50,7 +50,7 @@ module vga_text_avl_interface (
 );
 
 
-
+logic [31:0] data;
 logic [5:0] AngleI2;
 logic [7:0] sin2, cos2, sin2u, cos2u, sin2u1, cos2u1, sin2p, cos2p;
 logic [9:0] drawxsig, drawysig, ballxsig1, ballysig1, ballxsig2, ballysig2, ballsizesig;
@@ -102,6 +102,7 @@ begin
 end
 
 
+ram1 ram(.clock(CLK),.data(AVL_WRITEDATA),.rdaddress(Word_ADDR),.wraddresss(AVL_ADDR),.wren(AVL_WRITE && AVL_CS),.q(data));
 
 color_mapper  c1(.BallX1(ballxsig1),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
 						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2), .cos2(cos2), .Red(red),.Blue(blue),.Green(green), .blank(blank));

@@ -38,7 +38,7 @@ void genMaze()
     struct paired_stack* m_stack = createPStack(mazeWidth*mazeHeight);
     int visitedCells;
     
-    alt_u8 maze_screen_buffer[120][160];
+    char maze_screen_buffer[120][160];
 
     int m_maze[mazeWidth*mazeHeight];
     memset(m_maze, 0x00, mazeWidth*mazeHeight*sizeof(int));
