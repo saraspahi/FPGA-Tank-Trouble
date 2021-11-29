@@ -1,7 +1,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "paired_stack.h"
+#include "../mazes/paired_stack.h"
 
 
 

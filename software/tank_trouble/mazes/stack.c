@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "stack.h"
+#include "../mazes/stack.h"
 
  
 // function to create a stack of given capacity. It initializes size of

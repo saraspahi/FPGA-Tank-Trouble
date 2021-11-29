@@ -3,14 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "stack.h"
-#include "paired_stack.h"
+#include "../mazes/stack.h"
+#include "../mazes/paired_stack.h"
+#include "../mazes/mazes.h"
 
-const int PATH_N = 0x01;
-const int PATH_E = 0x02;
-const int PATH_S = 0x04;
-const int PATH_W = 0x08;
-const int VISITED = 0x10;
 
 //    struct Stack* stack = createStack(100);
 //    push(stack, 10);
@@ -27,17 +23,22 @@ const int VISITED = 0x10;
  
 #define offset(x,y) ((Ppeek(m_stack).second + y) * mazeWidth + (Ppeek(m_stack).first+x))
 
-int main()
+void genMaze()
 {
     srand(time(NULL));
-    int mazeWidth = 40;
-    int mazeHeight = 30;
-    int pathWidth = 4;
+    static int PATH_N = 0x01;
+    static int PATH_E = 0x02;
+    static int PATH_S = 0x04;
+    static int PATH_W = 0x08;
+    static int VISITED = 0x10;
+    int mazeWidth = 20;
+    int mazeHeight = 15;
+    int pathWidth = 7;
     struct Stack* neighbors = createStack(4);
     struct paired_stack* m_stack = createPStack(mazeWidth*mazeHeight);
     int visitedCells;
     
-    char maze_screen_buffer[150][200];
+    char maze_screen_buffer[120][160];
 
     int m_maze[mazeWidth*mazeHeight];
     memset(m_maze, 0x00, mazeWidth*mazeHeight*sizeof(int));
@@ -97,15 +98,15 @@ int main()
             Ppop(m_stack);
    }
  
-    for(int i = 0; i<150; i++){
-        for(int j=0; j<200; j++){
+    for(int i = 0; i<120; i++){
+        for(int j=0; j<160; j++){
             maze_screen_buffer[i][j] = '#';
         }
     }
   
 
-    for(int x = 0; x<mazeWidth; x++){
-        for(int y = 0; y<mazeHeight; y++){ 
+    for(int x = 1; x<mazeWidth; x++){
+        for(int y = 1; y<mazeHeight; y++){
             for(int py = 0; py<pathWidth; py++){
                 for(int px = 0; px<pathWidth; px++){
                     maze_screen_buffer[y*(pathWidth + 1) + py][x*(pathWidth+1) + px] = ' ';
@@ -122,11 +123,10 @@ int main()
         }
     }
 
-    for(int i = 0; i<150; i++){
+    for(int i = 0; i<120; i++){
         printf("%d \n", i);
-        for(int j=0; j<200; j++){
+        for(int j=0; j<160; j++){
             printf("%c", maze_screen_buffer[i][j]);
         }
     }
-    return 0;
 }

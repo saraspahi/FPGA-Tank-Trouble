@@ -16,6 +16,9 @@
 #include "usb_kb/transfer.h"
 #include "usb_kb/usb_ch9.h"
 #include "usb_kb/USB.h"
+#include "mazes/mazes.h"
+#include "mazes/stack.h"
+#include "mazes/paired_stack.h"
 
 extern HID_DEVICE hid_device;
 
@@ -130,6 +133,7 @@ void setKeycode(int keycode)
 	IOWR_ALTERA_AVALON_PIO_DATA(0x00000c0, keycode);
 }
 int main() {
+	genMaze();
 	BYTE rcode;
 	BOOT_MOUSE_REPORT buf;		//USB mouse report
 	BOOT_KBD_REPORT kbdbuf;

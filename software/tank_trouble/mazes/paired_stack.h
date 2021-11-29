@@ -1,15 +1,15 @@
 #ifndef _paired_stack_h
 #define _paired_stack_h
 
-typedef struct pair{
-    int first;
-    int second;
+typedef struct pair {
+	int first;
+	int second;
 } pair;
 
-typedef struct paired_stack{
-    int top;
-    unsigned capacity;
-    struct pair* pairs;
+typedef struct paired_stack {
+	int top;
+	unsigned capacity;
+	struct pair* pairs;
 } paired_stack;
 
 struct paired_stack* createPStack(unsigned capacity);
