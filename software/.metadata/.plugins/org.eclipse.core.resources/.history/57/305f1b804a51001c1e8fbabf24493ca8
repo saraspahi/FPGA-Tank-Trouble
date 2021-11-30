@@ -1,0 +1,29 @@
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include "stack.h"
+#include "paired_stack.h"
+#include "mazes.h"
+
+
+//    struct Stack* stack = createStack(100);
+//    push(stack, 10);
+//    push(stack, 20);
+ 
+//    printf("%d popped from stack\n", pop(stack));
+
+//    struct paired_stack* pstack = createPStack(100);
+
+//    Ppush(pstack, (struct pair){1,1});
+//    Ppush(pstack, (struct pair){2,4});
+
+//    printf("popped (%d, %d) off da stack \n", Ppeek(pstack).first, Ppeek(pstack).second);
+ 
+
+int main()
+{
+    genMaze();
+   return 0;
+}
