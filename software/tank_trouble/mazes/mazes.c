@@ -3,9 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <alt_types.h>
+#include <system.h>
 #include "../mazes/stack.h"
 #include "../mazes/paired_stack.h"
 #include "../mazes/mazes.h"
+#include "../usb_kb/GenericMacros.h"
+#include "../usb_kb/GenericTypeDefs.h"
 
 
 //    struct Stack* stack = createStack(100);
@@ -129,13 +133,14 @@ void genMaze()
 	};
 	//you may have to change this line depending on your platform designer
 	static volatile struct MAZE* vga_ctrl = 0x00001000;
-	alt_u32 tempVal = 0;
-	for (int i =0; i<120; i++){
-		for(int j =0 ; j< 160; i++){
+	unsigned int tempVal = 0;
+	for (int fort=0; fort<120; fort++){
+		for(int nite=0 ; nite< 160; nite++){
 			tempVal = tempVal << 1;
-			tempVal |= maze_screen_buffer[i][j];
-			if((j+1)%32 == 0){
-				vga_ctrl->VRAM = tempVal;
+			tempVal += maze_screen_buffer[fort][nite];
+			if((nite)%31 == 0){
+				printf("%d \n", tempVal);
+				vga_ctrl->VRAM[fort*5+(int)((nite+1)/32)] = tempVal;
 				tempVal = 0;
 			}
 		}
@@ -145,7 +150,7 @@ void genMaze()
     for(int i = 0; i<120; i++){
         printf("%d \n", i);
         for(int j=0; j<160; j++){
-            printf("%c", maze_screen_buffer[i][j]);
+            printf("%d", maze_screen_buffer[i][j]);
         }
     }
 }

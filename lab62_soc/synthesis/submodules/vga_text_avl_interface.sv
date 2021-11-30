@@ -103,9 +103,9 @@ begin
    end
 end
 
-
-ram1 ram(.clock(CLK),.data(AVL_WRITEDATA),.rdaddress(Word_ADDR),.wraddresss(AVL_ADDR),.wren(AVL_WRITE && AVL_CS),.q(data));
-
+ram0 ram1(.byteena_a(AVL_BYTE_EN), .clock(CLK), .data(AVL_WRITEDATA), .rdaddress(Word_ADDR), .rden(AVL_READ && AVL_CS),
+			.wraddress(AVL_ADDR), .wren(AVL_WRITE && AVL_CS), .q(data));
+			
 always_comb
 begin 
 	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
