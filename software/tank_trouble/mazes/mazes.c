@@ -137,10 +137,13 @@ void genMaze()
 
 	for (int fort=0; fort<120; fort++){
 		for(int nite=0 ; nite< 160; nite++){
-			tempVal = tempVal << 1;
-			tempVal += maze_screen_buffer[fort][nite];
-			if((nite)%31 == 0){
-				printf("%d \n", tempVal);
+			tempVal += maze_screen_buffer[fort][159-nite];
+			if((nite+1)%32 != 0){
+
+				tempVal = tempVal << 1;
+			}
+			else if((nite+1)%32 == 0){
+				printf("%d \n", fort*5+(int)((nite+1)/32));
 				vga_ctrl->VRAM[fort*5+(int)((nite+1)/32)] = tempVal;
 				tempVal = 0;
 			}

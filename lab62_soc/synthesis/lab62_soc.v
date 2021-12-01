@@ -8,7 +8,7 @@ module lab62_soc (
 		output wire [15:0] hex_digits_export,              //              hex_digits.export
 		input  wire [1:0]  key_external_connection_export, // key_external_connection.export
 		output wire [31:0] keycode_export,                 //                 keycode.export
-		input  wire        keycode_port_new_signal,        //            keycode_port.new_signal
+		input  wire [31:0] keycode_port_new_signal,        //            keycode_port.new_signal
 		output wire [13:0] leds_export,                    //                    leds.export
 		input  wire        reset_reset_n,                  //                   reset.reset_n
 		output wire        sdram_clk_clk,                  //               sdram_clk.clk

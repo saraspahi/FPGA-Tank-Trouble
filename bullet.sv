@@ -2,7 +2,7 @@
 //Each tank can have 3 bullets at the same time in the screen 
 
 
-module bullet ( input Reset, frame_clk, //Faster clock needed
+module bullet ( input logic Reset, frame_clk, //Faster clock needed
 					 input isWallBottom,isWallTop,isWallRight,isWallLeft,
 					 input create, //coming from some kind of state machine for the bullet whenever the shoot key is pressed
 					 input [9:0] tankX,tankY,

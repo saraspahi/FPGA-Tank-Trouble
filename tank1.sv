@@ -15,7 +15,10 @@
 
 module tank1 ( input Reset, frame_clk,
 					input [31:0] keycode,
-               output [9:0]  BallX, BallY, BallS );
+					input [7:0] sin, cos,
+               output [9:0]  BallX, BallY, BallS,
+					output ShootBullet,
+					output [5:0] Angle);//inxe
     
     logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion, Ball_Size;
 	 logic [7:0] key;

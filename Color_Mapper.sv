@@ -15,7 +15,7 @@
 
 module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2,BallY2,
                       input [7:0] sin2, cos2,
-							 input blank,
+							 input blank, CLK,
 							 input maze,
                       output logic [7:0]  Red, Green, Blue, 
 							 //Is bullet 1 active
@@ -25,7 +25,8 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
     logic ball1_on;
 	logic ball2_on;
 	logic bullet1on;
-	 
+	logic[9:0] Red_New, Green_New, Blue_New;
+	
 //  Old Ball: Generated square box by checking if the current pixel is within a square of length
 //    2*Ball_Size, centered at (BallX, BallY).  Note that this requires unsigned comparisons.
 	 
@@ -113,7 +114,12 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 //	 
 //	 end 
 
-
+	always_ff@(posedge CLK)
+	begin
+		Red <= Red_New;
+		Green <= Green_New;
+		Blue <= Blue_New;
+	end
 
 	 
 
@@ -123,14 +129,21 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 	 if(blank)
 	 
 	 begin
-        if ((DrawX >= BallX1 - Ball_size) &&
+	 if(maze)
+	 begin
+	      Red_New = 8'h00;
+         Green_New = 8'h00;
+         Blue_New = 8'h00;
+	 end
+	 
+    else if ((DrawX >= BallX1 - Ball_size) &&
 				(DrawX <= BallX1 + Ball_size) &&
 				(DrawY >= BallY1 - Ball_size) &&
 				(DrawY <= BallY1 + Ball_size))
             begin 
-                Red = 8'hff;
-                Green = 8'hbb;
-                Blue = 8'h00;
+                Red_New = 8'hff;
+                Green_New = 8'hbb;
+                Blue_New = 8'h00;
             end 
 
         else if ((DrawXs2[9:0] >= BallX2 - Ball_size) &&
@@ -138,33 +151,33 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 				(DrawYs2[9:0] >= BallY2 - Ball_size) &&
 				(DrawYs2[9:0] <= BallY2 + Ball_size))
 				begin
-					Red = 8'hff;
-					Green = 8'h00;
-					Blue = 8'h00;
+					Red_New = 8'hff;
+					Green_New = 8'h00;
+					Blue_New = 8'h00;
 				end 
 		  else if(is_bullet1_active && ((DrawX >= Bullet1X - Ball_size) &&
 				(DrawX <= Bullet1X + Ball_size) &&
 				(DrawY >= Bullet1Y - Ball_size) &&
 				(DrawY <= Bullet1Y + Ball_size)))
 				begin 
-					Red = 8'h32;
-					Green = 8'hDD;
-					Blue = 8'hDE;
+					Red_New = 8'h32;
+					Green_New = 8'hDD;
+					Blue_New = 8'hDE;
 				
 				
 				end 
 			else 
 			begin 
-                Red = 8'h55; 
-                Green = 8'h55;
-                Blue = 8'h55;
+                Red_New = 8'h55; 
+                Green_New = 8'h55;
+                Blue_New = 8'h55;
 			end 
 			end
 	 else 
 	 begin 
-	     Red = 8'h00;
-        Green = 8'h00;
-        Blue = 8'h00;
+	     Red_New = 8'h00;
+        Green_New = 8'h00;
+        Blue_New = 8'h00;
 	 
 	 end
      end 

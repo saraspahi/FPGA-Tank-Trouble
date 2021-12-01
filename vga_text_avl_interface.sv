@@ -36,7 +36,7 @@ logic [31:0] keycode;
 logic maze;
 assign keycode = keycode_signal;
 
-vga_controller v1(.Clk(CLK),.Reset(RESET),.hs(hs),.vs(vs),.blank(blank),.DrawX(drawxsig),.DrawY(drawysig));
+vga_controller v1(.Clk(CLK),.Reset(RESET), .pixel_clk(PIX_CLK), .hs(hs),.vs(vs),.blank(blank),.DrawX(drawxsig),.DrawY(drawysig));
 
 tank1 b1(.Reset(RESET),
 			.frame_clk(vs),
@@ -122,11 +122,10 @@ end
 
 
 //Ram stores the maze 
-ram0 ram1(.byteena_a(AVL_BYTE_EN), 
+ram1 ram0(.byteena_a(AVL_BYTE_EN), 
 			.clock(CLK), 
 			.data(AVL_WRITEDATA), 
 			.rdaddress(Word_ADDR), 
-			.rden(AVL_READ && AVL_CS),
 			.wraddress(AVL_ADDR), 
 			.wren(AVL_WRITE && AVL_CS),
 			.q(data));
@@ -134,15 +133,14 @@ ram0 ram1(.byteena_a(AVL_BYTE_EN),
 always_comb
 begin 
 	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
-	Word_ADDR[13:0] = Byte_ADDR[14:1];//How to index the ram
-	maze = data[drawxsig[4:0]];
+	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
+	maze = data[Byte_ADDR[4:0]];
 
 end 
 
 
-
-
 color_mapper  c1(.BallX1(ballxsig1),
+					.CLK(PIX_CLK),
 					.maze(maze),.BallY1(ballysig1),
 					.DrawX(drawxsig), 
 					.DrawY(drawysig), 

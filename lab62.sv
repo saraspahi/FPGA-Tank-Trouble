@@ -161,10 +161,10 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		
 		
 		//VGA
-		.vga_port_new_signal_2 (VGA_R),
+		.vga_port_new_signal_2 (VGA_HS),
 		.vga_port_new_signal_1 (VGA_G),
 		.vga_port_new_signal (VGA_B),
-		.vga_port_new_signal_3 (VGA_HS),
+		.vga_port_new_signal_3 (VGA_R),
 		.vga_port_new_signal_4 (VGA_VS)
 		
 		

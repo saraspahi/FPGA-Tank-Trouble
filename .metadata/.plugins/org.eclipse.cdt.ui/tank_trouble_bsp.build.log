@@ -1,6 +1,6 @@
-10:34:10 **** Incremental Build of configuration Nios II for project tank_trouble_bsp ****
+01:25:20 **** Incremental Build of configuration Nios II for project tank_trouble_bsp ****
 make all 
 [BSP build complete]
 
-10:34:11 Build Finished (took 665ms)
+01:25:21 Build Finished (took 647ms)
 

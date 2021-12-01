@@ -40,9 +40,9 @@ refer to the applicable agreement for further details.
 	(port
 		(pt 0 232)
 		(input)
-		(text "keycode_port_new_signal" (rect 0 0 103 12)(font "Arial" (font_size 8)))
-		(text "keycode_port_new_signal" (rect 4 221 142 232)(font "Arial" (font_size 8)))
-		(line (pt 0 232)(pt 192 232)(line_width 1))
+		(text "keycode_port_new_signal[31..0]" (rect 0 0 127 12)(font "Arial" (font_size 8)))
+		(text "keycode_port_new_signal[31..0]" (rect 4 221 184 232)(font "Arial" (font_size 8)))
+		(line (pt 0 232)(pt 192 232)(line_width 3))
 	)
 	(port
 		(pt 0 312)
