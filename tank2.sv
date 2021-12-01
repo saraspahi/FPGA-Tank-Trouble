@@ -17,6 +17,7 @@ module tank2 ( input Reset, frame_clk,
                input [7:0] sin, cos,
 					input [31:0] keycode,
                output [9:0]  BallX, BallY, BallS,
+					output ShootBullet,
 					output [5:0] Angle);//inxe
     
    logic [9:0] Ball_X_Pos, Ball_Y_Pos, Ball_Size;
@@ -25,7 +26,7 @@ module tank2 ( input Reset, frame_clk,
 	
 	logic [7:0] key;
     logic [15:0] Ball_X_Comp, Ball_Y_Comp;
-	 logic signX, signY;
+	 logic signX, signY,ShootBulletP;
     always_comb
     begin
 		  signX = Ball_X_Step[7] ^ cos[7];
@@ -56,6 +57,7 @@ module tank2 ( input Reset, frame_clk,
 				Ball_Y_Pos <= Ball_Y_Center;
 				Ball_X_Pos <= Ball_X_Center;
 				Angle_new <= 0;
+				ShootBulletP<=0;
         end
            
         else 
@@ -65,6 +67,7 @@ module tank2 ( input Reset, frame_clk,
 					  Ball_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't move
 					  Ball_X_Motion <= 10'd0;
 					  Angle_Motion <= 5'd0;
+					  ShootBulletP <=0;
 
 				 
 				 if ((keycode[31:24] ==8'h52 )||(keycode[23:16]==8'h52)||(keycode[15:8] ==8'h52)||(keycode[7:0]==8'h52))
@@ -75,6 +78,8 @@ module tank2 ( input Reset, frame_clk,
 					  key <= 8'h50;
 				 else if ((keycode[31:24] ==8'h4f )||(keycode[23:16]==8'h4f)||(keycode[15:8] ==8'h4f)||(keycode[7:0]==8'h4f))
 					  key <= 8'h4f;
+				 else if ((keycode[31:24] ==8'h2C )||(keycode[23:16]==8'h2C)||(keycode[15:8] ==8'h2C)||(keycode[7:0]==8'h2C))
+					  key <= 8'h2C;
 				 else 
 					  key <= 8'h00;  
 				 
@@ -85,6 +90,7 @@ module tank2 ( input Reset, frame_clk,
 									Ball_X_Motion <= 0;//A
 									Ball_Y_Motion<= 0;
 									Angle_Motion <=  AngleStep;
+									ShootBulletP <=0;
 								end
 							  end
 					        
@@ -115,7 +121,13 @@ module tank2 ( input Reset, frame_clk,
 									Ball_X_Motion[9:0] <= {{6{~signX}}, ~Ball_X_Comp[10:7]} + 1'b1;
 									Angle_Motion <=0;
 								end
-							end
+								end
+								
+					8'h2C : begin
+							  begin 
+									ShootBulletP <= 1;
+								end 
+								end
 								  
 					default: ;
 			   endcase
@@ -152,6 +164,8 @@ module tank2 ( input Reset, frame_clk,
     assign BallS = Ball_Size;
 	 
 	assign Angle = Angle_new;
+	
+	assign ShootBullet= ShootBulletP;
     
 
 endmodule

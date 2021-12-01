@@ -134,6 +134,7 @@ void genMaze()
 	//you may have to change this line depending on your platform designer
 	static volatile struct MAZE* vga_ctrl = 0x00001000;
 	unsigned int tempVal = 0;
+
 	for (int fort=0; fort<120; fort++){
 		for(int nite=0 ; nite< 160; nite++){
 			tempVal = tempVal << 1;

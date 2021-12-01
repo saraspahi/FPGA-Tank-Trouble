@@ -17,10 +17,14 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
                       input [7:0] sin2, cos2,
 							 input blank,
 							 input maze,
-                       output logic [7:0]  Red, Green, Blue );
+                      output logic [7:0]  Red, Green, Blue, 
+							 //Is bullet 1 active
+							 input Bullet1X,Bullet1Y,Bullet1S,
+							 input is_bullet1_active);
     
     logic ball1_on;
 	logic ball2_on;
+	logic bullet1on;
 	 
 //  Old Ball: Generated square box by checking if the current pixel is within a square of length
 //    2*Ball_Size, centered at (BallX, BallY).  Note that this requires unsigned comparisons.
@@ -37,7 +41,7 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
 //    assign DistY = DrawY - BallY;
 //    assign Size = Ball_size;
 	
-     logic[63:0] XmultCos, YmultSin, XmultSin, YmultCos;
+    logic[63:0] XmultCos, YmultSin, XmultSin, YmultCos;
 	 logic[31:0] DrawXs2, DrawYs2, BallY2e, BallX2e, DrawXe, DrawYe, sin2e, cos2e, BallXsp, BallYsp;
 	 logic XMCsign, YMCsign, XMSsign, YMSsign;
     
@@ -76,74 +80,96 @@ module color_mapper ( input        [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size
             DrawYs2[15:0] = {{6{XMSsign}}, XmultSin[41:32]} + {{6{YMCsign}}, YmultCos[41:32]} + BallY2;
 	 end
 	 
+	 
+	 
+	 
+//Check only for maze ........	 
+//    always_comb
+//    begin
+//	 if(blank)
+//	 begin 
+//	     if (maze)
+//		  begin
+//          Red = 8'hff;
+//          Green = 8'hbb;
+//			 Blue = 8'h00;
+//			 end
+//			else 
+//			begin
+//			 Red = 8'hff;
+//          Green = 8'hff;
+//			 Blue = 8'hff;
+//			 end
+//			 end
+//	else
+//	begin
+//			 Red = 8'h00;
+//          Green = 8'h00;
+//			 Blue = 8'h00;
+//			 end
+//			
+//		 
+//	 
+//	 
+//	 end 
+
+
+
+	 
+
     always_comb
     begin:Ball_on_proc
+	 
+	 if(blank)
+	 
+	 begin
         if ((DrawX >= BallX1 - Ball_size) &&
 				(DrawX <= BallX1 + Ball_size) &&
 				(DrawY >= BallY1 - Ball_size) &&
 				(DrawY <= BallY1 + Ball_size))
-				begin
-            ball1_on = 1'b1;
-				ball2_on = 1'b0;
-				end
-		  else if ((DrawXs2[9:0] >= BallX2) &&
-				(DrawXs2[9:0] <= BallX2 + Ball_size) &&
-				(DrawYs2[9:0] >= BallY2 - 3'b110) &&
-				(DrawYs2[9:0] <= BallY2 + 3'b110))
-				begin
-                ball1_on = 1'b1;
-					 ball2_on = 1'b0;
-				end
+            begin 
+                Red = 8'hff;
+                Green = 8'hbb;
+                Blue = 8'h00;
+            end 
+
         else if ((DrawXs2[9:0] >= BallX2 - Ball_size) &&
 				(DrawXs2[9:0] <= BallX2 + Ball_size) &&
 				(DrawYs2[9:0] >= BallY2 - Ball_size) &&
 				(DrawYs2[9:0] <= BallY2 + Ball_size))
 				begin
-                ball1_on = 1'b0;
-					 ball2_on = 1'b1;
-				end
+					Red = 8'hff;
+					Green = 8'h00;
+					Blue = 8'h00;
+				end 
+		  else if(is_bullet1_active && ((DrawX >= Bullet1X - Ball_size) &&
+				(DrawX <= Bullet1X + Ball_size) &&
+				(DrawY >= Bullet1Y - Ball_size) &&
+				(DrawY <= Bullet1Y + Ball_size)))
+				begin 
+					Red = 8'h32;
+					Green = 8'hDD;
+					Blue = 8'hDE;
+				
+				
+				end 
 			else 
 			begin 
-			   ball1_on = 1'b0;
-				ball2_on = 1'b0;
-			end 
-     end 
-       
-    always_comb
-    begin:RGB_Display
-        if(blank)
-        begin
-				if (maze)
-				begin 
-					Red = 8'h00;
-               Green = 8'hbb;
-               Blue = 8'h00;
-				end
-            else if (ball1_on == 1'b1)
-            begin 
-                Red = 8'hff;
-                Green = 8'hbb;
-                Blue = 8'h00;
-            end       
-            else if (ball2_on == 1'b1)
-            begin 
-                Red = 8'hff;
-                Green = 8'h00;
-                Blue = 8'h00;
-            end 
-            else 
-            begin 
                 Red = 8'h55; 
                 Green = 8'h55;
                 Blue = 8'h55;
-            end 
-        end
-        else
-        begin
-            Red = 8'h00;
-            Green = 8'h00;
-            Blue = 8'h00;
-        end
-    end 
+			end 
+			end
+	 else 
+	 begin 
+	     Red = 8'h00;
+        Green = 8'h00;
+        Blue = 8'h00;
+	 
+	 end
+     end 
+       
+
+     
     
 endmodule

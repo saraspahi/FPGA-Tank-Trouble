@@ -1,29 +1,4 @@
-/************************************************************************
-Avalon-MM Interface VGA Text mode display
 
-Register Map:
-0x000-0x0257 : VRAM, 80x30 (2400 byte, 600 word) raster order (first column then row)
-0x258        : control register
-
-VRAM Format:
-X->
-[ 31  30-24][ 23  22-16][ 15  14-8 ][ 7    6-0 ]
-[IV3][CODE3][IV2][CODE2][IV1][CODE1][IV0][CODE0]
-
-IVn = Draw inverse glyph
-CODEn = Glyph code from IBM codepage 437
-
-Control Register Format:
-[[31-25][24-21][20-17][16-13][ 12-9][ 8-5 ][ 4-1 ][   0    ] 
-[[RSVD ][FGD_R][FGD_G][FGD_B][BKG_R][BKG_G][BKG_B][RESERVED]
-
-VSYNC signal = bit which flips on every Vsync (time for new frame), used to synchronize software
-BKG_R/G/B = Background color, flipped with foreground when IVn bit is set
-FGD_R/G/B = Foreground color, flipped with background when Inv bit is set
-
-************************************************************************/
-`define NUM_REGS 601 //80*30 characters / 4 characters per register
-`define CTRL_REG 600 //index of control register
 
 module vga_text_avl_interface (
 	// Avalon Clock Input, note this clock is also used for VGA, so this must be 50Mhz
@@ -42,7 +17,7 @@ module vga_text_avl_interface (
 	input  logic [31:0] AVL_WRITEDATA,		// Avalon-MM Write Data
 	output logic [31:0] AVL_READDATA,		// Avalon-MM Read Data
 	
-	input logic [31:0] keycode_signal, 
+	input logic [31:0] keycode_signal, 		//The interface needs the keycode signal as input to display 
 	
 	// Exported Conduit (mapped to VGA port - make sure you export in Platform Designer)
 	output logic [7:0]  red, green, blue,	// VGA color channels (mapped to output pins in top-level)
@@ -51,7 +26,9 @@ module vga_text_avl_interface (
 
 
 logic [31:0] data;
-logic [5:0] AngleI2;
+
+logic [5:0] AngleI1,AngleI2;
+logic ShootBullet1,ShootBullet2;
 logic [7:0] sin2, cos2, sin2u, cos2u, sin2u1, cos2u1, sin2p, cos2p;
 logic [9:0] drawxsig, drawysig, ballxsig1, ballysig1, ballxsig2, ballysig2, ballsizesig, Word_ADDR;
 logic [14:0] Byte_ADDR;
@@ -61,9 +38,49 @@ assign keycode = keycode_signal;
 
 vga_controller v1(.Clk(CLK),.Reset(RESET),.hs(hs),.vs(vs),.blank(blank),.DrawX(drawxsig),.DrawY(drawysig));
 
-tank1 b1(.Reset(RESET),.frame_clk(vs),.keycode(keycode),.BallX(ballxsig1),.BallY(ballysig1),.BallS(ballsizesig1));
+tank1 b1(.Reset(RESET),
+			.frame_clk(vs),
+			.sin(sin2), 
+			.cos(cos2),
+			.keycode(keycode),
+			.BallX(ballxsig1),
+			.BallY(ballysig1),
+			.BallS(ballsizesig1),
+			.ShootBullet(ShootBullet1),
+			.Angle(AngleI1));
 
-tank2 b2(.Reset(RESET),.frame_clk(vs),.sin(sin2), .cos(cos2),.keycode(keycode),.BallX(ballxsig2),.BallY(ballysig2),.BallS(ballsizesig2),.Angle(AngleI2));
+tank2 b2(.Reset(RESET),   //Instantiates tank2 module 
+			.frame_clk(vs),
+			.sin(sin2), 
+			.cos(cos2),
+			.keycode(keycode),
+			.BallX(ballxsig2),
+			.BallY(ballysig2),
+			.BallS(ballsizesig2),
+			.ShootBullet(ShootBullet2),
+			.Angle(AngleI2)
+			);
+			
+			
+logic bullet1_active;
+logic[9:0] bullet1_X,	bullet1_Y,	bullet1_S	;
+//Bullet from tank b2
+bullet bullet1(.Reset(RESET), 
+					.frame_clk(vs), 
+					.isWallBottom(0),
+					.isWallTop(0),
+					.isWallRight(0),
+					.isWallLeft(0),
+					.create(ShootBullet2), //coming from some kind of state machine for the bullet whenever the shoot key is pressed
+					.tankX(ballxsig2),
+					.tankY(ballysig2),
+					.angle(AngleI2),
+					.sin(sin2),
+					.cos(cos2),
+					.is_bullet_active(bullet1_active),
+               .BulletX(bullet1_X),
+					.BulletY(bullet1_Y), 
+					.BulletS(bullet1_S));  // same postion  as the tank once shot
 
 sinCos sincos1(.AngleI(AngleI2), .sin(sin2u), .cos(cos2u));
 sinCos sincos2(.AngleI(6'd44 + ~AngleI2 + 1'b1), .sin(sin2u1), .cos(cos2u1));
@@ -103,21 +120,47 @@ begin
    end
 end
 
-ram0 ram1(.byteena_a(AVL_BYTE_EN), .clock(CLK), .data(AVL_WRITEDATA), .rdaddress(Word_ADDR), .rden(AVL_READ && AVL_CS),
-			.wraddress(AVL_ADDR), .wren(AVL_WRITE && AVL_CS), .q(data));
+
+//Ram stores the maze 
+ram0 ram1(.byteena_a(AVL_BYTE_EN), 
+			.clock(CLK), 
+			.data(AVL_WRITEDATA), 
+			.rdaddress(Word_ADDR), 
+			.rden(AVL_READ && AVL_CS),
+			.wraddress(AVL_ADDR), 
+			.wren(AVL_WRITE && AVL_CS),
+			.q(data));
 			
 always_comb
 begin 
 	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
-	Word_ADDR[9:0] = Byte_ADDR[14:5];
-	maze = data[Byte_ADDR[4:0]];
+	Word_ADDR[13:0] = Byte_ADDR[14:1];//How to index the ram
+	maze = data[drawxsig[4:0]];
 
 end 
 
 
 
 
-color_mapper  c1(.BallX1(ballxsig1),.maze(maze),.BallY1(ballysig1),.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(4'd10),
-						.BallX2(ballxsig2),.BallY2(ballysig2), .sin2(sin2), .cos2(cos2), .Red(red),.Blue(blue),.Green(green), .blank(blank));
+color_mapper  c1(.BallX1(ballxsig1),
+					.maze(maze),.BallY1(ballysig1),
+					.DrawX(drawxsig), 
+					.DrawY(drawysig), 
+					.Ball_size(4'd10),
+					.BallX2(ballxsig2),
+					.BallY2(ballysig2), 
+					.sin2(sin2),
+					.cos2(cos2), 
+					.Red(red),
+					.Blue(blue),
+					.Green(green),
+					.blank(blank),
+					
+					
+					//bullet1data
+					.Bullet1X(bullet1_X),
+					.Bullet1Y(bullet1_X),
+					.Bullet1S(bullet1_X),
+					.is_bullet1_active(bullet1_active));
 
 endmodule
