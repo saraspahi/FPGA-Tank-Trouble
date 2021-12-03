@@ -1,102 +1,162 @@
-//Controls the bullet fired by the player 
-//Each tank can have 3 bullets at the same time in the screen 
 
 
-module bullet ( input logic Reset, frame_clk, //Faster clock needed
-					 input isWallBottom,isWallTop,isWallRight,isWallLeft,
-					 input create, //coming from some kind of state machine for the bullet whenever the shoot key is pressed
-					 input [9:0] tankX,tankY,
-					 input [5:0] angle,
-					 input [7:0] sin, cos,
-					 output is_bullet_active,
-                output [9:0]  BulletX, BulletY, BulletS);  // same postion  as the tank once shot
-					 
-logic [9:0] Bullet_Y_Motion, Bullet_X_Motion,X_Motion,Y_Motion;
-logic [9:0] Bullet_X_Pos, Bullet_Y_Pos, Bullet_Size;
-logic [8:0] bulletLife;
-
-					 
-
-parameter [7:0] bullet_Step=8'b0101_0000;
-parameter [2:0] Bullet_size = 2'd5; 
-assign X_Motion = bullet_Step*cos;
-assign Y_Motion = bullet_Step*sin;
-
-
-
-always_ff @ (posedge Reset or posedge frame_clk )
-   begin 
+module bullet ( input Reset, frame_clk,
+					input isWallBottom,isWallTop,isWallRight,isWallLeft,create,
+					input [9:0] tankX,tankY,
+               input [7:0] sin, cos,
+					output is_bullet_active,
+					input [31:0] keycode,
+               output [9:0]  BulletX, BulletY, BulletS,
+					output [15:0] bulletTimer);
+    
+   logic [9:0] Bullet_X_Pos, Bullet_Y_Pos, Bullet_Size;
+	logic [9:0] Bullet_X_Motion, Bullet_Y_Motion;
+	logic [5:0] Angle_Motion,Angle_new;
+	logic creation_flag;
+	logic [15:0]timer;
 	
-		if(Reset)
-			begin 
-			is_bullet_active<=0;
-			//bulletLife <=9'd240; //Do sth with the life
+	logic [7:0] key;
+   logic [15:0] Bullet_X_Comp, Bullet_Y_Comp;
+	logic signX, signY;
+	
+	logic [7:0] sinBullet;
+	logic [7:0] cosBullet;
+   
 
-			
-			end 
-		else if(create==1'b1)
-			begin
-			is_bullet_active<=1;
-			//bulletLife<=bulletLife-1;
-			Bullet_X_Pos <= tankX;
-			Bullet_Y_Pos<= tankY;
-         Bullet_Y_Motion <= Y_Motion; //Ball_Y_Step;
-			Bullet_X_Motion <= X_Motion; //Ball_X_Step;
-			end
-		else 
-		begin 
-			
-				is_bullet_active <=1;
+    parameter [9:0] Bullet_X_Center=400;  // Center position on the X axis
+    parameter [9:0] Bullet_Y_Center=250;  // Center position on the Y axis
+    parameter [9:0] Bullet_X_Min=0;       // Leftmost point on the X axis
+    parameter [9:0] Bullet_X_Max=639;     // Rightmost point on the X axis
+    parameter [9:0] Bullet_Y_Min=0;       // Topmost point on the Y axis
+    parameter [9:0] Bullet_Y_Max=479;     // Bottommost point on the Y axis
+    parameter [7:0] Bullet_X_Step=8'b0010_0000;    
+	 parameter [7:0] Bullet_Y_Step=8'b0010_0000; 
+	 
+
+   				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
+
+    assign Bullet_Size = 1;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
+   
+    always_ff @ (posedge Reset or posedge frame_clk )
+    begin: Move_Bullet
+        if (Reset)  // Asynchronous Reset
+        begin 
+            Bullet_Y_Motion <= 10'd0; //Ball_Y_Step;
+				Bullet_X_Motion <= 10'd0; //Ball_X_Step;
+				Bullet_X_Pos <= Bullet_Y_Center;
+				Bullet_Y_Pos <= Bullet_X_Center;
+			   is_bullet_active<=0;
+				timer<=0;
+
+        end 
+		  else
+		  begin 
+		       //The flag drives the logic below
+				if(create)
+					begin 
+				creation_flag<=1;
+					end 
+				else 
+					begin
+				creation_flag<=0;
+					end 
+				
+				//Create bullet,save the shooting angle 
+			   if (creation_flag && !is_bullet_active) 
+					begin
+					is_bullet_active<=1'b1;
+					
+					//save the sin and cos at the moment of creation and calc direction
+					sinBullet<=sin;
+					cosBullet<=cos;
+					
+					signX = Bullet_X_Step[7] ^ cos[7];
+					signY = Bullet_Y_Step[7] ^ sin[7];
+					Bullet_X_Comp[15:0] = Bullet_X_Step[6:0]*cos[6:0];
+					Bullet_Y_Comp[15:0] = Bullet_Y_Step[6:0]*sin[6:0];
+					
+					//The steps to take according to angle
+					Bullet_Y_Motion[9:0] <=  {{6{~signY}},~Bullet_Y_Comp[10:7]}+1;//Dont know why I had to reverse this
+					Bullet_X_Motion[9:0] <=  {{6{signX}},Bullet_X_Comp[10:7]};
+										
+					Bullet_X_Pos<=tankX+Bullet_X_Motion;//add offset based on angle needs start out of the tanks body for collisions to work???
+																	//Multiply by a different step size in the beginning
+					Bullet_Y_Pos<=tankY+Bullet_Y_Motion;
+
+					end
+				else if (is_bullet_active)
+				begin
+				
+		//Collision logic 
+							
 				if(isWallBottom ==1'b1)
 					begin
-					Bullet_Y_Motion <= ~Bullet_Y_Motion+1'b1;
-					Bullet_X_Motion <= Bullet_X_Motion;
+					Bullet_Y_Motion = ~Bullet_Y_Motion+1'b1;
+					Bullet_X_Motion = Bullet_X_Motion;				
+
+					
 					end
 				else if(isWallTop == 1'b1)
 					begin 
 				
-					Bullet_Y_Motion <= ~Bullet_Y_Motion+1'b1;
-					Bullet_X_Motion <= Bullet_X_Motion;
+					Bullet_Y_Motion = ~Bullet_Y_Motion+1'b1;
+					Bullet_X_Motion = Bullet_X_Motion;
+
 					end 
 				else if (isWallRight==1'b1)
 					begin 
-					Bullet_Y_Motion <= Bullet_Y_Motion;
-					Bullet_X_Motion <= ~Bullet_X_Motion+1;
+					Bullet_Y_Motion = Bullet_Y_Motion;
+					Bullet_X_Motion = ~Bullet_X_Motion+1'b1;
+
 					end 
 					
 				else if (isWallLeft==1'b1)
 					begin 
-					Bullet_Y_Motion <= Bullet_Y_Motion;
-					Bullet_X_Motion <= ~Bullet_X_Motion+1;
+					Bullet_Y_Motion = Bullet_Y_Motion;
+					Bullet_X_Motion = ~Bullet_X_Motion+1'b1;
+
 					end 
 				else
 					begin
 					
-					Bullet_Y_Motion <= Bullet_Y_Motion;
-					Bullet_X_Motion <= Bullet_X_Motion;
+					Bullet_Y_Motion = Bullet_Y_Motion;
+					Bullet_X_Motion = Bullet_X_Motion;
 					end 
-				end
+					//Counter to make the bullet dissapear after some time
+					timer<=timer+1'b1;
 				
-			Bullet_Y_Pos[9:0] <= (Bullet_Y_Pos[9:0] + Bullet_Y_Motion[9:0]);  // Update ball position
-			Bullet_X_Pos[9:0] <= (Bullet_X_Pos[9:0] + Bullet_X_Motion[9:0]);
-			
-			
-			end 
-		 
-				
-//		always_comb	
-//		begin	
-//		if(bulletLife==0)
-//			begin 
-//			is_bullet_active=0;
-//			end
-//		end
-		
-	assign BulletX=Bullet_X_Pos;
-	assign BulletY=Bullet_Y_Pos;
-	assign BulletS=Bullet_Size;
+					Bullet_X_Pos<=Bullet_X_Pos+Bullet_X_Motion;
+					Bullet_Y_Pos<=Bullet_Y_Pos+Bullet_Y_Motion;
 					
-			
+										
+					if(timer>=16'd1000)
+					begin 
+						is_bullet_active=1'b0;
+						timer<=16'd0;
+					end
+					else 
+					begin 
+						is_bullet_active=is_bullet_active;
+						
+					end
+				end 
+			end
+		end
+ 
+     
+    assign BulletX = Bullet_X_Pos;
+   
+    assign BulletY = Bullet_Y_Pos;
+   
+    assign BulletS = Bullet_Size;
+	 
+	 assign bulletTimer = timer;
+
+    
+
 endmodule
+
+
+
 					 
 					 

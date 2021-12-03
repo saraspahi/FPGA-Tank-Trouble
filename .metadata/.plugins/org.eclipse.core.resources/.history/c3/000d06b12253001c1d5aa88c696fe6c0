@@ -151,10 +151,10 @@ void genMaze()
 	}
 
 
-//    for(int i = 0; i<120; i++){
-//        printf("%d \n", i);
-//        for(int j=0; j<160; j++){
-//            printf("%d", maze_screen_buffer[i][j]);
-//        }
-//    }
+    for(int i = 0; i<120; i++){
+        printf("%d \n", i);
+        for(int j=0; j<160; j++){
+            printf("%d", maze_screen_buffer[i][j]);
+        }
+    }
 }

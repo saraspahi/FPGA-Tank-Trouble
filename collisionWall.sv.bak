@@ -1,0 +1,47 @@
+module collisionWall(input[9:0] objectX,objectY,objectS,DrawX,DrawY,
+							output isWallBottom,isWallTop,isWallRight,isWallLeft);
+always_comb 
+begin
+	if((objectY+objectS)>=439)
+	begin
+		isWallBottom=1'b1;
+		isWallTop=0;
+		isWallRight=0;
+		isWallLeft=0;
+	end 
+	else if((objectY+objectS)<=0)
+	begin 
+		isWallBottom=1'b0;
+		isWallTop=1'b1;
+		isWallRight=1'b0;
+		isWallLeft=1'b0;
+	
+	end 
+	else if ((objectX+objectS)<=0)
+	begin 
+		isWallBottom=0;
+		isWallTop=0;
+		isWallRight=0;
+		isWallLeft=1;
+	
+	
+	end 
+	else if ()
+	begin 
+	
+	
+	end 
+	else 
+	begin 
+		isWallBottom=0;
+		isWallTop=0;
+		isWallRight=0;
+		isWallLeft=0;
+		
+	end 
+	
+
+
+end 
+																
+endmodule

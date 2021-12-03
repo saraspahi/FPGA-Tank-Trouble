@@ -122,7 +122,7 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 	
 	lab62_soc u0 (
 		.clk_clk                           (MAX10_CLK1_50),  //clk.clk
-		.reset_reset_n                     (1'b1),           //reset.reset_n
+		.reset_reset_n                     (KEY[0]),           //reset.reset_n
 		.altpll_0_locked_conduit_export    (),               //altpll_0_locked_conduit.export
 		.altpll_0_phasedone_conduit_export (),               //altpll_0_phasedone_conduit.export
 		.altpll_0_areset_conduit_export    (),               //altpll_0_areset_conduit.export

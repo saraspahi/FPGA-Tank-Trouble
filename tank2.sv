@@ -16,33 +16,33 @@
 module tank2 ( input Reset, frame_clk,
                input [7:0] sin, cos,
 					input [31:0] keycode,
-               output [9:0]  BallX, BallY, BallS,
+               output [9:0]  TankX, TankY, TankS,
 					output ShootBullet,
-					output [5:0] Angle);//inxe
+					output [5:0] Angle );
     
-   logic [9:0] Ball_X_Pos, Ball_Y_Pos, Ball_Size;
-	logic [9:0] Ball_X_Motion, Ball_Y_Motion;
+   logic [9:0] Tank_X_Pos, Tank_Y_Pos,Tank_Size,timer;
+	logic [9:0] Tank_X_Motion, Tank_Y_Motion;
 	logic [5:0] Angle_Motion,Angle_new;
 	
 	logic [7:0] key;
-    logic [15:0] Ball_X_Comp, Ball_Y_Comp;
+    logic [15:0] Tank_X_Comp, Tank_Y_Comp;
 	 logic signX, signY,ShootBulletP;
     always_comb
     begin
-		  signX = Ball_X_Step[7] ^ cos[7];
-		  signY = Ball_Y_Step[7] ^ sin[7];
-        Ball_X_Comp[15:0] = Ball_X_Step[6:0]*cos[6:0];
-        Ball_Y_Comp[15:0] = Ball_Y_Step[6:0]*sin[6:0];
+		  signX = Tank_X_Step[7] ^ cos[7];
+		  signY = Tank_Y_Step[7] ^ sin[7];
+        Tank_X_Comp[15:0] = Tank_X_Step[6:0]*cos[6:0];
+        Tank_Y_Comp[15:0] = Tank_Y_Step[6:0]*sin[6:0];
     end    
 
-    parameter [9:0] Ball_X_Center=300;  // Center position on the X axis
-    parameter [9:0] Ball_Y_Center=250;  // Center position on the Y axis
-    parameter [9:0] Ball_X_Min=0;       // Leftmost point on the X axis
-    parameter [9:0] Ball_X_Max=639;     // Rightmost point on the X axis
-    parameter [9:0] Ball_Y_Min=0;       // Topmost point on the Y axis
-    parameter [9:0] Ball_Y_Max=479;     // Bottommost point on the Y axis
-    parameter [7:0] Ball_X_Step=8'b0101_0000;      // Step size on the X axis
-    parameter [7:0] Ball_Y_Step=8'b0101_0000;      // Step size on the Y axis
+    parameter [9:0] Tank_X_Center=300;  // Center position on the X axis
+    parameter [9:0] Tank_Y_Center=250;  // Center position on the Y axis
+    parameter [9:0] Tank_X_Min=0;       // Leftmost point on the X axis
+    parameter [9:0] Tank_X_Max=639;     // Rightmost point on the X axis
+    parameter [9:0] Tank_Y_Min=0;       // Topmost point on the Y axis
+    parameter [9:0] Tank_Y_Max=479;     // Bottommost point on the Y axis
+    parameter [7:0] Tank_X_Step=8'b0101_0000;      // Step size on the X axis
+    parameter [7:0] Tank_Y_Step=8'b0101_0000;      // Step size on the Y axis
     parameter [5:0] AngleStep= 5'b00001;				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
 
     assign Ball_Size = 10;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
@@ -51,23 +51,23 @@ module tank2 ( input Reset, frame_clk,
     begin: Move_Ball
         if (Reset)  // Asynchronous Reset
         begin 
-            Ball_Y_Motion <= 10'd0; //Ball_Y_Step;
-				Ball_X_Motion <= 10'd0; //Ball_X_Step;
+            Tank_Y_Motion <= 10'd0; //Ball_Y_Step;
+				Tank_X_Motion <= 10'd0; //Ball_X_Step;
 				Angle_Motion <=   5'd0;	      //Ball angle step;
-				Ball_Y_Pos <= Ball_Y_Center;
-				Ball_X_Pos <= Ball_X_Center;
+				Tank_Y_Pos <= Tank_Y_Center;
+				Tank_X_Pos <= Tank_X_Center;
 				Angle_new <= 0;
 				ShootBulletP<=0;
+
         end
            
         else 
         begin 
  
 					 
-					  Ball_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't move
-					  Ball_X_Motion <= 10'd0;
+					  Tank_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't move
+					  Tank_X_Motion <= 10'd0;
 					  Angle_Motion <= 5'd0;
-					  ShootBulletP <=0;
 
 				 
 				 if ((keycode[31:24] ==8'h52 )||(keycode[23:16]==8'h52)||(keycode[15:8] ==8'h52)||(keycode[7:0]==8'h52))
@@ -78,8 +78,8 @@ module tank2 ( input Reset, frame_clk,
 					  key <= 8'h50;
 				 else if ((keycode[31:24] ==8'h4f )||(keycode[23:16]==8'h4f)||(keycode[15:8] ==8'h4f)||(keycode[7:0]==8'h4f))
 					  key <= 8'h4f;
-				 else if ((keycode[31:24] ==8'h2C )||(keycode[23:16]==8'h2C)||(keycode[15:8] ==8'h2C)||(keycode[7:0]==8'h2C))
-					  key <= 8'h2C;
+				 else if ((keycode[31:24] ==8'h2c )||(keycode[23:16]==8'h2c)||(keycode[15:8] ==8'h2c)||(keycode[7:0]==8'h2c))
+					  key <= 8'h2c;
 				 else 
 					  key <= 8'h00;  
 				 
@@ -87,8 +87,8 @@ module tank2 ( input Reset, frame_clk,
 					8'h50 : begin
 							
 								begin
-									Ball_X_Motion <= 0;//A
-									Ball_Y_Motion<= 0;
+									Tank_X_Motion <= 0;//A
+									Tank_Y_Motion<= 0;
 									Angle_Motion <=  AngleStep;
 									ShootBulletP <=0;
 								end
@@ -97,9 +97,10 @@ module tank2 ( input Reset, frame_clk,
 					8'h4f : begin
 							
 								begin
-									Ball_X_Motion <= 0;//D
-									Ball_Y_Motion <= 0;
+									Tank_X_Motion <= 0;//D
+									Tank_Y_Motion <= 0;
 									Angle_Motion <=  ~(AngleStep) + 1;      // Descreases the angle
+									ShootBulletP <=0;
 								end
 							  end
 							  
@@ -107,9 +108,10 @@ module tank2 ( input Reset, frame_clk,
 							  begin
 									//Ball_Y_Motion[9] <= signY;
                            //Ball_X_Motion[9] <= signX;
-									Ball_Y_Motion[9:0] <=  {{6{~signY}},~Ball_Y_Comp[10:7]} + 1'b1;//S
-									Ball_X_Motion[9:0] <=  {{6{signX}},Ball_X_Comp[10:7]};
+									Tank_Y_Motion[9:0] <=  {{6{~signY}},~Tank_Y_Comp[10:7]} + 1'b1;//up 
+									Tank_X_Motion[9:0] <=  {{6{signX}},Tank_X_Comp[10:7]};
 									Angle_Motion <=0;
+									ShootBulletP <=0;
 								end
 							 end
 							  
@@ -117,23 +119,31 @@ module tank2 ( input Reset, frame_clk,
 								begin
                            //Ball_Y_Motion[9] <= ~signY;
                            //Ball_X_Motion[9] <= ~signX;
-									Ball_Y_Motion[9:0] <= {{6{signY}}, Ball_Y_Comp[10:7]};//S
-									Ball_X_Motion[9:0] <= {{6{~signX}}, ~Ball_X_Comp[10:7]} + 1'b1;
+									Tank_Y_Motion[9:0] <= {{6{signY}},Tank_Y_Comp[10:7]};//down
+									Tank_X_Motion[9:0] <= {{6{~signX}}, ~Tank_X_Comp[10:7]} + 1'b1;
 									Angle_Motion <=0;
+									ShootBulletP <=0;
 								end
 								end
 								
-					8'h2C : begin
+					8'h2c : begin
 							  begin 
+							  		Tank_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't move
+									Tank_X_Motion <= 10'd0;
+									Angle_Motion <= 5'd0;
 									ShootBulletP <= 1;
+									timer <=timer+1'b1;
 								end 
 								end
 								  
-					default: ;
+					default:begin 
+								ShootBulletP <=0;
+								timer<=10'd0;
+							end
 			   endcase
 				 
-				 Ball_Y_Pos[9:0] <= (Ball_Y_Pos[9:0] + Ball_Y_Motion[9:0]);  // Update ball position
-				 Ball_X_Pos[9:0] <= (Ball_X_Pos[9:0] + Ball_X_Motion[9:0]);
+				 Tank_Y_Pos[9:0] <= (Tank_Y_Pos[9:0] + Tank_Y_Motion[9:0]);  // Update ball position
+				 Tank_X_Pos[9:0] <= (Tank_X_Pos[9:0] + Tank_X_Motion[9:0]);
 		
 				 
 				 if(Angle_new > 44 && Angle_new <=48)
@@ -157,15 +167,15 @@ module tank2 ( input Reset, frame_clk,
 		end  
     end
        
-    assign BallX = Ball_X_Pos;
+    assign TankX = Tank_X_Pos;
    
-    assign BallY = Ball_Y_Pos;
+    assign TankY = Tank_Y_Pos;
    
-    assign BallS = Ball_Size;
+    assign TankS = Tank_Size;
 	 
 	assign Angle = Angle_new;
 	
 	assign ShootBullet= ShootBulletP;
+	
     
-
 endmodule

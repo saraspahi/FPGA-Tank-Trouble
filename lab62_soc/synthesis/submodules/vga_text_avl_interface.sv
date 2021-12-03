@@ -1,5 +1,7 @@
 
-
+//Todo change the names of the signals for tanks 
+//create a module with the multiplexer for cos 
+//flashing when turning fix
 module vga_text_avl_interface (
 	// Avalon Clock Input, note this clock is also used for VGA, so this must be 50Mhz
 	// We can put a clock divider here in the future to make this IP more generalizable
@@ -29,7 +31,7 @@ logic [31:0] data;
 
 logic [5:0] AngleI1,AngleI2;
 logic ShootBullet1,ShootBullet2;
-logic [7:0] sin2, cos2, sin2u, cos2u, sin2u1, cos2u1, sin2p, cos2p;
+logic [7:0] sin1,cos1,sin2, cos2, sin2u, cos2u, sin2u1, cos2u1, sin2p, cos2p;
 logic [9:0] drawxsig, drawysig, ballxsig1, ballysig1, ballxsig2, ballysig2, ballsizesig, Word_ADDR;
 logic [14:0] Byte_ADDR;
 logic [31:0] keycode;
@@ -40,85 +42,152 @@ vga_controller v1(.Clk(CLK),.Reset(RESET), .pixel_clk(PIX_CLK), .hs(hs),.vs(vs),
 
 tank1 b1(.Reset(RESET),
 			.frame_clk(vs),
-			.sin(sin2), 
-			.cos(cos2),
+			.sin(sin1), 
+			.cos(cos1),
 			.keycode(keycode),
-			.BallX(ballxsig1),
-			.BallY(ballysig1),
-			.BallS(ballsizesig1),
+			.TankX(ballxsig1),
+			.TankY(ballysig1),
+			.TankS(ballsizesig1),
 			.ShootBullet(ShootBullet1),
 			.Angle(AngleI1));
 
+logic [9:0] timer;
 tank2 b2(.Reset(RESET),   //Instantiates tank2 module 
 			.frame_clk(vs),
 			.sin(sin2), 
 			.cos(cos2),
 			.keycode(keycode),
-			.BallX(ballxsig2),
-			.BallY(ballysig2),
-			.BallS(ballsizesig2),
+			.TankX(ballxsig2),
+			.TankY(ballysig2),
+			.TankS(ballsizesig2),
 			.ShootBullet(ShootBullet2),
-			.Angle(AngleI2)
-			);
+			.Angle(AngleI2));
 			
 			
+
+		
 logic bullet1_active;
-logic[9:0] bullet1_X,	bullet1_Y,	bullet1_S	;
-//Bullet from tank b2
+logic[9:0] bullet1_X,bullet1_Y,bullet1_S,bulletTimer1	;
+
+//Bullet1 from tank b2
 bullet bullet1(.Reset(RESET), 
 					.frame_clk(vs), 
-					.isWallBottom(0),
-					.isWallTop(0),
-					.isWallRight(0),
-					.isWallLeft(0),
-					.create(ShootBullet2), //coming from some kind of state machine for the bullet whenever the shoot key is pressed
+					.isWallBottom(isWallBottom1),
+					.isWallTop(isWallTop1),
+					.isWallRight(isWallRight1),
+					.isWallLeft(isWallLeft1),
+					.create(ShootBullet2), // TODOand bullet is not active then create on
 					.tankX(ballxsig2),
 					.tankY(ballysig2),
-					.angle(AngleI2),
 					.sin(sin2),
 					.cos(cos2),
+					//Outputs
 					.is_bullet_active(bullet1_active),
                .BulletX(bullet1_X),
 					.BulletY(bullet1_Y), 
-					.BulletS(bullet1_S));  // same postion  as the tank once shot
+					.BulletS(bullet1_S),
+					.bulletTimer(bulletTimer1));  // same postion  as the tank once shot
+					
 
-sinCos sincos1(.AngleI(AngleI2), .sin(sin2u), .cos(cos2u));
-sinCos sincos2(.AngleI(6'd44 + ~AngleI2 + 1'b1), .sin(sin2u1), .cos(cos2u1));
+collisionWall collisonWallBullet1(.objectX(bullet1_X),.objectY(bullet1_Y),.objectS(bullet1_S),.DrawX(drawxsig),.DrawY(drawysig),
+							.isWallBottom(isWallBottom1),.isWallTop(isWallTop1),.isWallRight(isWallRight1),.isWallLeft(isWallLeft1));
+
+//bullet2 from tank 2 active only after bullet1 is active 		
+logic [9:0] bullet2_X,bullet2_Y,bullet2_S,bulletTimer2;
+logic bullet2_active;
+
+bullet bullet2(.Reset(RESET), 
+					.frame_clk(vs), 
+					.isWallBottom(isWallBottom2),
+					.isWallTop(isWallTop2),
+					.isWallRight(isWallRight2),
+					.isWallLeft(isWallLeft2),
+					.create(ShootBullet2 && bullet1_active && (bulletTimer1>10'd35)), // TODOand bullet is not active then create on
+					.tankX(ballxsig2),
+					.tankY(ballysig2),
+					.sin(sin2),
+					.cos(cos2),
+					//Outputs
+					.is_bullet_active(bullet2_active),
+               .BulletX(bullet2_X),
+					.BulletY(bullet2_Y), 
+					.BulletS(bullet2_S),
+					.bulletTimer(bulletTimer2));  // same postion  as the tank once shot
+					
+collisionWall collisonWallBullet2(.objectX(bullet2_X),.objectY(bullet2_Y),.objectS(bullet2_S),.DrawX(drawxsig),.DrawY(drawysig),
+							.isWallBottom(isWallBottom2),.isWallTop(isWallTop2),.isWallRight(isWallRight2),.isWallLeft(isWallLeft2));
+							
+//Bullet3 from tank2
+logic [9:0] bullet3_X,bullet3_Y,bullet3_S,bulletTimer3;
+logic bullet3_active;
+							
+bullet bullet3(.Reset(RESET), 
+					.frame_clk(vs), 
+					.isWallBottom(isWallBottom3),
+					.isWallTop(isWallTop3),
+					.isWallRight(isWallRight3),
+					.isWallLeft(isWallLeft3),
+					.create(ShootBullet2 && bullet2_active && (bulletTimer2>10'd35)), // TODOand bullet is not active then create on
+					.tankX(ballxsig2),
+					.tankY(ballysig2),
+					.sin(sin2),
+					.cos(cos2),
+					//Outputs
+					.is_bullet_active(bullet3_active),
+               .BulletX(bullet3_X),
+					.BulletY(bullet3_Y), 
+					.BulletS(bullet3_S),
+					.bulletTimer(bulletTimer3)); 
+					
+collisionWall collisonWallBullet3(.objectX(bullet3_X),.objectY(bullet3_Y),.objectS(bullet3_S),.DrawX(drawxsig),.DrawY(drawysig),
+							.isWallBottom(isWallBottom3),.isWallTop(isWallTop3),.isWallRight(isWallRight3),.isWallLeft(isWallLeft3));
+
+							
+//angles for tank 1							
+sinCos sincos1(.AngleI(AngleI1), .sin(sin1u), .cos(cos1u));
+//angles for tank 2
+sinCos sincos2(.AngleI(AngleI2), .sin(sin2u), .cos(cos2u));
 
 
-//Mux that takes care of the negative sines and cosines in different quadrants
-always_comb
-begin
-   
-   if(AngleI2<23 && AngleI2>11)
-	begin
-       cos2[7:0] = ~cos2u[7:0]+1'b1;
-		 sin2 = sin2u[7:0];
-		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
-		 sin2p[7:0] = sin2u1[7:0];
-	end
-   else if(AngleI2>22 && AngleI2<34)
-   begin
-       cos2[7:0] = ~cos2u[7:0]+1'b1;
-       sin2[7:0] = ~sin2u[7:0]+1'b1;
-		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
-       sin2p[7:0] = ~sin2u1[7:0]+1'b1;
-   end
-   else if(AngleI2>33)
-   begin
-       cos2[7:0] = cos2u[7:0];
-       sin2[7:0] = ~sin2u[7:0]+1'b1;
-		 cos2p[7:0] = cos2u1[7:0];
-       sin2p[7:0] = ~sin2u1[7:0]+1'b1;
-   end
-   else
-   begin
-       cos2[7:0] = cos2u[7:0];
-       sin2[7:0] = sin2u[7:0];
-		 cos2p[7:0] = cos2u1[7:0];
-       sin2p[7:0] = sin2u1[7:0];
-   end
-end
+//Gives the corresponding sin and cos matching the vga coordinate system
+
+angleMux angleTank1(  .Angle(AngleI1),.sin(sin1u),.cos(cos1u),.newSin(sin1), .newCos(cos1));
+angleMux angleTank2(  .Angle(AngleI2),.sin(sin2u),.cos(cos2u),.newSin(sin2), .newCos(cos2));
+
+
+////Mux that takes care of the negative sines and cosines in different quadrants
+//always_comb
+//begin
+//   
+//   if(AngleI2<23 && AngleI2>11)
+//	begin
+//       cos2[7:0] = ~cos2u[7:0]+1'b1;
+//		 sin2 = sin2u[7:0];
+//		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
+//		 sin2p[7:0] = sin2u1[7:0];
+//	end
+//   else if(AngleI2>22 && AngleI2<34)
+//   begin
+//       cos2[7:0] = ~cos2u[7:0]+1'b1;
+//       sin2[7:0] = ~sin2u[7:0]+1'b1;
+//		 cos2p[7:0] = ~cos2u1[7:0]+1'b1;
+//       sin2p[7:0] = ~sin2u1[7:0]+1'b1;
+//   end
+//   else if(AngleI2>33)
+//   begin
+//       cos2[7:0] = cos2u[7:0];
+//       sin2[7:0] = ~sin2u[7:0]+1'b1;
+//		 cos2p[7:0] = cos2u1[7:0];
+//       sin2p[7:0] = ~sin2u1[7:0]+1'b1;
+//   end
+//   else
+//   begin
+//       cos2[7:0] = cos2u[7:0];
+//       sin2[7:0] = sin2u[7:0];
+//		 cos2p[7:0] = cos2u1[7:0];
+//       sin2p[7:0] = sin2u1[7:0];
+//   end
+//end
 
 
 //Ram stores the maze 
@@ -157,8 +226,21 @@ color_mapper  c1(.BallX1(ballxsig1),
 					
 					//bullet1data
 					.Bullet1X(bullet1_X),
-					.Bullet1Y(bullet1_X),
-					.Bullet1S(bullet1_X),
-					.is_bullet1_active(bullet1_active));
+					.Bullet1Y(bullet1_Y),
+					.Bullet1S(bullet1_S),
+					.is_bullet1_active(bullet1_active),
+					
+					//bullet2data
+					.Bullet2X(bullet2_X),
+					.Bullet2Y(bullet2_Y),
+					.Bullet2S(bullet2_S),
+					.is_bullet2_active(bullet2_active),
+					
+					//bullet3data
+					.Bullet3X(bullet3_X),
+					.Bullet3Y(bullet3_Y),
+					.Bullet3S(bullet3_S),
+					.is_bullet3_active(bullet3_active),
+					);
 
 endmodule

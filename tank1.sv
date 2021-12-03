@@ -16,21 +16,21 @@
 module tank1 ( input Reset, frame_clk,
 					input [31:0] keycode,
 					input [7:0] sin, cos,
-               output [9:0]  BallX, BallY, BallS,
+               output [9:0]  TankX, TankY, TankS,
 					output ShootBullet,
 					output [5:0] Angle);//inxe
     
-    logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion, Ball_Size;
+    logic [9:0] Tank_X_Pos,Tank_X_Motion, Tank_Y_Pos, Tank_Y_Motion,Tank_Size;
 	 logic [7:0] key;
 	 
-    parameter [9:0] Ball_X_Center=320;  // Center position on the X axis
-    parameter [9:0] Ball_Y_Center=240;  // Center position on the Y axis
-    parameter [9:0] Ball_X_Min=0;       // Leftmost point on the X axis
-    parameter [9:0] Ball_X_Max=639;     // Rightmost point on the X axis
-    parameter [9:0] Ball_Y_Min=0;       // Topmost point on the Y axis
-    parameter [9:0] Ball_Y_Max=479;     // Bottommost point on the Y axis
-    parameter [9:0] Ball_X_Step=1;      // Step size on the X axis
-    parameter [9:0] Ball_Y_Step=1;      // Step size on the Y axis
+    parameter [9:0] Tank_X_Center=320;  // Center position on the X axis
+    parameter [9:0] Tank_Y_Center=240;  // Center position on the Y axis
+    parameter [9:0] Tank_X_Min=0;       // Leftmost point on the X axis
+    parameter [9:0] Tank_X_Max=639;     // Rightmost point on the X axis
+    parameter [9:0] Tank_Y_Min=0;       // Topmost point on the Y axis
+    parameter [9:0] Tank_Y_Max=479;     // Bottommost point on the Y axis
+    parameter [9:0] Tank_X_Step=1;      // Step size on the X axis
+    parameter [9:0] Tank_Y_Step=1;      // Step size on the Y axis
 
     assign Ball_Size = 10;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
@@ -38,29 +38,17 @@ module tank1 ( input Reset, frame_clk,
     begin: Move_Ball
         if (Reset)  // Asynchronous Reset
         begin 
-            Ball_Y_Motion <= 10'd0; //Ball_Y_Step;
-				Ball_X_Motion <= 10'd0; //Ball_X_Step;
-				Ball_Y_Pos <= Ball_Y_Center;
-				Ball_X_Pos <= Ball_X_Center;
+            Tank_Y_Motion <= 10'd0; //Ball_Y_Step;
+				Tank_X_Motion <= 10'd0; //Ball_X_Step;
+				Tank_Y_Pos <= Tank_Y_Center;
+				Tank_X_Pos <= Tank_X_Center;
         end
            
         else 
         begin 
-				 if ( (Ball_Y_Pos + Ball_Size) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
-					  Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);  // 2's complement.
-					  
-				 else if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
-					  Ball_Y_Motion <= Ball_Y_Step;
-					  
-				 else if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  // Ball is at the Right edge, BOUNCE!
-					  Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);  // 2's complement.
-					  
-				 else if ( (Ball_X_Pos - Ball_Size) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
-					  Ball_X_Motion <= Ball_X_Step;
-					  
-				 else 
-					  Ball_Y_Motion <= 10'd0;  // Ball is somewhere in the middle, don't bounce, just keep moving
-					  Ball_X_Motion <= 10'd0;
+			
+					  Tank_Y_Motion <= 10'd0;  // Ball is somewhere in the middle, don't bounce, just keep moving
+					  Tank_X_Motion <= 10'd0;
 				 
 				 if ((keycode[31:24] ==8'h04 )||(keycode[23:16]==8'h04)||(keycode[15:8] ==8'h04)||(keycode[7:0]==8'h04))
 					  key <= 8'h04;
@@ -76,50 +64,42 @@ module tank1 ( input Reset, frame_clk,
 				 
 				 case (key)
 					8'h04 : begin
-								if ( (Ball_X_Pos - Ball_Size) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
-									Ball_X_Motion <= Ball_X_Step;
-								else
+							
 								begin
-									Ball_X_Motion <= -1;//A
-									Ball_Y_Motion<= 0;
+									Tank_X_Motion <= -1;//A
+									Tank_Y_Motion<= 0;
 								end
 							  end
 					        
 					8'h07 : begin
-								if ( (Ball_X_Pos + Ball_Size) >= Ball_X_Max )  // Ball is at the Right edge, BOUNCE!
-									Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);
-								else
+						
 								begin
-									Ball_X_Motion <= 1;//D
-									Ball_Y_Motion <= 0;
+									Tank_X_Motion <= 1;//D
+									Tank_Y_Motion <= 0;
 								end
 							  end
 
 							  
 					8'h16 : begin
-								if ( (Ball_Y_Pos + Ball_Size) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
-									Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);
-							  else
+
 							  begin
-									Ball_Y_Motion <= 1;//S
-									Ball_X_Motion <= 0;
+									Tank_Y_Motion <= 1;//S
+									Tank_X_Motion <= 0;
 								end
 							 end
 							  
 					8'h1A : begin
-								if ( (Ball_Y_Pos - Ball_Size) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
-									Ball_Y_Motion <= Ball_Y_Step;
-								else
+
 								begin
-									Ball_Y_Motion <= -1;//W
-									Ball_X_Motion <= 0;
+									Tank_Y_Motion <= -1;//W
+									Tank_X_Motion <= 0;
 								end
 							 end	  
 					default: ;
 			   endcase
 				 
-				 Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
-				 Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
+				 Tank_Y_Pos <= (Tank_Y_Pos + Tank_Y_Motion);  // Update ball position
+				 Tank_X_Pos <= (Tank_X_Pos + Tank_X_Motion);
 			
 			
 	  /**************************************************************************************
@@ -135,11 +115,11 @@ module tank1 ( input Reset, frame_clk,
 		end  
     end
        
-    assign BallX = Ball_X_Pos;
+    assign TankX = Tank_X_Pos;
    
-    assign BallY = Ball_Y_Pos;
+    assign TankY = Tank_Y_Pos;
    
-    assign BallS = Ball_Size;
+    assign TankS = Tank_Size;
     
 
 endmodule
