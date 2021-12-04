@@ -35,9 +35,9 @@ void genMaze()
     static int PATH_S = 0x04;
     static int PATH_W = 0x08;
     static int VISITED = 0x10;
-    int mazeWidth = 8;
-    int mazeHeight = 6;
-    int pathWidth = 19;
+    int mazeWidth = 20;
+    int mazeHeight = 15;
+    int pathWidth = 7;
     struct Stack* neighbors = createStack(4);
     struct paired_stack* m_stack = createPStack(mazeWidth*mazeHeight);
     int visitedCells;
@@ -143,8 +143,8 @@ void genMaze()
 				tempVal = tempVal << 1;
 			}
 			else if((nite+1)%32 == 0){
-				printf("%d \n", fort*5+(int)((nite)/32));
-				vga_ctrl->VRAM[fort*5+(int)((nite)/32)] = tempVal;
+				printf("%d \n", fort*5+(int)((nite+1)/32));
+				vga_ctrl->VRAM[fort*5+(int)((nite+1)/32)] = tempVal;
 				tempVal = 0;
 			}
 		}
