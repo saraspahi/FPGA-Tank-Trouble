@@ -28,6 +28,7 @@ module vga_text_avl_interface (
 
 
 logic [31:0] data;
+logic [31:0] Maze_Reg [600]; // Registers to store maze
 
 logic [5:0] AngleI1,AngleI2;
 logic ShootBullet1,ShootBullet2;
@@ -37,6 +38,22 @@ logic [14:0] Byte_ADDR;
 logic [31:0] keycode;
 logic maze;
 assign keycode = keycode_signal;
+
+always_ff @ (posedge CLK)
+begin 
+if(AVL_WRITE && AVL_CS)
+begin
+		Maze_Reg[AVL_ADDR][31:0] <= AVL_WRITEDATA;
+end
+else if(RESET)
+	begin
+		for(int i = 0; i<600; i++)
+		begin
+			Maze_Reg[i] <= 32'h00000000;
+		end
+	end
+end
+
 
 vga_controller v1(.Clk(CLK),.Reset(RESET), .pixel_clk(PIX_CLK), .hs(hs),.vs(vs),.blank(blank),.DrawX(drawxsig),.DrawY(drawysig));
 
@@ -190,20 +207,22 @@ angleMux angleTank2(  .Angle(AngleI2),.sin(sin2u),.cos(cos2u),.newSin(sin2), .ne
 //end
 
 
-//Ram stores the maze 
-ram1 ram0(.byteena_a(AVL_BYTE_EN), 
-			.clock(CLK), 
-			.data(AVL_WRITEDATA), 
-			.rdaddress(Word_ADDR), 
-			.wraddress(AVL_ADDR), 
-			.wren(AVL_WRITE && AVL_CS),
-			.q(data));
+////Ram stores the maze 
+//ram1 ram0(.byteena_a(AVL_BYTE_EN), 
+//			.clock(CLK), 
+//			.data(AVL_WRITEDATA), 
+//			.rdaddress(Word_ADDR), 
+//			.wraddress(AVL_ADDR), 
+//			.wren(AVL_WRITE && AVL_CS),
+//			.q(data));
+
+
 			
 always_comb
 begin 
 	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
 	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
-	maze = data[Byte_ADDR[4:0]];
+	maze = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]];
 
 end 
 

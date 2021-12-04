@@ -113,7 +113,7 @@ void genMaze()
         for(int y = 1; y<mazeHeight; y++){
             for(int py = 0; py<pathWidth; py++){
                 for(int px = 0; px<pathWidth; px++){
-                    maze_screen_buffer[y*(pathWidth + 1) + py][x*(pathWidth+1) + px] = 0;
+                    maze _screen_buffer[y*(pathWidth + 1) + py][x*(pathWidth+1) + px] = 0;
                 }
             }
             for(int p = 0; p<pathWidth; p++){

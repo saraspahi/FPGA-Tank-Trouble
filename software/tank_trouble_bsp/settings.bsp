@@ -2,11 +2,11 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Dec 3, 2021 6:17:50 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1638577070143</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/ece385user/FPGA-Tank-Trouble/software/tank_trouble_bsp</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>Dec 3, 2021 7:22:26 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1638580946719</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>C:\Users\Sara\UIUC\FinalProject\software\tank_trouble_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
-        <SopcDesignFile>../../lab62_soc.sopcinfo</SopcDesignFile>
+        <SopcDesignFile>..\..\lab62_soc.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>nios2_gen2_0</Cpu>
         <SchemaVersion>1.9</SchemaVersion>

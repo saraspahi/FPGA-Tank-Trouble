@@ -106,15 +106,25 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 	 if(blank)
 	 
 	 begin
+	 
+			if(maze)
+			begin 
+					Red_New = 8'h00;
+					Green_New = 8'h00;
+					Blue_New = 8'h00;
+			
+			
+			end
+	 
 	 //draws the head of the tank1
-	 		if((DrawX >= BallX1) &&
+			else if((DrawX >= BallX1) &&
 				(DrawX <= BallX1 + Ball_size) &&
 				(DrawY >= BallY1 - 3'b110) &&
 				(DrawY <= BallY1 + 3'b110))
 				begin
-					Red_New = 8'h55;
-					Green_New = 8'h55;
-					Blue_New = 8'h00;
+					Red_New = 8'h00;
+					Green_New = 8'hFF;
+					Blue_New = 8'hFF;
 				end
 	 //Draws the body of tank1
 			else if ((DrawX >= BallX1 - Ball_size) &&
@@ -164,9 +174,9 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 				(DrawYs2[9:0] >= BallY2 - 3'b110) &&
 				(DrawYs2[9:0] <= BallY2 + 3'b110))
 				begin
-					Red_New = 8'h55;
-					Green_New = 8'h55;
-					Blue_New = 8'h00;
+					Red_New = 8'h00;
+					Green_New = 8'hFF;
+					Blue_New = 8'hFF;
 				end
 		 //Draws the body of tank 2
 
