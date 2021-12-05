@@ -1,23 +1,35 @@
-module collisionWall(input[9:0] objectX,objectY,objectS,X_Motion,Y_Motion, 
+module collisionWall(input[9:0] objectX,objectY,objectS,X_Motion,Y_Motion,DrawX,DrawY, 
 							input currentMaze,MazeUp,MazeDown,MazeLeft,MazeRight, //Checks the current pixel and up down right left
 							output isWallBottom,isWallTop,isWallRight,isWallLeft);
 
-logic objectOn,UpLeft,DownRight,UpRight,DownLeft;	
+logic objectOn,UpLeft,DownRight,UpRight,DownLeft,Wall_On;	
 					
-//always_comb
+always_comb
+begin 
+if((DrawX >= objectX - objectS) &&
+				(DrawX <= objectX + objectS) &&
+				(DrawY >= objectY - objectS) &&
+				(DrawY <= objectY + objectS))
+begin
+objectOn=1'b1;
+end
+else 
+objectOn=1'b0;
+end 
+
+always_comb 
+begin 
+if(objectOn && currentMaze)
+begin 
+Wall_On = objectOn && currentMaze;
+end
+end
+
+//always_ff(Reset )
 //begin 
-//if((DrawX >= objectX - objectS) &&
-//				(DrawX <= objectX + objectS) &&
-//				(DrawY >= objectY - objectS) &&
-//				(DrawY <= objectY + objectS))
-//begin
-//objectOn=1'b1;
-//end
-//else 
-//objectOn=1'b0;
+//
+//
 //end 
-
-
 always_comb
 begin 
 if(X_Motion[9]==1'b1 && Y_Motion[9]==1'b1)

@@ -241,57 +241,59 @@ angleMux angleTank2(  .Angle(AngleI2),.sin(sin2u),.cos(cos2u),.newSin(sin2), .ne
 
 
 			
-//always_comb
-//begin 
-//	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
-//	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
-//	//Checking if each pixel is a wall or not 
-//	currentMaze = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]];	
-//
-//	if(Word_ADDR==10'd0)
-//	begin 
-//		MazeUp = 0; //There is no register up
-//	end 
-//	else 
-//	begin
-//		MazeUp = Maze_Reg[Word_ADDR-10'd5][~Byte_ADDR[4:0]];//Go a word address up
-//	end 
-//	
-//	if(Word_ADDR==10'd599)
-//	begin 
-//		MazeDown = 0; 
-//	end 
-//	else 
-//	begin 
-//		MazeDown = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]];//Go a word address down
-//	end
-//	
-//	if(Byte_ADDR == 10'd31)
-//	begin 
-//		MazeLeft = 0;
-//	end 
-//	else 
-//	begin 
-//		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-1'b1];//Go a word address down ;
-//	end 
-//	
-//	if(Byte_ADDR == 10'd0)
-//	begin 
-//		MazeRight = 0;
-//	end 
-//	else 
-//	begin 
-//		MazeRight = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]+1'b1];//Go a word address down ;
-//	end
-//
-//end 
+always_comb
+begin 
+	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
+	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
+	//Checking if each pixel is a wall or not 
+	currentMaze = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]];	
 
-logic [14:0]ByteBullet1;
-logic [9:0]WordBullet1;
-logic MazeBullet1,MazeBullet1Up,MazeBullet1Down,MazeBullet1Left,MazeBullet1Right;
+	if(Word_ADDR==10'd0)
+	begin 
+		MazeUp = 0; //There is no register up
+	end 
+	else 
+	begin
+		MazeUp = Maze_Reg[Word_ADDR-10'd5][~Byte_ADDR[4:0]];//Go a word address up
+	end 
+	
+	if(Word_ADDR==10'd599)
+	begin 
+		MazeDown = 0; 
+	end 
+	else 
+	begin 
+		MazeDown = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]];//Go a word address down
+	end
+	
+	if(Byte_ADDR == 10'd31)
+	begin 
+		MazeLeft = 0;
+	end 
+	else 
+	begin 
+		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-1'b1];//Go a word address down ;
+	end 
+	
+	if(Byte_ADDR == 10'd0)
+	begin 
+		MazeRight = 0;
+	end 
+	else 
+	begin 
+		MazeRight = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]+1'b1];//Go a word address down ;
+	end
+
+end 
+
+
+
 
 
 //Useless
+//logic [14:0]ByteBullet1;
+//logic [9:0]WordBullet1;
+//logic MazeBullet1,MazeBullet1Up,MazeBullet1Down,MazeBullet1Left,MazeBullet1Right;
 //always_comb 
 //begin 
 //	ByteBullet1[14:0] = bullet1_X[9:2]+bullet1_Y[9:2]*160;
