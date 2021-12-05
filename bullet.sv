@@ -6,14 +6,14 @@ module bullet ( input Reset, frame_clk,
                input [7:0] sin, cos,
 					output is_bullet_active,
 					input [31:0] keycode,
-               output [9:0]  BulletX, BulletY, BulletS,
+               output [9:0]  BulletX, BulletY, BulletS,BulletXStep,BulletYStep,
 					output [15:0] bulletTimer);
     
    logic [9:0] Bullet_X_Pos, Bullet_Y_Pos, Bullet_Size;
 	logic [9:0] Bullet_X_Motion, Bullet_Y_Motion;
 	logic [5:0] Angle_Motion,Angle_new;
 	logic creation_flag;
-	logic [15:0]timer;
+	logic [15:0]timer,timer2; //timer is to dissapear bullet, timer2 is to make the bullet active after some time
 	
 	logic [7:0] key;
    logic [15:0] Bullet_X_Comp, Bullet_Y_Comp;
@@ -23,8 +23,8 @@ module bullet ( input Reset, frame_clk,
 	logic [7:0] cosBullet;
    
 
-    parameter [9:0] Bullet_X_Center=400;  // Center position on the X axis
-    parameter [9:0] Bullet_Y_Center=250;  // Center position on the Y axis
+    parameter [9:0] Bullet_X_Center=0;  // Center position on the X axis
+    parameter [9:0] Bullet_Y_Center=0;  // Center position on the Y axis
     parameter [9:0] Bullet_X_Min=0;       // Leftmost point on the X axis
     parameter [9:0] Bullet_X_Max=639;     // Rightmost point on the X axis
     parameter [9:0] Bullet_Y_Min=0;       // Topmost point on the Y axis
@@ -47,6 +47,7 @@ module bullet ( input Reset, frame_clk,
 				Bullet_Y_Pos <= Bullet_X_Center;
 			   is_bullet_active<=0;
 				timer<=0;
+				timer2<=0;
 
         end 
 		  else
@@ -64,8 +65,8 @@ module bullet ( input Reset, frame_clk,
 				//Create bullet,save the shooting angle 
 			   if (creation_flag && !is_bullet_active) 
 					begin
+
 					is_bullet_active<=1'b1;
-					
 					//save the sin and cos at the moment of creation and calc direction
 					sinBullet<=sin;
 					cosBullet<=cos;
@@ -74,15 +75,18 @@ module bullet ( input Reset, frame_clk,
 					signY = Bullet_Y_Step[7] ^ sin[7];
 					Bullet_X_Comp[15:0] = Bullet_X_Step[6:0]*cos[6:0];
 					Bullet_Y_Comp[15:0] = Bullet_Y_Step[6:0]*sin[6:0];
-					
 					//The steps to take according to angle
 					Bullet_Y_Motion[9:0] <=  {{6{~signY}},~Bullet_Y_Comp[10:7]}+1;//Dont know why I had to reverse this
 					Bullet_X_Motion[9:0] <=  {{6{signX}},Bullet_X_Comp[10:7]};
 										
-					Bullet_X_Pos<=tankX+Bullet_X_Motion;//add offset based on angle needs start out of the tanks body for collisions to work???
+					Bullet_X_Pos<=tankX+Bullet_X_Motion+Bullet_X_Motion+Bullet_X_Motion+Bullet_X_Motion;//add offset based on angle needs start out of the tanks body for collisions to work???
 																	//Multiply by a different step size in the beginning
-					Bullet_Y_Pos<=tankY+Bullet_Y_Motion;
-
+					Bullet_Y_Pos<=tankY+Bullet_Y_Motion+Bullet_Y_Motion+Bullet_Y_Motion+Bullet_Y_Motion;
+//					timer2<=timer2+1'b1;
+//					if(timer2>=16'd5)
+//							is_bullet_active<=1'b1;
+//					else 
+//							is_bullet_active=is_bullet_active;
 					end
 				else if (is_bullet_active)
 				begin
@@ -151,6 +155,10 @@ module bullet ( input Reset, frame_clk,
     assign BulletS = Bullet_Size;
 	 
 	 assign bulletTimer = timer;
+	 
+	 assign BulletXStep = Bullet_X_Motion;
+	 
+	 assign BulletYStep = Bullet_Y_Motion;
 
     
 

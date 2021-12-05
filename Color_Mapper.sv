@@ -1,6 +1,7 @@
 
 
 module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2,BallY2,
+                      input Tank2Shot, Tank1Shot,                                 
                       input [7:0] sin2, cos2,
 							 input blank, CLK,
 							 input maze,
@@ -120,7 +121,7 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			else if((DrawX >= BallX1) &&
 				(DrawX <= BallX1 + Ball_size) &&
 				(DrawY >= BallY1 - 3'b110) &&
-				(DrawY <= BallY1 + 3'b110))
+				(DrawY <= BallY1 + 3'b110) && !Tank1Shot)
 				begin
 					Red_New = 8'h00;
 					Green_New = 8'hFF;
@@ -130,7 +131,7 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			else if ((DrawX >= BallX1 - Ball_size) &&
 				(DrawX <= BallX1 + Ball_size) &&
 				(DrawY >= BallY1 - Ball_size) &&
-				(DrawY <= BallY1 + Ball_size))
+				(DrawY <= BallY1 + Ball_size) && !Tank1Shot)
             begin 
                 Red_New = 8'hff;
                 Green_New = 8'hbb;
@@ -172,7 +173,7 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 		  else if((DrawXs2[9:0] >= BallX2) &&
 				(DrawXs2[9:0] <= BallX2 + Ball_size) &&
 				(DrawYs2[9:0] >= BallY2 - 3'b110) &&
-				(DrawYs2[9:0] <= BallY2 + 3'b110))
+				(DrawYs2[9:0] <= BallY2 + 3'b110) && !Tank2Shot)
 				begin
 					Red_New = 8'h00;
 					Green_New = 8'hFF;
@@ -183,7 +184,7 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
         else if ((DrawXs2[9:0] >= BallX2 - Ball_size) &&
 				(DrawXs2[9:0] <= BallX2 + Ball_size) &&
 				(DrawYs2[9:0] >= BallY2 - Ball_size) &&
-				(DrawYs2[9:0] <= BallY2 + Ball_size))
+				(DrawYs2[9:0] <= BallY2 + Ball_size) && !Tank2Shot)
 				begin
 					Red_New = 8'hff;
 					Green_New = 8'h00;

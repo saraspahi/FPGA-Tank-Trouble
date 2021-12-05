@@ -45,7 +45,7 @@ module tank2 ( input Reset, frame_clk,
     parameter [7:0] Tank_Y_Step=8'b0101_0000;      // Step size on the Y axis
     parameter [5:0] AngleStep= 5'b00001;				//angle counter clockwise step 1 corresponds to 4 degrees. 22 is 360 set to 0
 
-    assign Ball_Size = 10;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
+    assign Tank_Size = 10;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
     always_ff @ (posedge Reset or posedge frame_clk )
     begin: Move_Ball
