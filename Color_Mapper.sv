@@ -5,6 +5,7 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
                       input [7:0] sin2, cos2,
 							 input blank, CLK,
 							 input maze,
+							 input title,
                       output logic [7:0]  Red, Green, Blue, 
 							 //bullet1from tank2
 							 input [9:0]Bullet1X,Bullet1Y,Bullet1S,
@@ -107,14 +108,18 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 	 if(blank)
 	 
 	 begin
-	 
-			if(maze)
+			
+			if(title)
+			begin 
+					Red_New = 8'hFF;
+					Green_New = 8'hFF;
+					Blue_New = 8'hFF;
+			end
+			else if(maze)
 			begin 
 					Red_New = 8'h00;
 					Green_New = 8'h00;
 					Blue_New = 8'h00;
-			
-			
 			end
 	 
 	 //draws the head of the tank1

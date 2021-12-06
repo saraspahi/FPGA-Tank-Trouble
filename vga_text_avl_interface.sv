@@ -21,6 +21,10 @@ module vga_text_avl_interface (
 	
 	input logic [31:0] keycode_signal, 		//The interface needs the keycode signal as input to display 
 	
+	output logic [1:0] game_end,
+	
+	input logic maze_ready,
+	
 	// Exported Conduit (mapped to VGA port - make sure you export in Platform Designer)
 	output logic [7:0]  red, green, blue,	// VGA color channels (mapped to output pins in top-level)
 	output logic hs, vs						// VGA HS/VS
@@ -53,6 +57,16 @@ else if(RESET)
 		end
 	end
 end
+
+logic hit;
+assign hit = tank1shot || tank2shot; 
+game_states game_states(.CLK(CLK), .RESET(RESET),
+                   .hit(hit), .maze_ready(maze_ready),
+                   .keycode(keycode),
+                   .title(title),
+                   .game_end(game_end));
+
+// Maze regs/bit field
 
 
 vga_controller v1(.Clk(CLK),.Reset(RESET), .pixel_clk(PIX_CLK), .hs(hs),.vs(vs),.blank(blank),.DrawX(drawxsig),.DrawY(drawysig));
@@ -175,7 +189,7 @@ collisionWall collisonWallBullet1(.objectX(bullet1_X),.objectY(bullet1_Y),.objec
 
 
 //Tank  Bullet Collision 
-logic tank2Shot,tank1Shot;
+logic tank2shot,tank1shot;
 
 TBCollision tank1BulletCollision(.Tank_X_Pos(tank1xsig),.Tank_Y_Pos(tank1ysig),.Tank_Size(tank1sizesig),.Bullet1_X_Pos(bullet1_X),
 											.Bullet1_Y_Pos(bullet1_Y),.isBullet1Active(bullet1_active),.TBCollided(tank1shot));
@@ -348,7 +362,7 @@ end
 color_mapper  c1(.BallX1(tank1xsig),
 					.CLK(PIX_CLK),
 					.maze(currentMaze),.BallY1(tank1ysig),  //Change the names to tank instead of ball
-					
+					.title(title),
 					.DrawX(drawxsig), 
 					.DrawY(drawysig), 
 					.Ball_size(4'd10),

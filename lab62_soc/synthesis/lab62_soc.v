@@ -5,11 +5,15 @@
 `timescale 1 ps / 1 ps
 module lab62_soc (
 		input  wire        clk_clk,                        //                     clk.clk
+		input  wire [1:0]  game_end_export,                //                game_end.export
+		output wire [1:0]  game_end_port_new_signal,       //           game_end_port.new_signal
 		output wire [15:0] hex_digits_export,              //              hex_digits.export
 		input  wire [1:0]  key_external_connection_export, // key_external_connection.export
 		output wire [31:0] keycode_export,                 //                 keycode.export
 		input  wire [31:0] keycode_port_new_signal,        //            keycode_port.new_signal
 		output wire [13:0] leds_export,                    //                    leds.export
+		output wire        maze_ready_export,              //              maze_ready.export
+		input  wire        maze_ready_port_new_signal,     //         maze_ready_port.new_signal
 		input  wire        reset_reset_n,                  //                   reset.reset_n
 		output wire        sdram_clk_clk,                  //               sdram_clk.clk
 		output wire [12:0] sdram_wire_addr,                //              sdram_wire.addr
@@ -124,6 +128,13 @@ module lab62_soc (
 	wire   [2:0] mm_interconnect_0_timer_0_s1_address;                                 // mm_interconnect_0:timer_0_s1_address -> timer_0:address
 	wire         mm_interconnect_0_timer_0_s1_write;                                   // mm_interconnect_0:timer_0_s1_write -> timer_0:write_n
 	wire  [15:0] mm_interconnect_0_timer_0_s1_writedata;                               // mm_interconnect_0:timer_0_s1_writedata -> timer_0:writedata
+	wire  [31:0] mm_interconnect_0_game_end_s1_readdata;                               // game_end:readdata -> mm_interconnect_0:game_end_s1_readdata
+	wire   [1:0] mm_interconnect_0_game_end_s1_address;                                // mm_interconnect_0:game_end_s1_address -> game_end:address
+	wire         mm_interconnect_0_maze_ready_s1_chipselect;                           // mm_interconnect_0:maze_ready_s1_chipselect -> maze_ready:chipselect
+	wire  [31:0] mm_interconnect_0_maze_ready_s1_readdata;                             // maze_ready:readdata -> mm_interconnect_0:maze_ready_s1_readdata
+	wire   [1:0] mm_interconnect_0_maze_ready_s1_address;                              // mm_interconnect_0:maze_ready_s1_address -> maze_ready:address
+	wire         mm_interconnect_0_maze_ready_s1_write;                                // mm_interconnect_0:maze_ready_s1_write -> maze_ready:write_n
+	wire  [31:0] mm_interconnect_0_maze_ready_s1_writedata;                            // mm_interconnect_0:maze_ready_s1_writedata -> maze_ready:writedata
 	wire         mm_interconnect_0_spi0_spi_control_port_chipselect;                   // mm_interconnect_0:spi0_spi_control_port_chipselect -> spi0:spi_select
 	wire  [15:0] mm_interconnect_0_spi0_spi_control_port_readdata;                     // spi0:data_to_cpu -> mm_interconnect_0:spi0_spi_control_port_readdata
 	wire   [2:0] mm_interconnect_0_spi0_spi_control_port_address;                      // mm_interconnect_0:spi0_spi_control_port_address -> spi0:mem_addr
@@ -134,7 +145,7 @@ module lab62_soc (
 	wire         irq_mapper_receiver1_irq;                                             // timer_0:irq -> irq_mapper:receiver1_irq
 	wire         irq_mapper_receiver2_irq;                                             // spi0:irq -> irq_mapper:receiver2_irq
 	wire  [31:0] nios2_gen2_0_irq_irq;                                                 // irq_mapper:sender_irq -> nios2_gen2_0:irq
-	wire         rst_controller_reset_out_reset;                                       // rst_controller:reset_out -> [VGA_text_mode_controller_0:RESET, hex_digits_pio:reset_n, jtag_uart_0:rst_n, key:reset_n, keycode:reset_n, leds_pio:reset_n, mm_interconnect_0:jtag_uart_0_reset_reset_bridge_in_reset_reset, spi0:reset_n, timer_0:reset_n, usb_gpx:reset_n, usb_irq:reset_n, usb_rst:reset_n]
+	wire         rst_controller_reset_out_reset;                                       // rst_controller:reset_out -> [VGA_text_mode_controller_0:RESET, game_end:reset_n, hex_digits_pio:reset_n, jtag_uart_0:rst_n, key:reset_n, keycode:reset_n, leds_pio:reset_n, maze_ready:reset_n, mm_interconnect_0:jtag_uart_0_reset_reset_bridge_in_reset_reset, spi0:reset_n, timer_0:reset_n, usb_gpx:reset_n, usb_irq:reset_n, usb_rst:reset_n]
 	wire         rst_controller_001_reset_out_reset;                                   // rst_controller_001:reset_out -> [irq_mapper:reset, mm_interconnect_0:nios2_gen2_0_reset_reset_bridge_in_reset_reset, nios2_gen2_0:reset_n, onchip_memory2_0:reset, rst_translator:in_reset, sdram_pll:reset, sysid_qsys_0:reset_n]
 	wire         rst_controller_001_reset_out_reset_req;                               // rst_controller_001:reset_req -> [nios2_gen2_0:reset_req, onchip_memory2_0:reset_req, rst_translator:reset_req_in]
 	wire         nios2_gen2_0_debug_reset_request_reset;                               // nios2_gen2_0:debug_reset_request -> [rst_controller_001:reset_in1, rst_controller_002:reset_in1]
@@ -155,7 +166,17 @@ module lab62_soc (
 		.hs             (vga_port_new_signal_2),                                                //             .new_signal_2
 		.red            (vga_port_new_signal_3),                                                //             .new_signal_3
 		.vs             (vga_port_new_signal_4),                                                //             .new_signal_4
-		.keycode_signal (keycode_port_new_signal)                                               //      keycode.new_signal
+		.keycode_signal (keycode_port_new_signal),                                              //      keycode.new_signal
+		.game_end       (game_end_port_new_signal),                                             //     game_end.new_signal
+		.maze_ready     (maze_ready_port_new_signal)                                            //   maze_ready.new_signal
+	);
+
+	lab62_soc_game_end game_end (
+		.clk      (clk_clk),                                //                 clk.clk
+		.reset_n  (~rst_controller_reset_out_reset),        //               reset.reset_n
+		.address  (mm_interconnect_0_game_end_s1_address),  //                  s1.address
+		.readdata (mm_interconnect_0_game_end_s1_readdata), //                    .readdata
+		.in_port  (game_end_export)                         // external_connection.export
 	);
 
 	lab62_soc_hex_digits_pio hex_digits_pio (
@@ -182,7 +203,7 @@ module lab62_soc (
 		.av_irq         (irq_mapper_receiver0_irq)                                     //               irq.irq
 	);
 
-	lab62_soc_key key (
+	lab62_soc_game_end key (
 		.clk      (clk_clk),                           //                 clk.clk
 		.reset_n  (~rst_controller_reset_out_reset),   //               reset.reset_n
 		.address  (mm_interconnect_0_key_s1_address),  //                  s1.address
@@ -210,6 +231,17 @@ module lab62_soc (
 		.chipselect (mm_interconnect_0_leds_pio_s1_chipselect), //                    .chipselect
 		.readdata   (mm_interconnect_0_leds_pio_s1_readdata),   //                    .readdata
 		.out_port   (leds_export)                               // external_connection.export
+	);
+
+	lab62_soc_maze_ready maze_ready (
+		.clk        (clk_clk),                                    //                 clk.clk
+		.reset_n    (~rst_controller_reset_out_reset),            //               reset.reset_n
+		.address    (mm_interconnect_0_maze_ready_s1_address),    //                  s1.address
+		.write_n    (~mm_interconnect_0_maze_ready_s1_write),     //                    .write_n
+		.writedata  (mm_interconnect_0_maze_ready_s1_writedata),  //                    .writedata
+		.chipselect (mm_interconnect_0_maze_ready_s1_chipselect), //                    .chipselect
+		.readdata   (mm_interconnect_0_maze_ready_s1_readdata),   //                    .readdata
+		.out_port   (maze_ready_export)                           // external_connection.export
 	);
 
 	lab62_soc_nios2_gen2_0 nios2_gen2_0 (
@@ -355,7 +387,7 @@ module lab62_soc (
 		.in_port  (usb_irq_export)                         // external_connection.export
 	);
 
-	lab62_soc_usb_rst usb_rst (
+	lab62_soc_maze_ready usb_rst (
 		.clk        (clk_clk),                                 //                 clk.clk
 		.reset_n    (~rst_controller_reset_out_reset),         //               reset.reset_n
 		.address    (mm_interconnect_0_usb_rst_s1_address),    //                  s1.address
@@ -384,6 +416,8 @@ module lab62_soc (
 		.nios2_gen2_0_instruction_master_waitrequest        (nios2_gen2_0_instruction_master_waitrequest),                          //                                         .waitrequest
 		.nios2_gen2_0_instruction_master_read               (nios2_gen2_0_instruction_master_read),                                 //                                         .read
 		.nios2_gen2_0_instruction_master_readdata           (nios2_gen2_0_instruction_master_readdata),                             //                                         .readdata
+		.game_end_s1_address                                (mm_interconnect_0_game_end_s1_address),                                //                              game_end_s1.address
+		.game_end_s1_readdata                               (mm_interconnect_0_game_end_s1_readdata),                               //                                         .readdata
 		.hex_digits_pio_s1_address                          (mm_interconnect_0_hex_digits_pio_s1_address),                          //                        hex_digits_pio_s1.address
 		.hex_digits_pio_s1_write                            (mm_interconnect_0_hex_digits_pio_s1_write),                            //                                         .write
 		.hex_digits_pio_s1_readdata                         (mm_interconnect_0_hex_digits_pio_s1_readdata),                         //                                         .readdata
@@ -408,6 +442,11 @@ module lab62_soc (
 		.leds_pio_s1_readdata                               (mm_interconnect_0_leds_pio_s1_readdata),                               //                                         .readdata
 		.leds_pio_s1_writedata                              (mm_interconnect_0_leds_pio_s1_writedata),                              //                                         .writedata
 		.leds_pio_s1_chipselect                             (mm_interconnect_0_leds_pio_s1_chipselect),                             //                                         .chipselect
+		.maze_ready_s1_address                              (mm_interconnect_0_maze_ready_s1_address),                              //                            maze_ready_s1.address
+		.maze_ready_s1_write                                (mm_interconnect_0_maze_ready_s1_write),                                //                                         .write
+		.maze_ready_s1_readdata                             (mm_interconnect_0_maze_ready_s1_readdata),                             //                                         .readdata
+		.maze_ready_s1_writedata                            (mm_interconnect_0_maze_ready_s1_writedata),                            //                                         .writedata
+		.maze_ready_s1_chipselect                           (mm_interconnect_0_maze_ready_s1_chipselect),                           //                                         .chipselect
 		.nios2_gen2_0_debug_mem_slave_address               (mm_interconnect_0_nios2_gen2_0_debug_mem_slave_address),               //             nios2_gen2_0_debug_mem_slave.address
 		.nios2_gen2_0_debug_mem_slave_write                 (mm_interconnect_0_nios2_gen2_0_debug_mem_slave_write),                 //                                         .write
 		.nios2_gen2_0_debug_mem_slave_read                  (mm_interconnect_0_nios2_gen2_0_debug_mem_slave_read),                  //                                         .read

@@ -130,12 +130,16 @@ void printSignedHex1(signed char value) {
 
 void setKeycode(int keycode)
 {
-	IOWR_ALTERA_AVALON_PIO_DATA(0x00000c0, keycode);
+	IOWR_ALTERA_AVALON_PIO_DATA(0x00000e0, keycode);
 }
 int main() {
-	genMaze();
-
-	BYTE rcode;
+    volatile unsigned int *game_end = (unsigned int*)0x70;
+    if(*game_end == 1){
+    	genMaze();
+    	IOWR_ALTERA_AVALON_PIO_DATA(0x0000060, 1);
+    }
+    IOWR_ALTERA_AVALON_PIO_DATA(0x0000060, 0);
+    BYTE rcode;
 	BOOT_MOUSE_REPORT buf;		//USB mouse report
 	BOOT_KBD_REPORT kbdbuf;
 
@@ -150,6 +154,12 @@ int main() {
 	printf("initializing USB...\n");
 	USB_init();
 	while (1) {
+
+		if(*game_end == 1){
+	        genMaze();
+            IOWR_ALTERA_AVALON_PIO_DATA(0x60, 1);
+        }
+        IOWR_ALTERA_AVALON_PIO_DATA(0x60, 0);
 		printf(".");
 		MAX3421E_Task();
 		//usleep (1000);

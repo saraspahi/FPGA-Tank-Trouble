@@ -66,7 +66,7 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 //=======================================================
 	logic SPI0_CS_N, SPI0_SCLK, SPI0_MISO, SPI0_MOSI, USB_GPX, USB_IRQ, USB_RST;
 	logic [3:0] hex_num_4, hex_num_3, hex_num_1, hex_num_0; //4 bit input hex digits
-	logic [1:0] signs;
+	logic [1:0] signs, game_end;
 	logic [1:0] hundreds;
 	logic [9:0] drawxsig, drawysig, ballxsig1, ballysig1, ballxsig2, ballysig2, ballsizesig;
 	logic [7:0] Red, Blue, Green;
@@ -159,7 +159,11 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		//keycodee input to the keycode port 
 		.keycode_port_new_signal(keycode1),
 		
+		.game_end_export(game_end),
+		.game_end_port_new_signal(game_end),
 		
+		.maze_ready_export(maze_ready),
+		.maze_ready_port_new_signal(maze_ready),
 		//VGA
 		.vga_port_new_signal_2 (VGA_HS),
 		.vga_port_new_signal_1 (VGA_G),

@@ -109,11 +109,11 @@ void genMaze()
     }
   
 
-    for(int x = 1; x<mazeWidth; x++){
-        for(int y = 1; y<mazeHeight; y++){
+    for(int x = 0; x<mazeWidth; x++){
+        for(int y = 0; y<mazeHeight; y++){
             for(int py = 0; py<pathWidth; py++){
                 for(int px = 0; px<pathWidth; px++){
-                    maze _screen_buffer[y*(pathWidth + 1) + py][x*(pathWidth+1) + px] = 0;
+                    maze_screen_buffer[y*(pathWidth + 1) + py][x*(pathWidth+1) + px] = 0;
                 }
             }
             for(int p = 0; p<pathWidth; p++){
@@ -137,7 +137,7 @@ void genMaze()
 
 	for (int fort=0; fort<120; fort++){
 		for(int nite=0 ; nite< 160; nite++){
-			tempVal += maze_screen_buffer[fort][159-nite];
+			tempVal += maze_screen_buffer[fort][nite];
 			if((nite+1)%32 != 0){
 
 				tempVal = tempVal << 1;
