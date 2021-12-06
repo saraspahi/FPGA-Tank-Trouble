@@ -39,20 +39,20 @@ logic [31:0] keycode;
 logic currentMaze,MazeUp,MazeDown,MazeLeft,MazeRight;
 assign keycode = keycode_signal;
 
-//always_ff @ (posedge CLK)
-//begin 
-//if(AVL_WRITE && AVL_CS)
-//begin
-//		Maze_Reg[AVL_ADDR][31:0] <= AVL_WRITEDATA;
-//end
-//else if(RESET)
-//	begin
-//		for(int i = 0; i<600; i++)
-//		begin
-//			Maze_Reg[i] <= 32'h00000000;
-//		end
-//	end
-//end
+always_ff @ (posedge CLK)
+begin 
+if(AVL_WRITE && AVL_CS)
+begin
+		Maze_Reg[AVL_ADDR][31:0] <= AVL_WRITEDATA;
+end
+else if(RESET)
+	begin
+		for(int i = 0; i<600; i++)
+		begin
+			Maze_Reg[i] <= 32'h00000000;
+		end
+	end
+end
 
 
 vga_controller v1(.Clk(CLK),.Reset(RESET), .pixel_clk(PIX_CLK), .hs(hs),.vs(vs),.blank(blank),.DrawX(drawxsig),.DrawY(drawysig));
@@ -108,9 +108,9 @@ bullet bullet1(.Reset(RESET),
 					.BulletYStep(Bullet1YStep));  // same postion  as the tank once shot
 					
 
-collisionWall collisonWallBullet1(.objectX(bullet1_X),.objectY(bullet1_Y),.objectS(bullet1_S),
-							.X_Motion(Bullet1XStep),.Y_Motion(Bullet1YStep), 
-							.currentMaze(MazeBullet1),.MazeUp(MazeBullet1Up),.MazeDown(MazeBullet1Down),.MazeLeft(MazeBullet1Left),.MazeRight(MazeBullet1Right),
+collisionWall collisonWallBullet1(.objectX(bullet1_X),.objectY(bullet1_Y),.objectS(bullet1_S),.DrawX(drawxsig),.DrawY(drawysig),
+							.X_Motion(Bullet1XStep),.Y_Motion(Bullet1YStep),.frame_clk(vs),.Reset(RESET),.pixel_clk(PIX_CLK),
+							.currentMazePrime(currentMaze),.MazeUpPrime(MazeLeft),.MazeDownPrime(MazeRight),.MazeLeftPrime(MazeUp),.MazeRightPrime(MazeDown),
 							.isWallBottom(isWallBottom1),.isWallTop(isWallTop1),.isWallRight(isWallRight1),.isWallLeft(isWallLeft1));
 
 ////bullet2 from tank 2 active only after bullet1 is active 		
@@ -250,7 +250,7 @@ begin
 
 	if(Word_ADDR==10'd0)
 	begin 
-		MazeUp = 0; //There is no register up
+		MazeUp = 1; //There is no register up
 	end 
 	else 
 	begin
@@ -259,7 +259,7 @@ begin
 	
 	if(Word_ADDR==10'd599)
 	begin 
-		MazeDown = 0; 
+		MazeDown = 1; 
 	end 
 	else 
 	begin 
@@ -268,20 +268,20 @@ begin
 	
 	if(Byte_ADDR == 10'd31)
 	begin 
-		MazeLeft = 0;
+		MazeLeft = Maze_Reg[Word_ADDR - 1'b1][5'b00000];
 	end 
 	else 
 	begin 
-		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-1'b1];//Go a word address down ;
+		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]+3'd1];//Go a word address down ;
 	end 
 	
 	if(Byte_ADDR == 10'd0)
 	begin 
-		MazeRight = 0;
+		MazeRight = Maze_Reg[Word_ADDR + 1'b1][5'b11111];
 	end 
 	else 
 	begin 
-		MazeRight = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]+1'b1];//Go a word address down ;
+		MazeRight = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-3'd1];//Go a word address down ;
 	end
 
 end 

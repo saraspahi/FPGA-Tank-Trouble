@@ -79,9 +79,9 @@ module bullet ( input Reset, frame_clk,
 					Bullet_Y_Motion[9:0] <=  {{6{~signY}},~Bullet_Y_Comp[10:7]}+1;//Dont know why I had to reverse this
 					Bullet_X_Motion[9:0] <=  {{6{signX}},Bullet_X_Comp[10:7]};
 										
-					Bullet_X_Pos<=tankX+Bullet_X_Motion+Bullet_X_Motion+Bullet_X_Motion+Bullet_X_Motion;//add offset based on angle needs start out of the tanks body for collisions to work???
+					Bullet_X_Pos<=tankX+3*Bullet_X_Motion;//add offset based on angle needs start out of the tanks body for collisions to work???
 																	//Multiply by a different step size in the beginning
-					Bullet_Y_Pos<=tankY+Bullet_Y_Motion+Bullet_Y_Motion+Bullet_Y_Motion+Bullet_Y_Motion;
+					Bullet_Y_Pos<=tankY+3*Bullet_Y_Motion;
 //					timer2<=timer2+1'b1;
 //					if(timer2>=16'd5)
 //							is_bullet_active<=1'b1;
