@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------
 
 
-module tank1 ( input Reset, frame_clk,
+module tank1 ( input Reset, frame_clk,hit,
 					input [31:0] keycode,
 					input [7:0] sin, cos,
                output [9:0]  TankX, TankY, TankS,

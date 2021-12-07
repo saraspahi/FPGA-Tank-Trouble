@@ -13,10 +13,11 @@
 //-------------------------------------------------------------------------
 
 
-module tank2 ( input Reset, frame_clk,
+module tank2 ( input Reset, frame_clk,hit,
+					input isWallBottom,isWallTop,isWallRight,isWallLeft,
                input [7:0] sin, cos,
 					input [31:0] keycode,
-               output [9:0]  TankX, TankY, TankS,
+               output [9:0]  TankX, TankY, TankS,TankXStep,TankYStep,
 					output ShootBullet,
 					output [5:0] Angle );
     
@@ -48,7 +49,7 @@ module tank2 ( input Reset, frame_clk,
     assign Tank_Size = 10;  // assigns the value 4 as a 10-digit binary number, ie "0000000100"
    
     always_ff @ (posedge Reset or posedge frame_clk )
-    begin: Move_Ball
+    begin
         if (Reset)  // Asynchronous Reset
         begin 
             Tank_Y_Motion <= 10'd0; //Ball_Y_Step;
@@ -60,75 +61,123 @@ module tank2 ( input Reset, frame_clk,
 				ShootBulletP<=0;
 
         end
-           
+		  else if(hit)
+		  begin 
+            Tank_Y_Motion <= 10'd0; //Ball_Y_Step;
+				Tank_X_Motion <= 10'd0; //Ball_X_Step;
+				Angle_Motion <=   5'd0;	      //Ball angle step;
+				Tank_Y_Pos <= Tank_Y_Center;
+				Tank_X_Pos <= Tank_X_Center;
+				Angle_new <= 0;
+				ShootBulletP<=0;
+				end
         else 
         begin 
- 
-					 
+		  			if(isWallBottom || isWallTop || isWallRight || isWallLeft )
+					begin 
+						Tank_X_Motion <= ~Tank_X_Motion+1'b1;
+						Tank_Y_Motion<= ~Tank_Y_Motion+1'b1;
+						Angle_Motion <= 0;
+						ShootBulletP <=0;
+					end 
+					else
+					begin
 					  Tank_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't move
 					  Tank_X_Motion <= 10'd0;
 					  Angle_Motion <= 5'd0;
+					 end
+
 
 				 
-				 if ((keycode[31:24] ==8'h52 )||(keycode[23:16]==8'h52)||(keycode[15:8] ==8'h52)||(keycode[7:0]==8'h52))
+				 if ((keycode[31:24] ==8'h52 )||(keycode[23:16]==8'h52)||(keycode[15:8] ==8'h52)||(keycode[7:0]==8'h52))//up
 					  key <= 8'h52;
-				 else if ((keycode[31:24] ==8'h51 )||(keycode[23:16]==8'h51)||(keycode[15:8] ==8'h51)||(keycode[7:0]==8'h51))
+				 else if ((keycode[31:24] ==8'h51 )||(keycode[23:16]==8'h51)||(keycode[15:8] ==8'h51)||(keycode[7:0]==8'h51))//down
 					  key <= 8'h51;
-				 else if ((keycode[31:24] ==8'h50 )||(keycode[23:16]==8'h50)||(keycode[15:8] ==8'h50)||(keycode[7:0]==8'h50))
+				 else if ((keycode[31:24] ==8'h50 )||(keycode[23:16]==8'h50)||(keycode[15:8] ==8'h50)||(keycode[7:0]==8'h50))//right increase angle
 					  key <= 8'h50;
-				 else if ((keycode[31:24] ==8'h4f )||(keycode[23:16]==8'h4f)||(keycode[15:8] ==8'h4f)||(keycode[7:0]==8'h4f))
+				 else if ((keycode[31:24] ==8'h4f )||(keycode[23:16]==8'h4f)||(keycode[15:8] ==8'h4f)||(keycode[7:0]==8'h4f))//left decrease angle
 					  key <= 8'h4f;
-				 else if ((keycode[31:24] ==8'h2c )||(keycode[23:16]==8'h2c)||(keycode[15:8] ==8'h2c)||(keycode[7:0]==8'h2c))
+				 else if ((keycode[31:24] ==8'h2c )||(keycode[23:16]==8'h2c)||(keycode[15:8] ==8'h2c)||(keycode[7:0]==8'h2c))//shoot
 					  key <= 8'h2c;
 				 else 
-					  key <= 8'h00;  
+					  key <= 8'h00; 
+					
 				 
 				 case (key)
 					8'h50 : begin
-							
-								begin
-									Tank_X_Motion <= 0;//A
-									Tank_Y_Motion<= 0;
-									Angle_Motion <=  AngleStep;
-									ShootBulletP <=0;
-								end
-							  end
+					if(isWallBottom || isWallTop || isWallRight || isWallLeft )
+					begin 
+						Tank_X_Motion <= ~Tank_X_Motion+1'b1;
+						Tank_Y_Motion<= ~Tank_Y_Motion+1'b1;
+						Angle_Motion <= 0;
+						ShootBulletP <=0;
+					end 
+					else 		
+					begin
+						Tank_X_Motion <= 0;
+						Tank_Y_Motion<= 0;
+						Angle_Motion <=  AngleStep;
+						ShootBulletP <=0;
+					end
+					end
 					        
 					8'h4f : begin
+					if(isWallBottom || isWallTop || isWallRight || isWallLeft )
+					begin 
+						Tank_X_Motion <= ~Tank_X_Motion+1'b1;
+						Tank_Y_Motion<= ~Tank_Y_Motion+1'b1;
+						Angle_Motion <= 0;
+						ShootBulletP <=0;
+					end 
+					else
 							
-								begin
-									Tank_X_Motion <= 0;//D
-									Tank_Y_Motion <= 0;
-									Angle_Motion <=  ~(AngleStep) + 1;      // Descreases the angle
-									ShootBulletP <=0;
-								end
-							  end
+					begin
+						Tank_X_Motion <= 0;//D
+						Tank_Y_Motion <= 0;
+						Angle_Motion <=  ~(AngleStep) + 1;      // Descreases the angle
+						ShootBulletP <=0;
+					end
+					end
 							  
 					8'h52 : begin
-							  begin
-									//Ball_Y_Motion[9] <= signY;
-                           //Ball_X_Motion[9] <= signX;
-									Tank_Y_Motion[9:0] <=  {{6{~signY}},~Tank_Y_Comp[10:7]} + 1'b1;//up 
-									Tank_X_Motion[9:0] <=  {{6{signX}},Tank_X_Comp[10:7]};
-									Angle_Motion <=0;
-									ShootBulletP <=0;
-								end
-							 end
+					if(isWallBottom || isWallTop || isWallRight || isWallLeft )//up
+					begin 
+						Tank_X_Motion <= ~Tank_X_Motion+1'b1;
+						Tank_Y_Motion<= ~Tank_Y_Motion+1'b1;
+						Angle_Motion <= 0;
+						ShootBulletP <=0;
+					end 
+					else
+					begin
+			
+					Tank_Y_Motion[9:0] <=  {{6{~signY}},~Tank_Y_Comp[10:7]} + 1'b1;//up 
+					Tank_X_Motion[9:0] <=  {{6{signX}},Tank_X_Comp[10:7]};
+					Angle_Motion <=0;
+					ShootBulletP <=0;
+					end
+					end
 							  
 					8'h51 : begin
-								begin
-                           //Ball_Y_Motion[9] <= ~signY;
-                           //Ball_X_Motion[9] <= ~signX;
-									Tank_Y_Motion[9:0] <= {{6{signY}},Tank_Y_Comp[10:7]};//down
-									Tank_X_Motion[9:0] <= {{6{~signX}}, ~Tank_X_Comp[10:7]} + 1'b1;
-									Angle_Motion <=0;
-									ShootBulletP <=0;
-								end
-								end
+					if(isWallBottom || isWallTop || isWallRight || isWallLeft )//down
+					begin 
+						Tank_X_Motion <= ~Tank_X_Motion+1'b1;
+						Tank_Y_Motion<= ~Tank_Y_Motion+1'b1;
+						Angle_Motion <= 0;
+						ShootBulletP <=0;
+					end 
+					else
+					begin
+                  
+						Tank_Y_Motion[9:0] <= {{6{signY}},Tank_Y_Comp[10:7]};//down
+						Tank_X_Motion[9:0] <= {{6{~signX}}, ~Tank_X_Comp[10:7]} + 1'b1;
+						Angle_Motion <=0;
+						ShootBulletP <=0;
+					end
+					end
 								
 					8'h2c : begin
 							  begin 
-							  		Tank_Y_Motion <= 10'd0 ;  // Ball is somewhere in the middle, don't move
+							  		Tank_Y_Motion <= 10'd0 ;  // Tank is somewhere in the middle, don't move
 									Tank_X_Motion <= 10'd0;
 									Angle_Motion <= 5'd0;
 									ShootBulletP <= 1;
@@ -168,14 +217,18 @@ module tank2 ( input Reset, frame_clk,
     end
        
     assign TankX = Tank_X_Pos;
-   
+	 
     assign TankY = Tank_Y_Pos;
-   
+	 
     assign TankS = Tank_Size;
 	 
-	assign Angle = Angle_new;
+	 assign TankXStep = Tank_X_Motion;
+	 
+	 assign TankYStep = Tank_Y_Motion;
+	 
+	 assign Angle = Angle_new;
 	
-	assign ShootBullet= ShootBulletP;
+	 assign ShootBullet= ShootBulletP;
 	
     
 endmodule

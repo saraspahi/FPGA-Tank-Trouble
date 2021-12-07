@@ -1,6 +1,6 @@
 
 
-module bullet ( input Reset, frame_clk,
+module bullet ( input Reset, frame_clk,hit,
 					input isWallBottom,isWallTop,isWallRight,isWallLeft,create,
 					input [9:0] tankX,tankY,
                input [7:0] sin, cos,
@@ -10,7 +10,7 @@ module bullet ( input Reset, frame_clk,
 					output [15:0] bulletTimer);
     
    logic [9:0] Bullet_X_Pos, Bullet_Y_Pos, Bullet_Size;
-	logic [9:0] Bullet_X_Motion, Bullet_Y_Motion;
+	logic [9:0] Bullet_X_Motion, Bullet_Y_Motion, Bullet_X_Motion1, Bullet_Y_Motion1;
 	logic [5:0] Angle_Motion,Angle_new;
 	logic creation_flag;
 	logic [15:0]timer,timer2; //timer is to dissapear bullet, timer2 is to make the bullet active after some time
@@ -76,12 +76,17 @@ module bullet ( input Reset, frame_clk,
 					Bullet_X_Comp[15:0] = Bullet_X_Step[6:0]*cos[6:0];
 					Bullet_Y_Comp[15:0] = Bullet_Y_Step[6:0]*sin[6:0];
 					//The steps to take according to angle
-					Bullet_Y_Motion[9:0] <=  {{6{~signY}},~Bullet_Y_Comp[10:7]}+1;//Dont know why I had to reverse this
-					Bullet_X_Motion[9:0] <=  {{6{signX}},Bullet_X_Comp[10:7]};
-										
-					Bullet_X_Pos<=tankX+3*Bullet_X_Motion;//add offset based on angle needs start out of the tanks body for collisions to work???
+					Bullet_Y_Motion[9:0] =  {{6{~signY}},~Bullet_Y_Comp[10:7]}+1;
+					Bullet_X_Motion[9:0] =  {{6{signX}},Bullet_X_Comp[10:7]};
+					
+					
+					Bullet_X_Motion1[9:0] <= Bullet_X_Motion[9:0];
+					Bullet_Y_Motion1[9:0] <= Bullet_Y_Motion[9:0];
+					
+					
+					Bullet_X_Pos<=tankX+Bullet_X_Motion[9:0] + Bullet_X_Motion[9:0] + Bullet_X_Motion[9:0] + Bullet_X_Motion[9:0] + Bullet_X_Motion[9:0];//add offset based on angle needs start out of the tanks body for collisions to work???
 																	//Multiply by a different step size in the beginning
-					Bullet_Y_Pos<=tankY+3*Bullet_Y_Motion;
+					Bullet_Y_Pos<=tankY+Bullet_Y_Motion[9:0] + Bullet_Y_Motion[9:0] + Bullet_Y_Motion[9:0] + Bullet_Y_Motion[9:0] + Bullet_Y_Motion[9:0];
 //					timer2<=timer2+1'b1;
 //					if(timer2>=16'd5)
 //							is_bullet_active<=1'b1;

@@ -1,5 +1,5 @@
 module collisionWall(input[9:0] objectX,objectY,objectS,X_Motion,Y_Motion,DrawX,DrawY, 
-							input frame_clk,Reset, pixel_clk,
+							input frame_clk,Reset, pixel_clk,hit,
 							input currentMazePrime,MazeUpPrime,MazeDownPrime,MazeLeftPrime,MazeRightPrime, //Checks the current pixel and up down right left
 							output isWallBottom,isWallTop,isWallRight,isWallLeft);
 
@@ -8,10 +8,10 @@ logic currentMaze1,MazeUp1,MazeDown1,MazeLeft1,MazeRight1,currentMaze2,MazeUp2,M
 					
 always_comb
 begin 
-if((DrawX == objectX - 10'd1) &&
-				(DrawX <= objectX + 10'd1) &&
-				(DrawY >= objectY - 10'd1) &&
-				(DrawY == objectY + 10'd1))
+if((DrawX == objectX - objectS) &&
+				(DrawX <= objectX + objectS) &&
+				(DrawY >= objectY - objectS) &&
+				(DrawY == objectY + objectS))
 begin
 objectOn=1'b1;
 end
