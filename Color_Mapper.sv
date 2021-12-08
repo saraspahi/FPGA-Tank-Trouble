@@ -14,7 +14,8 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 							 input [9:0]Bullet2X,Bullet2Y,Bullet2S,
 							 input is_bullet2_active,
 							 input [9:0]Bullet3X,Bullet3Y,Bullet3S,
-							 input is_bullet3_active
+							 input is_bullet3_active,
+							 output logic [9:0] DrawXs2Prime,DrawYs2Prime
 							 );
     
 	logic[9:0] Red_New, Green_New, Blue_New;
@@ -22,7 +23,8 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 
 	
     logic[63:0] XmultCos, YmultSin, XmultSin, YmultCos;
-	 logic[31:0] DrawXs2, DrawYs2, BallY2e, BallX2e, DrawXe, DrawYe, sin2e, cos2e, BallXsp, BallYsp;
+	 logic [15:0] DrawXs2,DrawYs2;
+	 logic[31:0] BallY2e, BallX2e, DrawXe, DrawYe, sin2e, cos2e, BallXsp, BallYsp;
 	 logic XMCsign, YMCsign, XMSsign, YMSsign;
     
 
@@ -58,9 +60,11 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 
             DrawXs2[15:0] = {{6{XMCsign}}, XmultCos[41:32]} + {{6{~YMCsign}}, ~YmultSin[41:32]}+1'b1 +BallX2;
             DrawYs2[15:0] = {{6{XMSsign}}, XmultSin[41:32]} + {{6{YMCsign}}, YmultCos[41:32]} + BallY2;
+				DrawXs2Prime = DrawXs2[9:0];
+				DrawYs2Prime = DrawYs2[9:0];
 	 end
 	 
-	 
+
 	 
 	 
 //Check only for maze ........	 

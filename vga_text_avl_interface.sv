@@ -83,7 +83,7 @@ tank1 b1(.Reset(RESET),
 			.ShootBullet(ShootBullet1),
 			.Angle(AngleI1));
 
-logic [9:0] timer,Tank2XStep,Tank2YStep;
+logic [9:0] timer,Tank2XStep,Tank2YStep,TankPrevX,TankPrevY;
 tank2 b2(.Reset(RESET),   //Instantiates tank2 module 
 			.hit(0),
 			.frame_clk(vs),
@@ -102,10 +102,11 @@ tank2 b2(.Reset(RESET),   //Instantiates tank2 module
 			.ShootBullet(ShootBullet2),
 			.Angle(AngleI2));
 			
-collisionWall collisonWallTank2(.objectX(tank2xsig),.objectY(tank2ysig),.objectS(tank2sizesig),.DrawX(DrawXs2),.DrawY(DrawYs2),
+collisionWall collisonWallTank2(.objectX(tank2xsig),.objectY(tank2ysig),.objectS(10'd15),.DrawX(drawxsig),.DrawY(drawysig),
 							.X_Motion(Tank2XStep),.Y_Motion(Tank2YStep),.frame_clk(vs),.Reset(RESET),.hit(hit),.pixel_clk(PIX_CLK),
 							.currentMazePrime(currentMaze),.MazeUpPrime(MazeLeft),.MazeDownPrime(MazeRight),.MazeLeftPrime(MazeUp),.MazeRightPrime(MazeDown),
-							.isWallBottom(isWallBottomT2),.isWallTop(isWallTopT2),.isWallRight(isWallRightT2),.isWallLeft(isWallLeftT2));
+							.isWallBottom(isWallBottomT2),.isWallTop(isWallTopT2),.isWallRight(isWallRightT2),.isWallLeft(isWallLeftT2),
+							.objectPrevX(TankPrevX),.objectPrevY(TankPrevY));
 		
 logic bullet1_active;
 logic[9:0] bullet1_X,bullet1_Y,bullet1_S,bulletTimer1,Bullet1XStep,Bullet1YStep;

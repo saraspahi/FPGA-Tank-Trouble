@@ -48,8 +48,19 @@ module bullet ( input Reset, frame_clk,hit,
 			   is_bullet_active<=0;
 				timer<=0;
 				timer2<=0;
+			end
+			else if(hit)
+			begin 
+			   Bullet_Y_Motion <= 10'd0; //Ball_Y_Step;
+				Bullet_X_Motion <= 10'd0; //Ball_X_Step;
+				Bullet_X_Pos <= Bullet_Y_Center;
+				Bullet_Y_Pos <= Bullet_X_Center;
+			   is_bullet_active<=0;
+				timer<=0;
+				timer2<=0;
+			
+			end
 
-        end 
 		  else
 		  begin 
 		       //The flag drives the logic below

@@ -1,7 +1,8 @@
 module collisionWall(input[9:0] objectX,objectY,objectS,X_Motion,Y_Motion,DrawX,DrawY, 
 							input frame_clk,Reset, pixel_clk,hit,
 							input currentMazePrime,MazeUpPrime,MazeDownPrime,MazeLeftPrime,MazeRightPrime, //Checks the current pixel and up down right left
-							output isWallBottom,isWallTop,isWallRight,isWallLeft);
+							output isWallBottom,isWallTop,isWallRight,isWallLeft,
+							output [9:0] objectPrevX,objectPrevY);
 
 logic objectOn,UpLeft,DownRight,UpRight,DownLeft,Wall_On,currentMaze,MazeUp,MazeDown,MazeLeft,MazeRight;	
 logic currentMaze1,MazeUp1,MazeDown1,MazeLeft1,MazeRight1,currentMaze2,MazeUp2,MazeDown2,MazeLeft2,MazeRight2;
@@ -30,6 +31,40 @@ else
 Wall_On = 0;
 
 end
+
+
+logic[9:0] 	objectPrevX1,objectPrevY1,objectPrevX2,objectPrevY2;
+
+//Saves the previous position from when it had not collided
+always_ff @(posedge Reset or posedge pixel_clk)
+begin 
+if (Reset)
+begin
+objectPrevX1 = 0;
+objectPrevY1 = 0;
+end 
+else if ((DrawX==0) && (DrawY==0)) 
+begin 
+objectPrevX1 = 0;
+objectPrevY1 = 0;
+end
+else 
+begin 
+	if(Wall_On==0)
+	begin 
+	objectPrevX1 = objectX;
+	objectPrevY1 = objectY;
+	end 
+	else 
+	begin 
+	objectPrevX1 = objectPrevX1;
+	objectPrevY1 = objectPrevY1;
+	end
+
+end
+end 
+
+
 
 always_ff @(posedge Reset or posedge pixel_clk )
 begin 
@@ -85,6 +120,8 @@ begin
 	MazeDown2=0;
 	MazeLeft2=0;
 	MazeRight2=0;
+	objectPrevX2=0;
+	objectPrevY2=0;
 
 end
 else if ((DrawX==0) && (DrawY==0))  //Does this set everythin to 0
@@ -95,6 +132,8 @@ begin
 	MazeDown2=0;
 	MazeLeft2=0;
 	MazeRight2=0;
+	objectPrevX2=0;
+	objectPrevY2=0;
 end
 else 
 begin 
@@ -103,6 +142,8 @@ begin
 	MazeDown2=MazeDown1;
 	MazeLeft2=MazeLeft1;
 	MazeRight2=MazeRight1;
+	objectPrevX2=objectPrevX1;
+	objectPrevY2=objectPrevY1;
 
 end 
 
@@ -113,43 +154,8 @@ assign MazeUp = MazeUp2;
 assign MazeDown = MazeDown2;
 assign MazeLeft = MazeLeft2;
 assign MazeRight = MazeRight2; 
-
-//always_ff @( posedge Reset or posedge Wall_On or  negedge frame_clk)
-//begin 
-//if(frame_clk==0)
-//begin 
-
-//end
-//else if(Reset)
-//begin 
-//	currentMaze<=0;
-//	MazeUp<=0;
-//	MazeDown<=0;
-//	MazeLeft<=0;
-//	MazeRight<=0;
-//end
-//else 
-//begin
-//if(Wall_On)
-// begin 
-//	currentMaze<=Wall_On;
-//	MazeUp<=MazeUpPrime;
-//	MazeDown<=MazeDownPrime;
-//	MazeLeft<=MazeLeftPrime;
-//	MazeRight<=MazeRightPrime;
-//end 
-//else 
-//begin 
-//	currentMaze<=currentMaze;
-//	MazeUp<=MazeUp;
-//	MazeDown<=MazeDown;
-//	MazeLeft<=MazeLeft;
-//	MazeRight<=MazeRight;
-//
-//end
-//end 
-//end
-
+assign objectPrevX = objectPrevX2;
+assign objectPrevY = objectPrevY2;
 
 
 always_comb
