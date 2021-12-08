@@ -3,6 +3,8 @@
 			clk_clk                        : in    std_logic                     := 'X';             -- clk
 			game_end_export                : in    std_logic_vector(1 downto 0)  := (others => 'X'); -- export
 			game_end_port_new_signal       : out   std_logic_vector(1 downto 0);                     -- new_signal
+			game_reset_export              : out   std_logic_vector(1 downto 0);                     -- export
+			game_reset_port_new_signal     : in    std_logic_vector(1 downto 0)  := (others => 'X'); -- new_signal
 			hex_digits_export              : out   std_logic_vector(15 downto 0);                    -- export
 			key_external_connection_export : in    std_logic_vector(1 downto 0)  := (others => 'X'); -- export
 			keycode_export                 : out   std_logic_vector(31 downto 0);                    -- export
@@ -21,6 +23,8 @@
 			sdram_wire_dqm                 : out   std_logic_vector(1 downto 0);                     -- dqm
 			sdram_wire_ras_n               : out   std_logic;                                        -- ras_n
 			sdram_wire_we_n                : out   std_logic;                                        -- we_n
+			spawn_pos_export               : out   std_logic_vector(19 downto 0);                    -- export
+			spawn_pos_port_new_signal      : in    std_logic_vector(19 downto 0) := (others => 'X'); -- new_signal
 			spi0_MISO                      : in    std_logic                     := 'X';             -- MISO
 			spi0_MOSI                      : out   std_logic;                                        -- MOSI
 			spi0_SCLK                      : out   std_logic;                                        -- SCLK

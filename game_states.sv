@@ -1,11 +1,12 @@
 module game_states(input logic CLK, RESET,
-                   input logic hit, maze_ready,
+                   input logic tank1shot, tank2shot, maze_ready,
                    input logic [31:0] keycode,
+						 input logic [1:0] game_reset,
                    output logic title,
                    output logic[1:0] game_end);
 
-    enum logic [2:0] { title_state, in_game, new_round } State, Next_state;
-
+    enum logic [2:0] { title_state, in_game, tank1win, tank2win, start_game } State, Next_state;
+	
     logic[7:0] key; 
     always_ff @ (posedge CLK)
     begin
@@ -30,15 +31,27 @@ module game_states(input logic CLK, RESET,
     unique case(State)
         title_state:
             if(key == 8'h28)
-                Next_state = new_round;
-        new_round:
+                Next_state = start_game;
+		  start_game:
+		      if(maze_ready)
+					Next_state = in_game;
+				else
+					Next_state = start_game;
+        tank1win:
             if(maze_ready)
                 Next_state = in_game;
             else
-                Next_state = new_round;
+                Next_state = tank1win;
+		  tank2win:
+		      if(maze_ready)
+					Next_state = in_game;
+				else
+					Next_state = tank2win;
         in_game:
-            if(hit)
-                Next_state = new_round;
+            if(tank1shot)
+                Next_state = tank2win;
+				else if(tank2shot)
+				    Next_state = tank1win;
             else
                 Next_state = in_game;
 				default:;
@@ -49,10 +62,18 @@ module game_states(input logic CLK, RESET,
         begin
             title = 1'b1;
         end
-        new_round:
+        tank1win:
         begin
             game_end = 2'b01;
         end
+		  tank2win:
+		  begin
+				game_end = 2'b10;
+		  end
+		  start_game:
+		  begin
+				game_end = 2'b11;
+		  end
         in_game:
         begin
             game_end = 2'b00;

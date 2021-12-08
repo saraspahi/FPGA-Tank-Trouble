@@ -164,6 +164,12 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		
 		.maze_ready_export(maze_ready),
 		.maze_ready_port_new_signal(maze_ready),
+		
+		.game_reset_export(game_reset),
+		.game_reset_port_new_signal(game_reset),
+		
+		.spawn_pos_export(spawn_pos),
+		.spawn_pos_port_new_signal(spawn_pos),
 		//VGA
 		.vga_port_new_signal_2 (VGA_HS),
 		.vga_port_new_signal_1 (VGA_G),

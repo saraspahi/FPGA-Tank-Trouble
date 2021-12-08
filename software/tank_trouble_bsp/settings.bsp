@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Dec 5, 2021 3:03:39 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1638738219789</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Dec 8, 2021 2:01:10 AM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1638950470459</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/ece385user/FPGA-Tank-Trouble/software/tank_trouble_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../lab62_soc.sopcinfo</SopcDesignFile>
@@ -917,74 +917,86 @@
                 <attributes>timer</attributes>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>maze_ready</slaveDescriptor>
+                <slaveDescriptor>spawn_pos</slaveDescriptor>
                 <addressRange>0x00000060 - 0x0000006F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>game_end</slaveDescriptor>
+                <slaveDescriptor>game_reset</slaveDescriptor>
                 <addressRange>0x00000070 - 0x0000007F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>key</slaveDescriptor>
+                <slaveDescriptor>maze_ready</slaveDescriptor>
                 <addressRange>0x00000080 - 0x0000008F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>leds_pio</slaveDescriptor>
+                <slaveDescriptor>game_end</slaveDescriptor>
                 <addressRange>0x00000090 - 0x0000009F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>hex_digits_pio</slaveDescriptor>
+                <slaveDescriptor>key</slaveDescriptor>
                 <addressRange>0x000000A0 - 0x000000AF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>usb_rst</slaveDescriptor>
+                <slaveDescriptor>leds_pio</slaveDescriptor>
                 <addressRange>0x000000B0 - 0x000000BF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>usb_gpx</slaveDescriptor>
+                <slaveDescriptor>hex_digits_pio</slaveDescriptor>
                 <addressRange>0x000000C0 - 0x000000CF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>usb_irq</slaveDescriptor>
+                <slaveDescriptor>usb_rst</slaveDescriptor>
                 <addressRange>0x000000D0 - 0x000000DF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>keycode</slaveDescriptor>
+                <slaveDescriptor>usb_gpx</slaveDescriptor>
                 <addressRange>0x000000E0 - 0x000000EF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>sdram_pll</slaveDescriptor>
+                <slaveDescriptor>usb_irq</slaveDescriptor>
                 <addressRange>0x000000F0 - 0x000000FF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
+                <slaveDescriptor>keycode</slaveDescriptor>
+                <addressRange>0x00000100 - 0x0000010F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>sdram_pll</slaveDescriptor>
+                <addressRange>0x00000110 - 0x0000011F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>sysid_qsys_0</slaveDescriptor>
-                <addressRange>0x00000108 - 0x0000010F</addressRange>
+                <addressRange>0x00000128 - 0x0000012F</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>jtag_uart_0</slaveDescriptor>
-                <addressRange>0x00000110 - 0x00000117</addressRange>
+                <addressRange>0x00000130 - 0x00000137</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
         </MemoryMap>

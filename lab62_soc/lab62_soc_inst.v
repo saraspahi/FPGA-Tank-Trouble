@@ -2,12 +2,14 @@
 		.clk_clk                        (<connected-to-clk_clk>),                        //                     clk.clk
 		.game_end_export                (<connected-to-game_end_export>),                //                game_end.export
 		.game_end_port_new_signal       (<connected-to-game_end_port_new_signal>),       //           game_end_port.new_signal
+		.game_reset_export              (<connected-to-game_reset_export>),              //              game_reset.export
 		.hex_digits_export              (<connected-to-hex_digits_export>),              //              hex_digits.export
 		.key_external_connection_export (<connected-to-key_external_connection_export>), // key_external_connection.export
 		.keycode_export                 (<connected-to-keycode_export>),                 //                 keycode.export
 		.keycode_port_new_signal        (<connected-to-keycode_port_new_signal>),        //            keycode_port.new_signal
 		.leds_export                    (<connected-to-leds_export>),                    //                    leds.export
 		.maze_ready_export              (<connected-to-maze_ready_export>),              //              maze_ready.export
+		.maze_ready_port_new_signal     (<connected-to-maze_ready_port_new_signal>),     //         maze_ready_port.new_signal
 		.reset_reset_n                  (<connected-to-reset_reset_n>),                  //                   reset.reset_n
 		.sdram_clk_clk                  (<connected-to-sdram_clk_clk>),                  //               sdram_clk.clk
 		.sdram_wire_addr                (<connected-to-sdram_wire_addr>),                //              sdram_wire.addr
@@ -31,6 +33,8 @@
 		.vga_port_new_signal_2          (<connected-to-vga_port_new_signal_2>),          //                        .new_signal_2
 		.vga_port_new_signal_3          (<connected-to-vga_port_new_signal_3>),          //                        .new_signal_3
 		.vga_port_new_signal_4          (<connected-to-vga_port_new_signal_4>),          //                        .new_signal_4
-		.maze_ready_port_new_signal     (<connected-to-maze_ready_port_new_signal>)      //         maze_ready_port.new_signal
+		.game_reset_port_new_signal     (<connected-to-game_reset_port_new_signal>),     //         game_reset_port.new_signal
+		.spawn_pos_port_new_signal      (<connected-to-spawn_pos_port_new_signal>),      //          spawn_pos_port.new_signal
+		.spawn_pos_export               (<connected-to-spawn_pos_export>)                //               spawn_pos.export
 	);
 

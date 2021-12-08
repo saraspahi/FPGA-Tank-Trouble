@@ -27,7 +27,8 @@
  
 #define offset(x,y) ((Ppeek(m_stack).second + y) * mazeWidth + (Ppeek(m_stack).first+x))
 
-void genMaze()
+
+void genMaze(alt_u8 t1Score, alt_u8 t2Score)
 {
     srand(time(NULL));
     static int PATH_N = 0x01;
@@ -36,7 +37,7 @@ void genMaze()
     static int PATH_W = 0x08;
     static int VISITED = 0x10;
     int mazeWidth = 8;
-    int mazeHeight = 6;
+    int mazeHeight = 5;
     int pathWidth = 19;
     struct Stack* neighbors = createStack(4);
     struct paired_stack* m_stack = createPStack(mazeWidth*mazeHeight);
@@ -107,20 +108,165 @@ void genMaze()
             maze_screen_buffer[i][j] = 1;
         }
     }
-  
+
+    for(int i = 0; i<19; i++){
+    	for(int j=0; j<160; j++){
+    		maze_screen_buffer[i][j] = 0;
+    	}
+    }
+
+
+    // To whoever is reading this... I'm sorry
+    alt_u8 zero[16][8] = {{0,0,1,1,1,1,0,0},
+						  {0,1,0,0,0,0,1,0},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {0,1,0,0,0,0,1,0},
+						  {0,0,1,1,1,1,0,0}};
+
+    alt_u8 one[16][8] =  {{0,0,1,1,0,0,0,0},
+						  {0,1,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,1,1,1,1,1,0}};
+
+    alt_u8 two[16][8] =  {{0,0,1,1,1,1,0,0},
+						  {0,1,0,0,0,0,1,0},
+						  {1,0,0,0,0,0,0,1},
+						  {1,0,0,0,0,0,0,1},
+						  {0,0,0,0,0,0,0,1},
+						  {0,0,0,0,0,0,1,0},
+						  {0,0,0,0,0,1,0,0},
+						  {0,0,0,0,1,0,0,0},
+						  {0,0,0,1,0,0,0,0},
+						  {0,0,1,0,0,0,0,0},
+						  {0,1,0,0,0,0,0,0},
+						  {1,0,0,0,0,0,0,0},
+						  {1,0,0,0,0,0,0,0},
+						  {1,0,0,0,0,0,0,0},
+						  {1,0,0,0,0,0,0,0},
+						  {1,1,1,1,1,1,1,1}};
+
+    alt_u8 three[16][8] = {{0,0,1,1,1,1,0,0},
+   						  {0,1,0,0,0,0,1,0},
+   						  {1,0,0,0,0,0,0,1},
+   						  {0,0,0,0,0,0,0,1},
+   						  {0,0,0,0,0,0,0,1},
+   						  {0,0,0,0,0,0,0,1},
+   						  {0,0,0,0,0,0,1,0},
+   						  {0,1,1,1,1,1,0,0},
+   						  {0,0,0,0,0,0,1,0},
+   						  {0,0,0,0,0,0,0,1},
+   						  {0,0,0,0,0,0,0,1},
+   						  {0,0,0,0,0,0,0,1},
+   						  {0,0,0,0,0,0,0,1},
+   						  {1,0,0,0,0,0,0,1},
+   						  {0,1,0,0,0,0,1,0},
+   						  {0,0,1,1,1,1,0,0}};
+    // tank1 hardcode
+    int t1scorepos = 60;
+    int t2scorepos = 90;
+
+    if(t1Score == 0){
+    	for(int i = 2; i < 18; i++){
+    		for(int j = t1scorepos; j<t1scorepos+8; j++){
+    			maze_screen_buffer[i][j] = zero[i-2][j-t1scorepos];
+    		}
+    	}
+    }
+
+    if(t1Score == 1){
+    	for(int i = 2; i < 18; i++){
+    		for(int j = t1scorepos; j<t1scorepos+8; j++){
+    			maze_screen_buffer[i][j] = one[i-2][j-t1scorepos];
+    		}
+    	}
+    }
+
+    if(t1Score == 2){
+      	for(int i = 2; i < 18; i++){
+      		for(int j = t1scorepos; j<t1scorepos+8; j++){
+      			maze_screen_buffer[i][j] = two[i-2][j-t1scorepos];
+      		}
+      	}
+      }
+
+      if(t1Score == 3){
+      	for(int i = 2; i < 18; i++){
+      		for(int j = t1scorepos; j<t1scorepos+8; j++){
+      			maze_screen_buffer[i][j] = three[i-2][j-t1scorepos];
+      		}
+      	}
+      }
+
+
+    // tank 2 hardcode
+      if(t2Score == 0){
+      	for(int i = 2; i < 18; i++){
+      		for(int j = t2scorepos; j<t2scorepos+8; j++){
+      			maze_screen_buffer[i][j] = zero[i-2][j-t2scorepos];
+      		}
+      	}
+      }
+
+      if(t2Score == 1){
+      	for(int i = 2; i < 18; i++){
+      		for(int j = t2scorepos; j<t2scorepos+8; j++){
+      			maze_screen_buffer[i][j] = one[i-2][j-t2scorepos];
+      		}
+      	}
+      }
+
+      if(t2Score == 2){
+        	for(int i = 2; i < 18; i++){
+        		for(int j = t2scorepos; j<t2scorepos+8; j++){
+        			maze_screen_buffer[i][j] = two[i-2][j-t2scorepos];
+        		}
+        	}
+        }
+
+      if(t2Score == 3){
+        	for(int i = 2; i < 18; i++){
+        		for(int j = t2scorepos; j<t2scorepos+8; j++){
+        			maze_screen_buffer[i][j] = three[i-2][j-t2scorepos];
+        		}
+        	}
+        }
+
 
     for(int x = 0; x<mazeWidth; x++){
         for(int y = 0; y<mazeHeight; y++){
             for(int py = 0; py<pathWidth; py++){
                 for(int px = 0; px<pathWidth; px++){
-                    maze_screen_buffer[y*(pathWidth + 1) + py][x*(pathWidth+1) + px] = 0;
+                    maze_screen_buffer[y*(pathWidth + 1) + py + 20][x*(pathWidth+1) + px] = 0;
                 }
             }
             for(int p = 0; p<pathWidth; p++){
                 if(m_maze[y*mazeWidth + x] & PATH_S)
-                    maze_screen_buffer[y*(pathWidth+1)+pathWidth][x*(pathWidth+1)+p] = 0;
+                    maze_screen_buffer[y*(pathWidth+1)+pathWidth + 20][x*(pathWidth+1)+p] = 0;
                 if(m_maze[y*mazeWidth + x] & PATH_E)
-                    maze_screen_buffer[y*(pathWidth+1)+p][x*(pathWidth+1)+pathWidth] = 0;
+                    maze_screen_buffer[y*(pathWidth+1)+p + 20][x*(pathWidth+1)+pathWidth] = 0;
 
             }
             
@@ -129,7 +275,6 @@ void genMaze()
 
 	struct MAZE{
 		alt_u32 VRAM [120*5]; //Week 2 - extended VRAM
-
 	};
 	//you may have to change this line depending on your platform designer
 	static volatile struct MAZE* vga_ctrl = 0x00001000;

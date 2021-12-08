@@ -25,6 +25,9 @@ module vga_text_avl_interface (
 	
 	input logic maze_ready,
 	
+	input logic [1:0] game_reset,
+	input logic [19:0] spawn_pos,
+	
 	// Exported Conduit (mapped to VGA port - make sure you export in Platform Designer)
 	output logic [7:0]  red, green, blue,	// VGA color channels (mapped to output pins in top-level)
 	output logic hs, vs						// VGA HS/VS
@@ -43,27 +46,28 @@ logic [31:0] keycode;
 logic currentMaze,MazeUp,MazeDown,MazeLeft,MazeRight;
 assign keycode = keycode_signal;
 
-//always_ff @ (posedge CLK)
-//begin 
-//if(AVL_WRITE && AVL_CS)
-//begin
-//		Maze_Reg[AVL_ADDR][31:0] <= AVL_WRITEDATA;
-//end
-//else if(RESET)
-//	begin
-//		for(int i = 0; i<600; i++)
-//		begin
-//			Maze_Reg[i] <= 32'h00000000;
-//		end
-//	end
-//end
+always_ff @ (posedge CLK)
+begin 
+if(AVL_WRITE && AVL_CS)
+begin
+		Maze_Reg[AVL_ADDR][31:0] <= AVL_WRITEDATA;
+end
+else if(RESET)
+	begin
+		for(int i = 0; i<600; i++)
+		begin
+			Maze_Reg[i] <= 32'h00000000;
+		end
+	end
+end
 
 logic hit;
 assign hit = tank1shot || tank2shot; 
 game_states game_states(.CLK(CLK), .RESET(RESET),
-                   .hit(hit), .maze_ready(maze_ready),
+                   .tank1shot(tank1shot), .tank2shot(tank2shot), .maze_ready(maze_ready),
                    .keycode(keycode),
                    .title(title),
+						 .game_reset(game_reset),
                    .game_end(game_end));
 
 
@@ -80,17 +84,23 @@ tank1 b1(.Reset(RESET),
 			.TankX(tank1xsig),
 			.TankY(tank1ysig),
 			.TankS(tank1sizesig),
+			.TankXStep(Tank1XStep), 
+			.TankYStep(Tank1YStep),
 			.ShootBullet(ShootBullet1),
 			.Angle(AngleI1));
 
 logic [9:0] timer,Tank2XStep,Tank2YStep,TankPrevX,TankPrevY;
+
+
 tank2 b2(.Reset(RESET),   //Instantiates tank2 module 
 			.hit(0),
+			.game_end(game_end),
+			.spawn_pos(spawn_pos[19:10]),
 			.frame_clk(vs),
-			.isWallBottom(isWallBottomT2),
-			.isWallTop(isWallTopT2),
-			.isWallRight(isWallRightT2),
-			.isWallLeft(isWallLeftT2),
+			.isWallBottom(0),
+			.isWallTop(0),
+			.isWallRight(0),
+			.isWallLeft(0),
 			.sin(sin2), 
 			.cos(cos2),
 			.keycode(keycode),
@@ -269,50 +279,50 @@ angleMux angleTank2(  .Angle(AngleI2),.sin(sin2u),.cos(cos2u),.newSin(sin2), .ne
 
 
 			
-//always_comb
-//begin 
-//	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
-//	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
-//	//Checking if each pixel is a wall or not 
-//	currentMaze = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]];	
-//
-//	if(Word_ADDR==10'd0)
-//	begin 
-//		MazeUp = 1; //There is no register up
-//	end 
-//	else 
-//	begin
-//		MazeUp = Maze_Reg[Word_ADDR-10'd5][~Byte_ADDR[4:0]];//Go a word address up
-//	end 
-//	
-//	if(Word_ADDR==10'd599)
-//	begin 
-//		MazeDown = 1; 
-//	end 
-//	else 
-//	begin 
-//		MazeDown = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]];//Go a word address down
-//	end
-//	
-//	if(Byte_ADDR == 10'd31)
-//	begin 
-//		MazeLeft = Maze_Reg[Word_ADDR - 1'b1][5'b00000];
-//	end 
-//	else 
-//	begin 
-//		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]+3'd1];//Go a word address down ;
-//	end 
-//	
-//	if(Byte_ADDR == 10'd0)
-//	begin 
-//		MazeRight = Maze_Reg[Word_ADDR + 1'b1][5'b11111];
-//	end 
-//	else 
-//	begin 
-//		MazeRight = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-3'd1];//Go a word address down ;
-//	end
-//
-//end 
+always_comb
+begin 
+	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
+	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
+	//Checking if each pixel is a wall or not 
+	currentMaze = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]];	
+
+	if(Word_ADDR==10'd0)
+	begin 
+		MazeUp = 1; //There is no register up
+	end 
+	else 
+	begin
+		MazeUp = Maze_Reg[Word_ADDR-10'd5][~Byte_ADDR[4:0]];//Go a word address up
+	end 
+	
+	if(Word_ADDR==10'd599)
+	begin 
+		MazeDown = 1; 
+	end 
+	else 
+	begin 
+		MazeDown = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]];//Go a word address down
+	end
+	
+	if(Byte_ADDR == 10'd31)
+	begin 
+		MazeLeft = Maze_Reg[Word_ADDR - 1'b1][5'b00000];
+	end 
+	else 
+	begin 
+		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]+3'd1];//Go a word address down ;
+	end 
+	
+	if(Byte_ADDR == 10'd0)
+	begin 
+		MazeRight = Maze_Reg[Word_ADDR + 1'b1][5'b11111];
+	end 
+	else 
+	begin 
+		MazeRight = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-3'd1];//Go a word address down ;
+	end
+
+end 
 
 
 
@@ -375,6 +385,7 @@ angleMux angleTank2(  .Angle(AngleI2),.sin(sin2u),.cos(cos2u),.newSin(sin2), .ne
 
 color_mapper  c1(.BallX1(tank1xsig),
 					.CLK(PIX_CLK),
+					.Sys_CLK(CLK),
 					.maze(currentMaze),.BallY1(tank1ysig),  //Change the names to tank instead of ball
 					.title(title),
 					.DrawX(drawxsig), 

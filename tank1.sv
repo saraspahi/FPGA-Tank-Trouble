@@ -16,7 +16,7 @@
 module tank1 ( input Reset, frame_clk,hit,
 					input [31:0] keycode,
 					input [7:0] sin, cos,
-               output [9:0]  TankX, TankY, TankS,
+               output [9:0]  TankX, TankY, TankS, TankXStep, TankYStep,
 					output ShootBullet,
 					output [5:0] Angle);//inxe
     
@@ -120,6 +120,10 @@ module tank1 ( input Reset, frame_clk,hit,
     assign TankY = Tank_Y_Pos;
    
     assign TankS = Tank_Size;
-    
+	 
+	 assign TankXStep = Tank_X_Motion;
+	 
+	 assign TankYStep = Tank_Y_Motion;
+	
 
 endmodule

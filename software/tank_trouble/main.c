@@ -130,15 +130,15 @@ void printSignedHex1(signed char value) {
 
 void setKeycode(int keycode)
 {
-	IOWR_ALTERA_AVALON_PIO_DATA(0x00000e0, keycode);
+	IOWR_ALTERA_AVALON_PIO_DATA(0x0000100, keycode);
 }
 int main() {
-    volatile unsigned int *game_end = (unsigned int*)0x70;
-    if(*game_end == 1){
-    	genMaze();
-    	IOWR_ALTERA_AVALON_PIO_DATA(0x0000060, 1);
-    }
-    IOWR_ALTERA_AVALON_PIO_DATA(0x0000060, 0);
+    volatile unsigned int *game_end = (unsigned int*)0x90;
+//    if(*game_end == 1){
+//    	genMaze();
+//    	IOWR_ALTERA_AVALON_PIO_DATA(0x0000060, 1);
+//    }
+//    IOWR_ALTERA_AVALON_PIO_DATA(0x0000060, 0);
     BYTE rcode;
 	BOOT_MOUSE_REPORT buf;		//USB mouse report
 	BOOT_KBD_REPORT kbdbuf;
@@ -153,13 +153,57 @@ int main() {
 	MAX3421E_init();
 	printf("initializing USB...\n");
 	USB_init();
-	while (1) {
 
-		if(*game_end == 1){
-	        genMaze();
-            IOWR_ALTERA_AVALON_PIO_DATA(0x60, 1);
+	alt_u8 t1Score = 0;
+	alt_u8 t2Score = 0;
+	alt_u8 x2pos = 0;
+	alt_u8 y2pos = 0;
+	int pos_buffer = 0;
+	srand(4);
+	while (1) {
+		//add base vals from system.h
+		//x80 is a maze ready
+		//x90 is game output from hardware
+		//x60 is spawn pos
+		//x70 is game final reset
+		if(t1Score > 3){
+			IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
+		}
+		if(t2Score > 3){
+			IOWR_ALTERA_AVALON_PIO_DATA(0x80, 2);
+		}
+		if(*game_end == 3){
+			x2pos = rand()%8;
+			y2pos = rand()%5 + 1;
+			pos_buffer = (x2pos << 10) | (y2pos<<15);
+			IOWR_ALTERA_AVALON_PIO_DATA(0x60, pos_buffer);
+			printf("game starting .. \n");
+	        genMaze(t1Score, t2Score);
+            IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
         }
-        IOWR_ALTERA_AVALON_PIO_DATA(0x60, 0);
+
+		if(*game_end == 2){
+			x2pos = rand()%8;
+			y2pos = rand()%5 + 1;
+			pos_buffer = (x2pos << 10) | (y2pos<<15);
+			IOWR_ALTERA_AVALON_PIO_DATA(0x60, pos_buffer);
+			t2Score = t2Score + 1;
+			printf("tank 2 wins \n");
+			genMaze(t1Score, t2Score);
+			IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
+		}
+		if(*game_end == 1){
+			x2pos = rand()%8;
+			y2pos = rand()%5 + 1;
+			pos_buffer = (x2pos << 10) | (y2pos<<15);
+			IOWR_ALTERA_AVALON_PIO_DATA(0x60, pos_buffer);
+			t1Score = t1Score + 1;
+			printf("tank 1 wins \n");
+			genMaze(t1Score, t2Score);
+			IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
+		}
+        IOWR_ALTERA_AVALON_PIO_DATA(0x80, 0);
+
 		printf(".");
 		MAX3421E_Task();
 		//usleep (1000);
