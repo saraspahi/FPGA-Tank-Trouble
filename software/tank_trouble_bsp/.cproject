@@ -46,10 +46,10 @@
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1579442670;preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1579442670.;altera.tool.gnu.c.compiler.mingw.614465211;cdt.managedbuild.tool.gnu.c.compiler.input.1580439239">
+		<scannerConfigBuildInfo instanceId="preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.97549293;preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.97549293.;altera.tool.gnu.cpp.compiler.mingw.2011311869;cdt.managedbuild.tool.gnu.cpp.compiler.input.505308916">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1579442670;preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1579442670.;altera.tool.gnu.cpp.compiler.mingw.645108329;cdt.managedbuild.tool.gnu.cpp.compiler.input.1709375114">
+		<scannerConfigBuildInfo instanceId="preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.97549293;preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.97549293.;altera.tool.gnu.c.compiler.mingw.1250966235;cdt.managedbuild.tool.gnu.c.compiler.input.941626818">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>

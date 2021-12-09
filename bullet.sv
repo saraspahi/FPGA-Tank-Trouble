@@ -2,6 +2,7 @@
 
 module bullet ( input Reset, frame_clk,hit,
 					input isWallBottom,isWallTop,isWallRight,isWallLeft,create,
+					input[1:0] game_end,
 					input [9:0] tankX,tankY,
                input [7:0] sin, cos,
 					output is_bullet_active,
@@ -49,7 +50,7 @@ module bullet ( input Reset, frame_clk,hit,
 				timer<=0;
 				timer2<=0;
 			end
-			else if(hit)
+			else if(game_end>0)
 			begin 
 			   Bullet_Y_Motion <= 10'd0; //Ball_Y_Step;
 				Bullet_X_Motion <= 10'd0; //Ball_X_Step;
