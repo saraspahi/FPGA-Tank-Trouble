@@ -61,6 +61,7 @@ else if(RESET)
 	end
 end
 
+
 logic hit,restart;
 assign hit = tank1shot || tank2shot; 
 game_states game_states(.CLK(CLK), .RESET(RESET),
@@ -296,7 +297,7 @@ bullet bullet9(.Reset(RESET),
 					.isWallTop(isWallTop9),
 					.isWallRight(isWallRight9),
 					.isWallLeft(isWallLeft9),
-					.create(ShootBullet1 && bullet9_active && (bulletTimer9>10'd35)), // TODOand bullet is not active then create on
+					.create(ShootBullet1 && bullet8_active && (bulletTimer8>10'd35)), // TODOand bullet is not active then create on
 					.tankX(tank1xsig),
 					.tankY(tank1ysig),
 					.sin(sin1),
@@ -433,6 +434,22 @@ color_mapper c1(.BallX1(tank1xsig),
 					.Bullet3Y(bullet3_Y),
 					.Bullet3S(bullet3_S),
 					.is_bullet3_active(bullet3_active),
+					//bullet7data
+					.Bullet7X(bullet7_X),
+					.Bullet7Y(bullet7_Y),
+					.Bullet7S(bullet7_S),
+					.is_bullet7_active(bullet7_active),
+					//bullet8data
+					.Bullet8X(bullet8_X),
+					.Bullet8Y(bullet8_Y),
+					.Bullet8S(bullet8_S),
+					.is_bullet8_active(bullet8_active),
+					//bullet9data
+					.Bullet9X(bullet9_X),
+					.Bullet9Y(bullet9_Y),
+					.Bullet9S(bullet9_S),
+					.is_bullet9_active(bullet9_active),
+					
 					);
 
 endmodule

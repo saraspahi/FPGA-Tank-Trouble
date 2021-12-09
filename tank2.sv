@@ -11,7 +11,7 @@ module tank2 ( input Reset, frame_clk,hit,
    logic [12:0] Tank_X_Pos, Tank_Y_Pos;
 	logic [9:0] Tank_Size,timer;
 	logic [12:0] Tank_X_Motion, Tank_Y_Motion;
-	logic [5:0] Angle_new, Angle_Motion;
+	int Angle_new, Angle_Motion;
 	
 	logic [7:0] key;
    logic [15:0] Tank_X_Comp, Tank_Y_Comp;

@@ -17,6 +17,12 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 							 input is_bullet2_active,
 							 input [9:0]Bullet3X,Bullet3Y,Bullet3S,
 							 input is_bullet3_active,
+							 input [9:0] Bullet7X,Bullet7Y,Bullet7S,
+							 input is_bullet7_active,
+							 input [9:0] Bullet8X,Bullet8Y,Bullet8S,
+							 input is_bullet8_active,
+							 input [9:0] Bullet9X,Bullet9Y,Bullet9S,
+							 input is_bullet9_active,
 							 output logic [9:0] DrawXs2Prime,DrawYs2Prime
 							 );
 							 
@@ -218,7 +224,7 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 					Green_New = 8'h00;
 					Blue_New = 8'h00;
 				end 
-						//Draws bullet2 from tank2
+						//Draws bullet3 from tank2
 			else if((DrawX >= Bullet3X - Bullet3S) &&
 				(DrawX <= Bullet3X + Bullet3S) &&
 				(DrawY >= Bullet3Y - Bullet3S) &&
@@ -228,6 +234,38 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 					Green_New = 8'h00;
 					Blue_New = 8'h00;
 				end 
+			//Draws bullet7 from tank7
+			else if((DrawX >= Bullet7X - Bullet7S) &&
+				(DrawX <= Bullet7X + Bullet7S) &&
+				(DrawY >= Bullet7Y - Bullet7S) &&
+				(DrawY <= Bullet7Y + Bullet7S) && is_bullet7_active)
+				begin 
+					Red_New = 8'h00;
+					Green_New = 8'h00;
+					Blue_New = 8'h00;
+				end 
+			//Draws bullet8 from tank8
+			else if((DrawX >= Bullet8X - Bullet8S) &&
+				(DrawX <= Bullet8X + Bullet8S) &&
+				(DrawY >= Bullet8Y - Bullet8S) &&
+				(DrawY <= Bullet8Y + Bullet8S) && is_bullet8_active)
+				begin 
+					Red_New = 8'h00;
+					Green_New = 8'h00;
+					Blue_New = 8'h00;
+				end 
+													//Draws bullet7 from tank7
+			else if((DrawX >= Bullet9X - Bullet9S) &&
+				(DrawX <= Bullet9X + Bullet9S) &&
+				(DrawY >= Bullet9Y - Bullet9S) &&
+				(DrawY <= Bullet9Y + Bullet9S) && is_bullet9_active)
+				begin 
+					Red_New = 8'h00;
+					Green_New = 8'h00;
+					Blue_New = 8'h00;
+				end 
+
+			
 				
 				
 		 		//Draws the head of tank 2	
