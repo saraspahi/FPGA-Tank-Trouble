@@ -67,15 +67,16 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 
 	title title_screen(.clock(Sys_CLK), .address(TitleADDR), .q(PalletI));
 	red_tank blerim(.clock(Sys_CLK), .address(TankADDR), .q(PalletIR));
+	yellow_tank sara(.clock(Sys_CLK), .address(TankADDRY), .q(PalletIY));
 	
 	logic [23:0] Pallet[8];
 	always_comb
 	begin
 	 Pallet[0] = 24'hFF3131;
-	 Pallet[1] = 24'h312D2B;
-	 Pallet[2] = 24'h878685;
-	 Pallet[3] = 24'h9B9DA0;
-	 Pallet[4] = 24'hFFE100;
+	 Pallet[1] = 24'h312222;
+	 Pallet[2] = 24'h878888;
+	 Pallet[3] = 24'h9B9DAA;
+	 Pallet[4] = 24'hFFEE00;
 	 Pallet[5] = 24'hFF00D6;
 	 Pallet[6] = 24'h000000;
 	 Pallet[7] = 24'hFFFFFF;
@@ -84,7 +85,7 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
     logic[63:0] XmultCos2, YmultSin2, XmultSin2, YmultCos2;
 	 logic [15:0] DrawXs2,DrawYs2;
 	 logic[19:0] TitleADDR;
-	 logic[2:0] PalletI, PalletIR;
+	 logic[2:0] PalletI, PalletIR, PalletIY;
 	 logic[8:0] TankADDR, TankADDRY;
 
 	 logic [9:0] TankXSp,TankYSp,TankXY,TankYY;
@@ -103,10 +104,10 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			
 			TankADDR = TankXSp[4:0] + TankYSp[4:0]*5'd20;
 			
-			TankXY[9:0] = DrawX[9:0] - BallX1[9:0] + Ball_size[9:0];
-			TankYY[9:0] = DrawY[9:0] - BallY1[9:0] + Ball_size[9:0];
+			TankXY[9:0] = DrawXs1[9:0] - BallX1[9:0] + Ball_size[9:0];
+			TankYY[9:0] = DrawYs1[9:0] - BallY1[9:0] + Ball_size[9:0];
 			
-			TankADDRY = TankXSp[4:0] + TankYSp[4:0]*5'd20;
+			TankADDRY = TankXY[4:0] + TankYY[4:0]*5'd20;
 			
 			TitleADDR = DrawX + DrawY*10'd640;
             // sign extend ball cords    
@@ -174,29 +175,28 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			else if(maze)
 			begin 
 					Red_New = DrawX + DrawY;
-					Green_New = DrawX + DrawY;
-					Blue_New = DrawX + DrawY;
+					Green_New = DrawX;
+					Blue_New = DrawY;
 			end
 	 
-	 //draws the head of the tank1
-		 else if((DrawXs1[9:0] >= BallX1) &&
-					(DrawXs1[9:0]<= BallX1 + Ball_size) &&
-					(DrawYs1[9:0] >= BallY1 - 3'b110) &&
-					(DrawYs1[9:0] <= BallY1 + 3'b110) && !Tank1Shot)
-				begin
-					Red_New = 8'h00;
-					Green_New = 8'hFF;
-					Blue_New = 8'hFF;
-				end
-	 //Draws the body of tank1
+
 			else if ((DrawXs1[9:0]>= BallX1 - Ball_size) &&
 				(DrawXs1[9:0] <= BallX1 + Ball_size) &&
 				(DrawYs1[9:0] >= BallY1 - Ball_size) &&
 				(DrawYs1[9:0] <= BallY1 + Ball_size) && !Tank1Shot)
             begin 
-                Red_New = 8'hff;
-                Green_New = 8'hbb;
-                Blue_New = 8'h00;
+					if(PalletIY != 3'd5)
+					begin
+						Red_New = Pallet[PalletIY[2:0]][23:16];
+						Green_New = Pallet[PalletIY[2:0]][15:8];
+						Blue_New = Pallet[PalletIY[2:0]][7:0];
+					end
+					else
+					begin
+						Red_New = 8'h55; 
+						Green_New = 8'h55;
+						Blue_New = 8'h55;
+					end
             end
 			//Draws bullet1 from tank 2	
 			else if((DrawX >= Bullet1X - Bullet1S) &&
@@ -260,23 +260,25 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 						Blue_New = 8'h55;
 					end
 				end 
+			// The tank next to the score
 			 else if ((DrawX[9:0] >= 10'd460 - Ball_size) &&
 				(DrawX[9:0] <= 10'd460 + Ball_size) &&
 				(DrawY[9:0] >= 10'd40 - Ball_size) &&
 				(DrawY[9:0] <= 10'd40 + Ball_size - 1) && !Tank2Shot)
 				begin
-					if(PalletIR != 3'd5)
-					begin
-						Red_New = Pallet[PalletIR[2:0]][23:16];
-						Green_New = Pallet[PalletIR[2:0]][15:8];
-						Blue_New = Pallet[PalletIR[2:0]][7:0];
-					end
-					else
-					begin
-						Red_New = 8'h55; 
-						Green_New = 8'h55;
-						Blue_New = 8'h55;
-					end
+						Red_New = 8'hFF;
+						Green_New = 8'h00;
+						Blue_New = 8'h00;
+				end
+				
+			 else if ((DrawX[9:0] >= 10'd180 - Ball_size) &&
+				(DrawX[9:0] <= 10'd180 + Ball_size) &&
+				(DrawY[9:0] >= 10'd40 - Ball_size) &&
+				(DrawY[9:0] <= 10'd40 + Ball_size - 1) && !Tank2Shot)
+				begin
+						Red_New = 8'hFF;
+						Green_New = 8'hFF;
+						Blue_New = 8'h00;
 				end 
         //Draws the background
 			else 
