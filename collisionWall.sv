@@ -43,7 +43,7 @@ begin
 	MazeRight1=0;
 
 end 
-else if ((DrawX==0) && (DrawY==0))  //Does this set everythin to 0
+else if ((DrawX==0) && (DrawY==0))  
 begin 
 
 	currentMaze1=0;
@@ -150,14 +150,14 @@ end
 
 always_comb 
 begin
-	if((objectY+objectS)>=10'd479)
+	if((objectY+objectS)>=10'd475)
 	begin
 		isWallBottom=1'b1;
 		isWallTop=1'b0;
 		isWallRight=1'b0;
 		isWallLeft=1'b0;
 	end 
-	else if((objectY-objectS)<=0)
+	else if((objectY-objectS)<=4)
 	begin 
 		isWallBottom=1'b0;
 		isWallTop=1'b1;
@@ -165,14 +165,14 @@ begin
 		isWallLeft=1'b0;
 	
 	end 
-	else if ((objectX-objectS)<=0)
+	else if ((objectX-objectS)<=4)
 	begin 
 		isWallBottom=1'b0;
 		isWallTop=1'b0;
 		isWallRight=1'b0;
 		isWallLeft=1'b1;
 	end 
-	else if ((objectX+objectS)>=10'd639)
+	else if ((objectX+objectS)>=10'd635)
 	begin 
 		isWallBottom=1'b0;
 		isWallTop=1'b0;

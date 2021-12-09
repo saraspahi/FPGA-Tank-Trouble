@@ -24,8 +24,8 @@ module tank1 ( input Reset, frame_clk,hit,
         Tank_Y_Comp[15:0] = Tank_Y_Step[6:0]*sin[6:0];
     end    
 
-    parameter [9:0] Tank_X_Center=100;  // Center position on the X axis
-    parameter [9:0] Tank_Y_Center=250;  // Center position on the Y axis
+    parameter [12:0] Tank_X_Center=320;  // Center position on the X axis
+    parameter [12:0] Tank_Y_Center=960;  // Center position on the Y axis
     parameter [9:0] Tank_X_Min=0;       // Leftmost point on the X axis
     parameter [9:0] Tank_X_Max=639;     // Rightmost point on the X axis
     parameter [9:0] Tank_Y_Min=0;       // Topmost point on the Y axis
@@ -67,11 +67,11 @@ module tank1 ( input Reset, frame_clk,hit,
 					if(isWallBottom || isWallTop || isWallRight || isWallLeft )//up
 					begin 
 					   Tank_Y_MotionP[12:0] = ~({{6{~signY}},~Tank_Y_Comp[10:4]} + 1'b1) + 1'b1;
-						Tank_Y_Motion[12:0] = Tank_Y_MotionP + Tank_Y_MotionP;//up 
+						Tank_Y_Motion[12:0] = ~Tank_Y_Motion + ~Tank_Y_Motion;//up 
 						
 						Tank_X_MotionP[12:0] = ~({{6{signX}},Tank_X_Comp[10:4]}) + 1'b1;
 
-						Tank_X_Motion[12:0] = Tank_X_MotionP+ Tank_X_MotionP;
+						Tank_X_Motion[12:0] = ~Tank_X_Motion+ ~Tank_X_Motion;
 						ShootBulletP = 0;						
 						Angle_Motion = 0;
 
@@ -89,9 +89,9 @@ module tank1 ( input Reset, frame_clk,hit,
 				 	if(isWallBottom || isWallTop || isWallRight || isWallLeft )//down
 					begin 
 					   Tank_Y_MotionP[12:0] = ~({{6{signY}},Tank_Y_Comp[10:4]} + 1'b1);
-						Tank_Y_Motion[12:0] = Tank_Y_MotionP+Tank_Y_MotionP;//down
+						Tank_Y_Motion[12:0] = ~Tank_Y_Motion+~Tank_Y_Motion;//down
 						Tank_X_MotionP[12:0] = ~({{6{~signX}}, ~Tank_X_Comp[10:4]} + 1'b1) + 1'b1;
-						Tank_X_Motion[12:0] = Tank_X_MotionP+Tank_X_MotionP;
+						Tank_X_Motion[12:0] = ~Tank_X_Motion+~Tank_X_Motion;
 						Angle_Motion = 0;
 						ShootBulletP <= 0;
 					end 
@@ -153,6 +153,15 @@ module tank1 ( input Reset, frame_clk,hit,
 				 end
 				 else  
 				 begin 
+					if(isWallBottom || isWallTop || isWallRight || isWallLeft )//down
+					begin 
+					   //Tank_Y_MotionP[12:0] = ~({{6{signY}},Tank_Y_Comp[10:4]} + 1'b1);
+						Tank_Y_Motion[12:0] = ~Tank_Y_Motion+~Tank_Y_Motion;//down
+						//Tank_X_MotionP[12:0] = ~({{6{~signX}}, ~Tank_X_Comp[10:4]} + 1'b1) + 1'b1;
+						Tank_X_Motion[12:0] = ~Tank_X_Motion+~Tank_X_Motion;
+						Angle_Motion = 0;
+						ShootBulletP <= 0;
+					end 
 				
 						Tank_Y_Motion = 13'd0 ;  // Tank is somewhere in the middle, don't move
 						Tank_X_Motion = 13'd0;
