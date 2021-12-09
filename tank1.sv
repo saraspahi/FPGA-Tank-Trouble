@@ -10,8 +10,8 @@ module tank1 ( input Reset, frame_clk,hit,
 					output ShootBullet,
 					output [5:0] Angle );
     
-   logic [9:0] Tank_X_Pos, Tank_Y_Pos,Tank_Size,timer;
-	logic [12:0] Tank_X_Motion, Tank_Y_Motion;
+   logic [12:0] Tank_X_Pos, Tank_Y_Pos,Tank_Size,timer;
+	logic [12:0] Tank_X_Motion, Tank_Y_Motion,Tank_X_MotionP, Tank_Y_MotionP;
 	int Angle_new, Angle_Motion;
 	logic [7:0] key;
    logic [15:0] Tank_X_Comp, Tank_Y_Comp;
@@ -24,7 +24,7 @@ module tank1 ( input Reset, frame_clk,hit,
         Tank_Y_Comp[15:0] = Tank_Y_Step[6:0]*sin[6:0];
     end    
 
-    parameter [9:0] Tank_X_Center=300;  // Center position on the X axis
+    parameter [9:0] Tank_X_Center=100;  // Center position on the X axis
     parameter [9:0] Tank_Y_Center=250;  // Center position on the Y axis
     parameter [9:0] Tank_X_Min=0;       // Leftmost point on the X axis
     parameter [9:0] Tank_X_Max=639;     // Rightmost point on the X axis
@@ -66,8 +66,12 @@ module tank1 ( input Reset, frame_clk,hit,
 					begin
 					if(isWallBottom || isWallTop || isWallRight || isWallLeft )//up
 					begin 
-						Tank_Y_Motion[12:0] = ~({{6{~signY}},~Tank_Y_Comp[10:4]} + 1'b1) + 1'b1;//up 
-						Tank_X_Motion[12:0] = ~({{6{signX}},Tank_X_Comp[10:4]}) + 1'b1;
+					   Tank_Y_MotionP[12:0] = ~({{6{~signY}},~Tank_Y_Comp[10:4]} + 1'b1) + 1'b1;
+						Tank_Y_Motion[12:0] = Tank_Y_MotionP + Tank_Y_MotionP;//up 
+						
+						Tank_X_MotionP[12:0] = ~({{6{signX}},Tank_X_Comp[10:4]}) + 1'b1;
+
+						Tank_X_Motion[12:0] = Tank_X_MotionP+ Tank_X_MotionP;
 						ShootBulletP = 0;						
 						Angle_Motion = 0;
 
@@ -84,8 +88,10 @@ module tank1 ( input Reset, frame_clk,hit,
 				 begin 
 				 	if(isWallBottom || isWallTop || isWallRight || isWallLeft )//down
 					begin 
-						Tank_Y_Motion[12:0] = ~({{6{signY}},Tank_Y_Comp[10:4]} + 1'b1);//down
-						Tank_X_Motion[12:0] = ~({{6{~signX}}, ~Tank_X_Comp[10:4]} + 1'b1) + 1'b1;
+					   Tank_Y_MotionP[12:0] = ~({{6{signY}},Tank_Y_Comp[10:4]} + 1'b1);
+						Tank_Y_Motion[12:0] = Tank_Y_MotionP+Tank_Y_MotionP;//down
+						Tank_X_MotionP[12:0] = ~({{6{~signX}}, ~Tank_X_Comp[10:4]} + 1'b1) + 1'b1;
+						Tank_X_Motion[12:0] = Tank_X_MotionP+Tank_X_MotionP;
 						Angle_Motion = 0;
 						ShootBulletP <= 0;
 					end 
@@ -154,23 +160,23 @@ module tank1 ( input Reset, frame_clk,hit,
 						ShootBulletP <= 0;
 						timer <= 10'd0; 
 				end 
-					Tank_Y_Pos[9:0] <= (Tank_Y_Pos[9:0] + Tank_Y_Motion[12:3]);  // Update ball position
-					Tank_X_Pos[9:0] <= (Tank_X_Pos[9:0] + Tank_X_Motion[12:3]);
-				//Angle_new = Angle_new + Angle_Motion;    
+					Tank_Y_Pos[12:0] <= (Tank_Y_Pos[12:0] + Tank_Y_Motion[12:0]);  // Update ball position
+					Tank_X_Pos[12:0] <= (Tank_X_Pos[12:0] + Tank_X_Motion[12:0]);
+					Angle_new = Angle_new + Angle_Motion;    
 		
-				if(Angle_new == 45)
-					Angle_new <= 0;
-				else if(Angle_new > 44 || Angle_new<0)
-					Angle_new <= 44;
+				if(Angle_new>44)
+					Angle_new = 0;
+				else if(Angle_new<0)
+					Angle_new = 44;
             else
-					Angle_new <= Angle_new + Angle_Motion; 
+					Angle_new = Angle_new; 
 				end	
 		end  
     
        
-    assign TankX = Tank_X_Pos;
+    assign TankX[9:0] = Tank_X_Pos[12:3];
 	 
-    assign TankY = Tank_Y_Pos;
+    assign TankY[9:0] = Tank_Y_Pos[12:3];
 	 
     assign TankS = Tank_Size;
 	 

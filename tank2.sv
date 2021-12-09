@@ -10,7 +10,7 @@ module tank2 ( input Reset, frame_clk,hit,
     
    logic [12:0] Tank_X_Pos, Tank_Y_Pos;
 	logic [9:0] Tank_Size,timer;
-	logic [12:0] Tank_X_Motion, Tank_Y_Motion;
+	logic [12:0] Tank_X_Motion, Tank_Y_Motion,Tank_X_MotionP, Tank_Y_MotionP;
 	int Angle_new, Angle_Motion;
 	
 	logic [7:0] key;
@@ -66,8 +66,12 @@ module tank2 ( input Reset, frame_clk,hit,
 					begin
 					if(isWallBottom || isWallTop || isWallRight || isWallLeft )//up
 					begin 
-						Tank_Y_Motion[12:0] = ~({{6{~signY}},~Tank_Y_Comp[10:4]}) + 1'b1 + ~({{6{~signY}},~Tank_Y_Comp[10:4]}) + 1'b1;//up 
-						Tank_X_Motion[12:0] = ~({{6{signX}},Tank_X_Comp[10:4]}) + 1'b1 +  ~({{6{signX}},Tank_X_Comp[10:4]}) + 1'b1;
+					   Tank_Y_MotionP[12:0] = ~({{6{~signY}},~Tank_Y_Comp[10:4]} + 1'b1) + 1'b1;
+						Tank_Y_Motion[12:0] = Tank_Y_MotionP + Tank_Y_MotionP;//up 
+						
+						Tank_X_MotionP[12:0] = ~({{6{signX}},Tank_X_Comp[10:4]}) + 1'b1;
+
+						Tank_X_Motion[12:0] = Tank_X_MotionP+ Tank_X_MotionP;
 						ShootBulletP = 0;						
 						Angle_Motion = 0;
 
@@ -84,8 +88,10 @@ module tank2 ( input Reset, frame_clk,hit,
 				 begin 
 				 	if(isWallBottom || isWallTop || isWallRight || isWallLeft )//down
 					begin 
-						Tank_Y_Motion[12:0] = ~({{6{signY}},Tank_Y_Comp[10:4]}) + 1'b1 + ~({{6{signY}},Tank_Y_Comp[10:4]}) + 1'b1;//down
-						Tank_X_Motion[12:0] = ~({{6{~signX}}, ~Tank_X_Comp[10:4]}) + 1'b1 + ~({{6{~signX}}, ~Tank_X_Comp[10:4]}) + 1'b1;
+					   Tank_Y_MotionP[12:0] = ~({{6{signY}},Tank_Y_Comp[10:4]} + 1'b1);
+						Tank_Y_Motion[12:0] = Tank_Y_MotionP+Tank_Y_MotionP;//down
+						Tank_X_MotionP[12:0] = ~({{6{~signX}}, ~Tank_X_Comp[10:4]} + 1'b1) + 1'b1;
+						Tank_X_Motion[12:0] = Tank_X_MotionP+Tank_X_MotionP;
 						Angle_Motion = 0;
 						ShootBulletP <= 0;
 					end 
@@ -156,14 +162,14 @@ module tank2 ( input Reset, frame_clk,hit,
 				end 
 					Tank_Y_Pos[12:0] <= (Tank_Y_Pos[12:0] + Tank_Y_Motion[12:0]);  // Update ball position
 					Tank_X_Pos[12:0] <= (Tank_X_Pos[12:0] + Tank_X_Motion[12:0]);
-				//Angle_new = Angle_new + Angle_Motion;    
+					Angle_new = Angle_new + Angle_Motion;    
 		
-				if(Angle_new == 45)
-					Angle_new <= 0;
-				else if(Angle_new > 44 || Angle_new<0)
-					Angle_new <= 44;
+				if(Angle_new > 44)
+					Angle_new = 0;
+				else if(Angle_new<0)
+					Angle_new = 44;
             else
-					Angle_new <= Angle_new + Angle_Motion; 
+					Angle_new = Angle_new; 
 				end	
 		end  
     

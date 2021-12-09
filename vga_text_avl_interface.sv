@@ -108,7 +108,7 @@ tank2 b2(.Reset(RESET),   //Instantiates tank2 module
 			.game_end(game_end),
 			.spawn_pos(spawn_pos[19:10]),
 			.frame_clk(vs),
-			.isWallBottom(current),
+			.isWallBottom(isWallBottomT2),
 			.isWallTop(isWallTopT2),
 			.isWallRight(isWallRightT2),
 			.isWallLeft(isWallLeftT2),
@@ -134,7 +134,7 @@ logic[9:0] bullet1_X,bullet1_Y,bullet1_S,bulletTimer1,Bullet1XStep,Bullet1YStep;
 
 //Bullet1 from tank b2
 bullet bullet1(.Reset(RESET), 
-					.hit(0),
+					.game_end(game_end),
 					.frame_clk(vs), 
 					.isWallBottom(isWallBottom1),
 					.isWallTop(isWallTop1),
@@ -165,7 +165,7 @@ logic [9:0] bullet2_X,bullet2_Y,bullet2_S,bulletTimer2,Bullet2XStep,Bullet2YStep
 logic bullet2_active;
 
 bullet bullet2(.Reset(RESET),
-					.hit(0),
+					.game_end(game_end),
 					.frame_clk(vs), 
 					.isWallBottom(isWallBottom2),
 					.isWallTop(isWallTop2),
@@ -195,7 +195,7 @@ logic [9:0] bullet3_X,bullet3_Y,bullet3_S,bulletTimer3,Bullet3XStep,Bullet3YStep
 logic bullet3_active;
 							
 bullet bullet3(.Reset(RESET), 
-					.hit(hit),
+					.game_end(game_end),
 					.frame_clk(vs), 
 					.isWallBottom(isWallBottom3),
 					.isWallTop(isWallTop3),
@@ -322,11 +322,25 @@ collisionWall collisonWallBullet9(.objectX(bullet9_X),.objectY(bullet9_Y),.objec
 //Tank  Bullet Collision 
 logic tank2shot,tank1shot;
 
-TBCollision tank1BulletCollision(.Tank_X_Pos(tank1xsig),.Tank_Y_Pos(tank1ysig),.Tank_Size(tank1sizesig),.Bullet1_X_Pos(bullet1_X),
-											.Bullet1_Y_Pos(bullet1_Y),.isBullet1Active(bullet1_active),.TBCollided(tank1shot));
+TBCollision tank1BulletCollision(.Tank_X_Pos(tank1xsig),.Tank_Y_Pos(tank1ysig),.Tank_Size(tank1sizesig),
+											.Bullet1_X_Pos(bullet1_X),.Bullet1_Y_Pos(bullet1_Y),.isBullet1Active(bullet1_active),
+											.Bullet2_X_Pos(bullet2_X),.Bullet2_Y_Pos(bullet2_Y),.isBullet2Active(bullet2_active),
+											.Bullet3_X_Pos(bullet3_X),.Bullet3_Y_Pos(bullet3_Y),.isBullet3Active(bullet3_active),
+											.Bullet7_X_Pos(bullet7_X),.Bullet7_Y_Pos(bullet7_Y),.isBullet7Active(bullet7_active),
+											.Bullet8_X_Pos(bullet8_X),.Bullet8_Y_Pos(bullet8_Y),.isBullet8Active(bullet8_active),
+											.Bullet9_X_Pos(bullet9_X),.Bullet9_Y_Pos(bullet9_Y),.isBullet9Active(bullet9_active),
+											.TBCollided(tank1shot)
+											);
 											
-TBCollision tank2BulletCollision(.Tank_X_Pos(tank2xsig),.Tank_Y_Pos(tank2ysig),.Tank_Size(tank2sizesig),.Bullet1_X_Pos(bullet1_X),
-											.Bullet1_Y_Pos(bullet1_Y),.isBullet1Active(bullet1_active),.TBCollided(tank2shot));	
+TBCollision tank2BulletCollision(.Tank_X_Pos(tank2xsig),.Tank_Y_Pos(tank2ysig),.Tank_Size(tank2sizesig),
+											.Bullet1_X_Pos(bullet1_X),.Bullet1_Y_Pos(bullet1_Y),.isBullet1Active(bullet1_active),
+											.Bullet2_X_Pos(bullet2_X),.Bullet2_Y_Pos(bullet2_Y),.isBullet2Active(bullet2_active),
+											.Bullet3_X_Pos(bullet3_X),.Bullet3_Y_Pos(bullet3_Y),.isBullet3Active(bullet3_active),
+											.Bullet7_X_Pos(bullet7_X),.Bullet7_Y_Pos(bullet7_Y),.isBullet7Active(bullet7_active),
+											.Bullet8_X_Pos(bullet8_X),.Bullet8_Y_Pos(bullet8_Y),.isBullet8Active(bullet8_active),
+											.Bullet9_X_Pos(bullet9_X),.Bullet9_Y_Pos(bullet9_Y),.isBullet9Active(bullet9_active),
+											.TBCollided(tank2shot)
+											);
 					
 //angles for tank 1							
 sinCos sincos1(.AngleI(AngleI1), .sin(sin1u), .cos(cos1u));
