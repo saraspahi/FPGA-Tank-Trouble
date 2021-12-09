@@ -46,20 +46,20 @@ logic [31:0] keycode;
 logic currentMaze,MazeUp,MazeDown,MazeLeft,MazeRight;
 assign keycode = keycode_signal;
 
-//always_ff @ (posedge CLK)
-//begin 
-//if(AVL_WRITE && AVL_CS)
-//begin
-//		Maze_Reg[AVL_ADDR][31:0] <= AVL_WRITEDATA;
-//end
-//else if(RESET)
-//	begin
-//		for(int i = 0; i<600; i++)
-//		begin
-//			Maze_Reg[i] <= 32'h00000000;
-//		end
-//	end
-//end
+always_ff @ (posedge CLK)
+begin 
+if(AVL_WRITE && AVL_CS)
+begin
+		Maze_Reg[AVL_ADDR][31:0] <= AVL_WRITEDATA;
+end
+else if(RESET)
+	begin
+		for(int i = 0; i<600; i++)
+		begin
+			Maze_Reg[i] <= 32'h00000000;
+		end
+	end
+end
 
 logic hit,restart;
 assign hit = tank1shot || tank2shot; 
@@ -339,50 +339,50 @@ angleMux angleTank1(  .Angle(AngleI1),.sin(sin1u),.cos(cos1u),.newSin(sin1), .ne
 angleMux angleTank2(  .Angle(AngleI2),.sin(sin2u),.cos(cos2u),.newSin(sin2), .newCos(cos2));
 
 			
-//always_comb
-//begin 
-//	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
-//	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
-//	//Checking if each pixel is a wall or not 
-//	currentMaze = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]];	
-//
-//	if(Word_ADDR==10'd0)
-//	begin 
-//		MazeUp = 1; //There is no register up
-//	end 
-//	else 
-//	begin
-//		MazeUp = Maze_Reg[Word_ADDR-10'd5][~Byte_ADDR[4:0]];//Go a word address up
-//	end 
-//	
-//	if(Word_ADDR==10'd599)
-//	begin 
-//		MazeDown = 1; 
-//	end 
-//	else 
-//	begin 
-//		MazeDown = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]];//Go a word address down
-//	end
-//	
-//	if(Byte_ADDR == 10'd31)
-//	begin 
-//		MazeLeft = Maze_Reg[Word_ADDR - 1'b1][5'b00000];
-//	end 
-//	else 
-//	begin 
-//		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]+3'd1];//Go a word address down ;
-//	end 
-//	
-//	if(Byte_ADDR == 10'd0)
-//	begin 
-//		MazeRight = Maze_Reg[Word_ADDR + 1'b1][5'b11111];
-//	end 
-//	else 
-//	begin 
-//		MazeRight = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-3'd1];//Go a word address down ;
-//	end
-//
-//end 
+always_comb
+begin 
+	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
+	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
+	//Checking if each pixel is a wall or not 
+	currentMaze = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]];	
+
+	if(Word_ADDR==10'd0)
+	begin 
+		MazeUp = 1; //There is no register up
+	end 
+	else 
+	begin
+		MazeUp = Maze_Reg[Word_ADDR-10'd5][~Byte_ADDR[4:0]];//Go a word address up
+	end 
+	
+	if(Word_ADDR==10'd599)
+	begin 
+		MazeDown = 1; 
+	end 
+	else 
+	begin 
+		MazeDown = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]];//Go a word address down
+	end
+	
+	if(Byte_ADDR == 10'd31)
+	begin 
+		MazeLeft = Maze_Reg[Word_ADDR - 1'b1][5'b00000];
+	end 
+	else 
+	begin 
+		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]+3'd1];//Go a word address down ;
+	end 
+	
+	if(Byte_ADDR == 10'd0)
+	begin 
+		MazeRight = Maze_Reg[Word_ADDR + 1'b1][5'b11111];
+	end 
+	else 
+	begin 
+		MazeRight = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-3'd1];//Go a word address down ;
+	end
+
+end 
 
 
 
