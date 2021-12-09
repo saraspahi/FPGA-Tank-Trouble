@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Dec 8, 2021 2:01:10 AM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1638950470459</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Dec 8, 2021 9:33:02 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1639020782437</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/ece385user/FPGA-Tank-Trouble/software/tank_trouble_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../lab62_soc.sopcinfo</SopcDesignFile>

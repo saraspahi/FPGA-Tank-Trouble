@@ -9,10 +9,10 @@ logic currentMaze1,MazeUp1,MazeDown1,MazeLeft1,MazeRight1,currentMaze2,MazeUp2,M
 					
 always_comb
 begin 
-if((DrawX == objectX - objectS) &&
+if((DrawX >= objectX - objectS) &&
 				(DrawX <= objectX + objectS) &&
 				(DrawY >= objectY - objectS) &&
-				(DrawY == objectY + objectS))
+				(DrawY <= objectY + objectS))
 begin
 objectOn=1'b1;
 end

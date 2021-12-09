@@ -97,10 +97,10 @@ tank2 b2(.Reset(RESET),   //Instantiates tank2 module
 			.game_end(game_end),
 			.spawn_pos(spawn_pos[19:10]),
 			.frame_clk(vs),
-			.isWallBottom(0),
-			.isWallTop(0),
-			.isWallRight(0),
-			.isWallLeft(0),
+			.isWallBottom(isWallBottomT2),
+			.isWallTop(isWallTopT2),
+			.isWallRight(isWallRightT2),
+			.isWallLeft(isWallLeftT2),
 			.sin(sin2), 
 			.cos(cos2),
 			.keycode(keycode),
@@ -112,7 +112,7 @@ tank2 b2(.Reset(RESET),   //Instantiates tank2 module
 			.ShootBullet(ShootBullet2),
 			.Angle(AngleI2));
 			
-collisionWall collisonWallTank2(.objectX(tank2xsig),.objectY(tank2ysig),.objectS(10'd15),.DrawX(drawxsig),.DrawY(drawysig),
+collisionWall collisonWallTank2(.objectX(tank2xsig),.objectY(tank2ysig),.objectS(10'd10),.DrawX(drawxsig),.DrawY(drawysig),
 							.X_Motion(Tank2XStep),.Y_Motion(Tank2YStep),.frame_clk(vs),.Reset(RESET),.hit(hit),.pixel_clk(PIX_CLK),
 							.currentMazePrime(currentMaze),.MazeUpPrime(MazeLeft),.MazeDownPrime(MazeRight),.MazeLeftPrime(MazeUp),.MazeRightPrime(MazeDown),
 							.isWallBottom(isWallBottomT2),.isWallTop(isWallTopT2),.isWallRight(isWallRightT2),.isWallLeft(isWallLeftT2),

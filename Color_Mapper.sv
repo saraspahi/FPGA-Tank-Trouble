@@ -154,9 +154,9 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			end
 			else if(maze)
 			begin 
-					Red_New = 8'h00;
-					Green_New = 8'h00;
-					Blue_New = 8'h00;
+					Red_New = DrawX + DrawY;
+					Green_New = DrawX + DrawY;
+					Blue_New = DrawX + DrawY;
 			end
 	 
 	 //draws the head of the tank1
@@ -241,24 +241,24 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 						Blue_New = 8'h55;
 					end
 				end 
-//			 else if ((DrawX[9:0] >= 10'd200 - Ball_size) &&
-//				(DrawX[9:0] <= 10'd200 + Ball_size) &&
-//				(DrawY[9:0] >= 10'd40 - Ball_size) &&
-//				(DrawY[9:0] <= 10'd40 + Ball_size - 1) && !Tank2Shot)
-//				begin
-//					if(PalletIR != 3'd5)
-//					begin
-//						Red_New = Pallet[PalletIY[2:0]][23:16];
-//						Green_New = Pallet[PalletIY[2:0]][15:8];
-//						Blue_New = Pallet[PalletIY[2:0]][7:0];
-//					end
-//					else
-//					begin
-//						Red_New = 8'h55; 
-//						Green_New = 8'h55;
-//						Blue_New = 8'h55;
-//					end
-//				end 
+			 else if ((DrawX[9:0] >= 10'd460 - Ball_size) &&
+				(DrawX[9:0] <= 10'd460 + Ball_size) &&
+				(DrawY[9:0] >= 10'd40 - Ball_size) &&
+				(DrawY[9:0] <= 10'd40 + Ball_size - 1) && !Tank2Shot)
+				begin
+					if(PalletIR != 3'd5)
+					begin
+						Red_New = Pallet[PalletIR[2:0]][23:16];
+						Green_New = Pallet[PalletIR[2:0]][15:8];
+						Blue_New = Pallet[PalletIR[2:0]][7:0];
+					end
+					else
+					begin
+						Red_New = 8'h55; 
+						Green_New = 8'h55;
+						Blue_New = 8'h55;
+					end
+				end 
         //Draws the background
 			else 
 			begin 
