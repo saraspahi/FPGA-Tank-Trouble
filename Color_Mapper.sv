@@ -7,7 +7,7 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 							 input [7:0] sin2, cos2, sin1,cos1,
 
 							 input maze,
-							 input title,
+							 input title, t1wscreen, t2wscreen,
                       output logic [7:0]  Red, Green, Blue, 
 							 //bullet1from tank2
 							 input [9:0]Bullet1X,Bullet1Y,Bullet1S,
@@ -73,7 +73,12 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 
 	title title_screen(.clock(Sys_CLK), .address(TitleADDR), .q(PalletI));
 	red_tank blerim(.clock(Sys_CLK), .address(TankADDR), .q(PalletIR));
+	t2ws     blerimw(.clock(Sys_CLK), .address(W2ADDR), .q(PalletIWS2));
+	t1ws     saraw(.clock(Sys_CLK), .address(W1ADDR), .q(PalletIWS1));
+	
 	yellow_tank sara(.clock(Sys_CLK), .address(TankADDRY), .q(PalletIY));
+	
+	
 	
 	logic [23:0] Pallet[8];
 	always_comb
@@ -88,13 +93,28 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 	 Pallet[7] = 24'hFFFFFF;
 	end
 	
+	logic [23:0] PalletW[8];
+	always_comb
+	begin
+	 PalletW[0] = 24'hFF3131;
+	 PalletW[1] = 24'h312222;
+	 PalletW[2] = 24'h878888;
+	 PalletW[3] = 24'h9B9DAA;
+	 PalletW[4] = 24'hFFEE00;
+	 PalletW[5] = 24'hFF00D6;
+	 PalletW[6] = 24'h000000;
+	 PalletW[7] = 24'hFFFFFF;
+	end
+	
     logic[63:0] XmultCos2, YmultSin2, XmultSin2, YmultCos2;
 	 logic [15:0] DrawXs2,DrawYs2;
 	 logic[19:0] TitleADDR;
-	 logic[2:0] PalletI, PalletIR, PalletIY;
+	 logic[2:0] PalletI, PalletIR, PalletIY, PalletIWS2, PalletIWS1;
 	 logic[8:0] TankADDR, TankADDRY;
+	 
+	 logic[13:0] W2ADDR, W1ADDR;
 
-	 logic [9:0] TankXSp,TankYSp,TankXY,TankYY;
+	 logic [9:0] TankXSp,TankYSp,TankXY,TankYY, W2XSp, W2YSp, W1XSp, W1YSp;
 
 
 	 logic[31:0] TankY2e, TankX2e, DrawXe2, DrawYe2, sin2e, cos2e, Tank2Xsp, Tank2Ysp;
@@ -116,6 +136,17 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			TankADDRY = TankXY[4:0] + TankYY[4:0]*5'd20;
 			
 			TitleADDR = DrawX + DrawY*10'd640;
+			
+			W2XSp[9:0] = DrawX[9:0] - 10'd320 + 10'd160;
+			W2YSp[9:0] = DrawY[9:0] - 10'd240 + 10'd90;
+			
+			W2ADDR = W2XSp[7:0] + W2YSp[7:0]*7'd160;
+			
+			W1XSp[9:0] = DrawX[9:0] - 10'd320 + 10'd160;
+			W1YSp[9:0] = DrawY[9:0] - 10'd240 + 10'd90;
+			
+			W1ADDR = W1XSp[7:0] + W1YSp[7:0]*7'd160;
+			
             // sign extend ball cords    
 			TankY2e[31:0] = {6'b0, BallY2, 16'b0};
 			TankX2e[31:0] = {6'b0, BallX2, 16'b0};
@@ -178,6 +209,42 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 					Green_New = Pallet[PalletI[2:0]][15:8];
 					Blue_New = Pallet[PalletI[2:0]][7:0];
 			end
+			else if(t2wscreen)
+			begin 
+				if ((DrawX[9:0] >= 10'd320 - 10'd160) &&
+				(DrawX[9:0] <= 10'd320 + 10'd160) &&
+				(DrawY[9:0] >= 10'd240 - 10'd90) &&
+				(DrawY[9:0] <= 10'd240 + 10'd90))
+				begin
+					Red_New = PalletW[PalletIWS2[2:0]][23:16];
+					Green_New = PalletW[PalletIWS2[2:0]][15:8];
+					Blue_New = PalletW[PalletIWS2[2:0]][7:0];
+				end
+				else
+				begin
+						Red_New = 8'hFF; 
+						Green_New = 8'hFF;
+						Blue_New = 8'hFF;
+				end
+			end
+			else if(t1wscreen)
+			begin 
+				if ((DrawX[9:0] >= 10'd320 - 10'd160) &&
+				(DrawX[9:0] <= 10'd320 + 10'd160) &&
+				(DrawY[9:0] >= 10'd240 - 10'd90) &&
+				(DrawY[9:0] <= 10'd240 + 10'd90))
+				begin
+					Red_New = PalletW[PalletIWS1[2:0]][23:16];
+					Green_New = PalletW[PalletIWS1[2:0]][15:8];
+					Blue_New = PalletW[PalletIWS1[2:0]][7:0];
+				end
+				else
+				begin
+						Red_New = 8'hFF; 
+						Green_New = 8'hFF;
+						Blue_New = 8'hFF;
+				end
+			end
 			else if(maze)
 			begin 
 					Red_New = DrawX + DrawY;
@@ -199,9 +266,9 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 					end
 					else
 					begin
-						Red_New = 8'h55; 
-						Green_New = 8'h55;
-						Blue_New = 8'h55;
+						Red_New = 8'hFF; 
+						Green_New = 8'hFF;
+						Blue_New = 8'hFF;
 					end
             end
 			//Draws bullet1 from tank 2	
@@ -293,9 +360,9 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 					end
 					else
 					begin
-						Red_New = 8'h55; 
-						Green_New = 8'h55;
-						Blue_New = 8'h55;
+						Red_New = 8'hFF; 
+						Green_New = 8'hFF;
+						Blue_New = 8'hFF;
 					end
 				end 
 			// The tank next to the score
@@ -321,9 +388,9 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
         //Draws the background
 			else 
 			begin 
-                Red_New = 8'h55; 
-                Green_New = 8'h55;
-                Blue_New = 8'h55;
+                Red_New = 8'hFF; 
+                Green_New = 8'hFF;
+                Blue_New = 8'hFF;
 			end 
 			end
 			

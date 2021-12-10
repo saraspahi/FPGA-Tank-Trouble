@@ -66,6 +66,8 @@ logic hit,restart;
 assign hit = tank1shot || tank2shot; 
 game_states game_states(.CLK(CLK), .RESET(RESET),
                    .tank1shot(tank1shot), .tank2shot(tank2shot), .maze_ready(maze_ready),
+						 .t2wscreen(t2wscreen),
+						 .t1wscreen(t1wscreen),
                    .keycode(keycode),
                    .title(title),
 						 .game_reset(game_reset),
@@ -408,6 +410,8 @@ color_mapper c1(.BallX1(tank1xsig),
 					.Sys_CLK(CLK),
 					.maze(currentMaze),  //Change the names to tank instead of ball
 					.title(title),
+					.t1wscreen(t1wscreen),
+					.t2wscreen(t2wscreen),
 					.DrawX(drawxsig), 
 					.DrawY(drawysig), 
 					.Ball_size(4'd10),

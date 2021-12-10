@@ -46,25 +46,28 @@ logic [31:0] keycode;
 logic currentMaze,MazeUp,MazeDown,MazeLeft,MazeRight;
 assign keycode = keycode_signal;
 
-//always_ff @ (posedge CLK)
-//begin 
-//if(AVL_WRITE && AVL_CS)
-//begin
-//		Maze_Reg[AVL_ADDR][31:0] <= AVL_WRITEDATA;
-//end
-//else if(RESET)
-//	begin
-//		for(int i = 0; i<600; i++)
-//		begin
-//			Maze_Reg[i] <= 32'h00000000;
-//		end
-//	end
-//end
+always_ff @ (posedge CLK)
+begin 
+if(AVL_WRITE && AVL_CS)
+begin
+		Maze_Reg[AVL_ADDR][31:0] <= AVL_WRITEDATA;
+end
+else if(RESET)
+	begin
+		for(int i = 0; i<600; i++)
+		begin
+			Maze_Reg[i] <= 32'h00000000;
+		end
+	end
+end
+
 
 logic hit,restart;
 assign hit = tank1shot || tank2shot; 
 game_states game_states(.CLK(CLK), .RESET(RESET),
                    .tank1shot(tank1shot), .tank2shot(tank2shot), .maze_ready(maze_ready),
+						 .t2wscreen(t2wscreen),
+						 .t1wscreen(t1wscreen),
                    .keycode(keycode),
                    .title(title),
 						 .game_reset(game_reset),
@@ -107,7 +110,7 @@ tank2 b2(.Reset(RESET),   //Instantiates tank2 module
 			.game_end(game_end),
 			.spawn_pos(spawn_pos[19:10]),
 			.frame_clk(vs),
-			.isWallBottom(current),
+			.isWallBottom(isWallBottomT2),
 			.isWallTop(isWallTopT2),
 			.isWallRight(isWallRightT2),
 			.isWallLeft(isWallLeftT2),
@@ -133,7 +136,7 @@ logic[9:0] bullet1_X,bullet1_Y,bullet1_S,bulletTimer1,Bullet1XStep,Bullet1YStep;
 
 //Bullet1 from tank b2
 bullet bullet1(.Reset(RESET), 
-					.hit(0),
+					.game_end(game_end),
 					.frame_clk(vs), 
 					.isWallBottom(isWallBottom1),
 					.isWallTop(isWallTop1),
@@ -164,7 +167,7 @@ logic [9:0] bullet2_X,bullet2_Y,bullet2_S,bulletTimer2,Bullet2XStep,Bullet2YStep
 logic bullet2_active;
 
 bullet bullet2(.Reset(RESET),
-					.hit(0),
+					.game_end(game_end),
 					.frame_clk(vs), 
 					.isWallBottom(isWallBottom2),
 					.isWallTop(isWallTop2),
@@ -194,7 +197,7 @@ logic [9:0] bullet3_X,bullet3_Y,bullet3_S,bulletTimer3,Bullet3XStep,Bullet3YStep
 logic bullet3_active;
 							
 bullet bullet3(.Reset(RESET), 
-					.hit(hit),
+					.game_end(game_end),
 					.frame_clk(vs), 
 					.isWallBottom(isWallBottom3),
 					.isWallTop(isWallTop3),
@@ -296,7 +299,7 @@ bullet bullet9(.Reset(RESET),
 					.isWallTop(isWallTop9),
 					.isWallRight(isWallRight9),
 					.isWallLeft(isWallLeft9),
-					.create(ShootBullet1 && bullet9_active && (bulletTimer9>10'd35)), // TODOand bullet is not active then create on
+					.create(ShootBullet1 && bullet8_active && (bulletTimer8>10'd35)), // TODOand bullet is not active then create on
 					.tankX(tank1xsig),
 					.tankY(tank1ysig),
 					.sin(sin1),
@@ -321,11 +324,25 @@ collisionWall collisonWallBullet9(.objectX(bullet9_X),.objectY(bullet9_Y),.objec
 //Tank  Bullet Collision 
 logic tank2shot,tank1shot;
 
-TBCollision tank1BulletCollision(.Tank_X_Pos(tank1xsig),.Tank_Y_Pos(tank1ysig),.Tank_Size(tank1sizesig),.Bullet1_X_Pos(bullet1_X),
-											.Bullet1_Y_Pos(bullet1_Y),.isBullet1Active(bullet1_active),.TBCollided(tank1shot));
+TBCollision tank1BulletCollision(.Tank_X_Pos(tank1xsig),.Tank_Y_Pos(tank1ysig),.Tank_Size(tank1sizesig),
+											.Bullet1_X_Pos(bullet1_X),.Bullet1_Y_Pos(bullet1_Y),.isBullet1Active(bullet1_active),
+											.Bullet2_X_Pos(bullet2_X),.Bullet2_Y_Pos(bullet2_Y),.isBullet2Active(bullet2_active),
+											.Bullet3_X_Pos(bullet3_X),.Bullet3_Y_Pos(bullet3_Y),.isBullet3Active(bullet3_active),
+											.Bullet7_X_Pos(bullet7_X),.Bullet7_Y_Pos(bullet7_Y),.isBullet7Active(bullet7_active),
+											.Bullet8_X_Pos(bullet8_X),.Bullet8_Y_Pos(bullet8_Y),.isBullet8Active(bullet8_active),
+											.Bullet9_X_Pos(bullet9_X),.Bullet9_Y_Pos(bullet9_Y),.isBullet9Active(bullet9_active),
+											.TBCollided(tank1shot)
+											);
 											
-TBCollision tank2BulletCollision(.Tank_X_Pos(tank2xsig),.Tank_Y_Pos(tank2ysig),.Tank_Size(tank2sizesig),.Bullet1_X_Pos(bullet1_X),
-											.Bullet1_Y_Pos(bullet1_Y),.isBullet1Active(bullet1_active),.TBCollided(tank2shot));	
+TBCollision tank2BulletCollision(.Tank_X_Pos(tank2xsig),.Tank_Y_Pos(tank2ysig),.Tank_Size(tank2sizesig),
+											.Bullet1_X_Pos(bullet1_X),.Bullet1_Y_Pos(bullet1_Y),.isBullet1Active(bullet1_active),
+											.Bullet2_X_Pos(bullet2_X),.Bullet2_Y_Pos(bullet2_Y),.isBullet2Active(bullet2_active),
+											.Bullet3_X_Pos(bullet3_X),.Bullet3_Y_Pos(bullet3_Y),.isBullet3Active(bullet3_active),
+											.Bullet7_X_Pos(bullet7_X),.Bullet7_Y_Pos(bullet7_Y),.isBullet7Active(bullet7_active),
+											.Bullet8_X_Pos(bullet8_X),.Bullet8_Y_Pos(bullet8_Y),.isBullet8Active(bullet8_active),
+											.Bullet9_X_Pos(bullet9_X),.Bullet9_Y_Pos(bullet9_Y),.isBullet9Active(bullet9_active),
+											.TBCollided(tank2shot)
+											);
 					
 //angles for tank 1							
 sinCos sincos1(.AngleI(AngleI1), .sin(sin1u), .cos(cos1u));
@@ -339,50 +356,50 @@ angleMux angleTank1(  .Angle(AngleI1),.sin(sin1u),.cos(cos1u),.newSin(sin1), .ne
 angleMux angleTank2(  .Angle(AngleI2),.sin(sin2u),.cos(cos2u),.newSin(sin2), .newCos(cos2));
 
 			
-//always_comb
-//begin 
-//	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
-//	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
-//	//Checking if each pixel is a wall or not 
-//	currentMaze = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]];	
-//
-//	if(Word_ADDR==10'd0)
-//	begin 
-//		MazeUp = 1; //There is no register up
-//	end 
-//	else 
-//	begin
-//		MazeUp = Maze_Reg[Word_ADDR-10'd5][~Byte_ADDR[4:0]];//Go a word address up
-//	end 
-//	
-//	if(Word_ADDR==10'd599)
-//	begin 
-//		MazeDown = 1; 
-//	end 
-//	else 
-//	begin 
-//		MazeDown = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]];//Go a word address down
-//	end
-//	
-//	if(Byte_ADDR == 10'd31)
-//	begin 
-//		MazeLeft = Maze_Reg[Word_ADDR - 1'b1][5'b00000];
-//	end 
-//	else 
-//	begin 
-//		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]+3'd1];//Go a word address down ;
-//	end 
-//	
-//	if(Byte_ADDR == 10'd0)
-//	begin 
-//		MazeRight = Maze_Reg[Word_ADDR + 1'b1][5'b11111];
-//	end 
-//	else 
-//	begin 
-//		MazeRight = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-3'd1];//Go a word address down ;
-//	end
-//
-//end 
+always_comb
+begin 
+	Byte_ADDR[14:0] = drawxsig[9:2]+drawysig[9:2]*160;
+	Word_ADDR[9:0] = Byte_ADDR[14:5];//How to index the ram
+	//Checking if each pixel is a wall or not 
+	currentMaze = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]];	
+
+	if(Word_ADDR==10'd0)
+	begin 
+		MazeUp = 1; //There is no register up
+	end 
+	else 
+	begin
+		MazeUp = Maze_Reg[Word_ADDR-10'd5][~Byte_ADDR[4:0]];//Go a word address up
+	end 
+	
+	if(Word_ADDR==10'd599)
+	begin 
+		MazeDown = 1; 
+	end 
+	else 
+	begin 
+		MazeDown = Maze_Reg[Word_ADDR+10'd5][~Byte_ADDR[4:0]];//Go a word address down
+	end
+	
+	if(Byte_ADDR == 10'd31)
+	begin 
+		MazeLeft = Maze_Reg[Word_ADDR - 1'b1][5'b00000];
+	end 
+	else 
+	begin 
+		MazeLeft = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]+3'd1];//Go a word address down ;
+	end 
+	
+	if(Byte_ADDR == 10'd0)
+	begin 
+		MazeRight = Maze_Reg[Word_ADDR + 1'b1][5'b11111];
+	end 
+	else 
+	begin 
+		MazeRight = Maze_Reg[Word_ADDR][~Byte_ADDR[4:0]-3'd1];//Go a word address down ;
+	end
+
+end 
 
 
 
@@ -393,6 +410,8 @@ color_mapper c1(.BallX1(tank1xsig),
 					.Sys_CLK(CLK),
 					.maze(currentMaze),  //Change the names to tank instead of ball
 					.title(title),
+					.t1wscreen(t1wscreen),
+					.t2wscreen(t2wscreen),
 					.DrawX(drawxsig), 
 					.DrawY(drawysig), 
 					.Ball_size(4'd10),
@@ -433,6 +452,22 @@ color_mapper c1(.BallX1(tank1xsig),
 					.Bullet3Y(bullet3_Y),
 					.Bullet3S(bullet3_S),
 					.is_bullet3_active(bullet3_active),
+					//bullet7data
+					.Bullet7X(bullet7_X),
+					.Bullet7Y(bullet7_Y),
+					.Bullet7S(bullet7_S),
+					.is_bullet7_active(bullet7_active),
+					//bullet8data
+					.Bullet8X(bullet8_X),
+					.Bullet8Y(bullet8_Y),
+					.Bullet8S(bullet8_S),
+					.is_bullet8_active(bullet8_active),
+					//bullet9data
+					.Bullet9X(bullet9_X),
+					.Bullet9Y(bullet9_Y),
+					.Bullet9S(bullet9_S),
+					.is_bullet9_active(bullet9_active),
+					
 					);
 
 endmodule

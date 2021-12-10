@@ -459,5 +459,11 @@ set_global_assignment -name MIF_FILE sprites/red_tank.mif
 set_global_assignment -name QIP_FILE red_tank.qip
 
 set_global_assignment -name MIF_FILE sprites/yellow_tank.mif
+set_global_assignment -name MIF_FILE sprites/blerim_win_screen.mif
+set_global_assignment -name MIF_FILE sprites/red_controls.mif
+set_global_assignment -name MIF_FILE sprites/sara_win_screen.mif
+set_global_assignment -name MIF_FILE sprites/yellow_controls.mif
 set_global_assignment -name QIP_FILE yellow_tank.qip
+set_global_assignment -name QIP_FILE t2ws.qip
+set_global_assignment -name QIP_FILE t1ws.qip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -288,7 +288,7 @@ void genMaze(alt_u8 t1Score, alt_u8 t2Score)
 				tempVal = tempVal << 1;
 			}
 			else if((nite+1)%32 == 0){
-				printf("%d \n", fort*5+(int)((nite)/32));
+				//printf("%d \n", fort*5+(int)((nite)/32));
 				vga_ctrl->VRAM[fort*5+(int)((nite)/32)] = tempVal;
 				tempVal = 0;
 			}

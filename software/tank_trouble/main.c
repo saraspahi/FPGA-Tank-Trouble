@@ -166,11 +166,14 @@ int main() {
 		//x90 is game output from hardware
 		//x60 is spawn pos
 		//x70 is game final reset
+		IOWR_ALTERA_AVALON_PIO_DATA(0x70, 0);
+
 		if(t1Score > 3){
-			IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
+			IOWR_ALTERA_AVALON_PIO_DATA(0x70, 1);
 		}
 		if(t2Score > 3){
-			IOWR_ALTERA_AVALON_PIO_DATA(0x80, 2);
+			printf("reseting");
+			IOWR_ALTERA_AVALON_PIO_DATA(0x70, 1);
 		}
 		if(*game_end == 3){
 			x2pos = rand()%8;
@@ -178,19 +181,29 @@ int main() {
 			pos_buffer = (x2pos << 10) | (y2pos<<15);
 			IOWR_ALTERA_AVALON_PIO_DATA(0x60, pos_buffer);
 			printf("game starting .. \n");
+			t2Score = 0;
+			t1Score = 0;
+			IOWR_ALTERA_AVALON_PIO_DATA(0x70, 0);
 	        genMaze(t1Score, t2Score);
             IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
         }
 
-		if(*game_end == 2){
+		if(*game_end == 2 && t2Score <= 3){
 			x2pos = rand()%8;
 			y2pos = rand()%5 + 1;
 			pos_buffer = (x2pos << 10) | (y2pos<<15);
 			IOWR_ALTERA_AVALON_PIO_DATA(0x60, pos_buffer);
 			t2Score = t2Score + 1;
-			printf("tank 2 wins \n");
-			genMaze(t1Score, t2Score);
-			IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
+			printf("tank 2 wins score: t1 %d t2 %d\n", t1Score, t2Score);
+			if(t2Score <= 3){
+				genMaze(t1Score, t2Score);
+				IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
+			}
+			else{
+				printf("reseting");
+				for(int i=0; i<100; i++)
+					IOWR_ALTERA_AVALON_PIO_DATA(0x70, 1);
+			}
 		}
 		if(*game_end == 1){
 			x2pos = rand()%8;
@@ -198,10 +211,19 @@ int main() {
 			pos_buffer = (x2pos << 10) | (y2pos<<15);
 			IOWR_ALTERA_AVALON_PIO_DATA(0x60, pos_buffer);
 			t1Score = t1Score + 1;
-			printf("tank 1 wins \n");
-			genMaze(t1Score, t2Score);
-			IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
+			printf("tank 1 wins score: t1 %d t2 %d\n", t1Score, t2Score);
+			if(t1Score <= 3){
+				genMaze(t1Score, t2Score);
+				IOWR_ALTERA_AVALON_PIO_DATA(0x80, 1);
+				//IOWR_ALTERA_AVALON_PIO_DATA(0x70, 1);
+			}
+			else{
+				printf("reseting");
+				for(int i=0; i<100; i++)
+					IOWR_ALTERA_AVALON_PIO_DATA(0x70, 1);
+			}
 		}
+
         IOWR_ALTERA_AVALON_PIO_DATA(0x80, 0);
 
 		printf(".");
