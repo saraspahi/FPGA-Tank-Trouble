@@ -140,12 +140,12 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			W2XSp[9:0] = DrawX[9:0] - 10'd320 + 10'd160;
 			W2YSp[9:0] = DrawY[9:0] - 10'd240 + 10'd90;
 			
-			W2ADDR = W2XSp[7:0] + W2YSp[7:0]*7'd160;
+			W2ADDR = W2XSp[9:0] + W2YSp[9:0]*7'd160;
 			
 			W1XSp[9:0] = DrawX[9:0] - 10'd320 + 10'd160;
 			W1YSp[9:0] = DrawY[9:0] - 10'd240 + 10'd90;
 			
-			W1ADDR = W1XSp[7:0] + W1YSp[7:0]*7'd160;
+			W1ADDR = W1XSp[9:0] + W1YSp[9:0]*7'd160;
 			
             // sign extend ball cords    
 			TankY2e[31:0] = {6'b0, BallY2, 16'b0};
@@ -256,7 +256,7 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			else if ((DrawXs1[9:0]>= BallX1 - Ball_size) &&
 				(DrawXs1[9:0] <= BallX1 + Ball_size) &&
 				(DrawYs1[9:0] >= BallY1 - Ball_size) &&
-				(DrawYs1[9:0] <= BallY1 + Ball_size) && !Tank1Shot)
+				(DrawYs1[9:0] <= BallY1 + Ball_size - 1) && !Tank1Shot)
             begin 
 					if(PalletIY != 3'd5)
 					begin
