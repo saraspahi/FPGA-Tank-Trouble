@@ -1,3 +1,6 @@
+// Inspired by https://www.geeksforgeeks.org/stack-data-structure-introduction-program/
+// modified to be a stack of structs containing paired integeres
+
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>

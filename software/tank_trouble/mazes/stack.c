@@ -1,4 +1,5 @@
-// from geeks4geeks
+// from geeks4geeks https://www.geeksforgeeks.org/stack-data-structure-introduction-program/
+// Used the C-Stack implementation with our own header file
 
 #include <limits.h>
 #include <stdio.h>

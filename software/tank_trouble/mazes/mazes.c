@@ -1,3 +1,9 @@
+// Recursive Backtracking alogrithim implementation in C 
+// Inspired by OneLoneCoders C++ implmentation
+// Used our own console/screen buffer and modified to use our own stacks in C
+// Source: https://github.com/OneLoneCoder/videos/blob/master/OneLoneCoder_Mazes.cpp
+
+
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>

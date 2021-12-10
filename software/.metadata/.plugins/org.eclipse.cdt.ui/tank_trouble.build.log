@@ -1,9 +1,9 @@
-21:33:37 **** Incremental Build of configuration Nios II for project tank_trouble ****
+14:41:17 **** Incremental Build of configuration Nios II for project tank_trouble ****
 make all 
 Info: Building ../tank_trouble_bsp/
 make --no-print-directory -C ../tank_trouble_bsp/
 [BSP build complete]
 [tank_trouble build complete]
 
-21:33:37 Build Finished (took 491ms)
+14:41:18 Build Finished (took 433ms)
 

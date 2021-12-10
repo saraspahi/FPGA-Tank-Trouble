@@ -137,15 +137,15 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			
 			TitleADDR = DrawX + DrawY*10'd640;
 			
-			W2XSp[9:0] = DrawX[9:0] - 10'd320 + 10'd160;
-			W2YSp[9:0] = DrawY[9:0] - 10'd240 + 10'd90;
+			W2XSp[9:0] = DrawX[9:0] - 10'd320 + 10'd80;
+			W2YSp[9:0] = DrawY[9:0] - 10'd240 + 10'd45;
 			
-			W2ADDR = W2XSp[9:0] + W2YSp[9:0]*7'd160;
+			W2ADDR[13:0] = W2XSp[7:0] + W2YSp[6:0]*8'd160;
 			
-			W1XSp[9:0] = DrawX[9:0] - 10'd320 + 10'd160;
-			W1YSp[9:0] = DrawY[9:0] - 10'd240 + 10'd90;
+			W1XSp[9:0] = DrawX[9:0] - 10'd320 + 10'd80;
+			W1YSp[9:0] = DrawY[9:0] - 10'd240 + 10'd45;
 			
-			W1ADDR = W1XSp[9:0] + W1YSp[9:0]*7'd160;
+			W1ADDR[13:0] = W1XSp[7:0] + W1YSp[6:0]*8'd160;
 			
             // sign extend ball cords    
 			TankY2e[31:0] = {6'b0, BallY2, 16'b0};
@@ -211,10 +211,10 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			end
 			else if(t2wscreen)
 			begin 
-				if ((DrawX[9:0] >= 10'd320 - 10'd160) &&
-				(DrawX[9:0] <= 10'd320 + 10'd160) &&
-				(DrawY[9:0] >= 10'd240 - 10'd90) &&
-				(DrawY[9:0] <= 10'd240 + 10'd90))
+				if ((DrawX[9:0] >= 10'd320 - 10'd80) &&
+				(DrawX[9:0] <= 10'd320 + 10'd80) &&
+				(DrawY[9:0] >= 10'd240 - 10'd45) &&
+				(DrawY[9:0] <= 10'd240 + 10'd45))
 				begin
 					Red_New = PalletW[PalletIWS2[2:0]][23:16];
 					Green_New = PalletW[PalletIWS2[2:0]][15:8];
@@ -229,10 +229,10 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			end
 			else if(t1wscreen)
 			begin 
-				if ((DrawX[9:0] >= 10'd320 - 10'd160) &&
-				(DrawX[9:0] <= 10'd320 + 10'd160) &&
-				(DrawY[9:0] >= 10'd240 - 10'd90) &&
-				(DrawY[9:0] <= 10'd240 + 10'd90))
+				if ((DrawX[9:0] >= 10'd320 - 10'd80) &&
+				(DrawX[9:0] <= 10'd320 + 10'd80) &&
+				(DrawY[9:0] >= 10'd240 - 10'd45) &&
+				(DrawY[9:0] <= 10'd240 + 10'd45))
 				begin
 					Red_New = PalletW[PalletIWS1[2:0]][23:16];
 					Green_New = PalletW[PalletIWS1[2:0]][15:8];
@@ -247,9 +247,9 @@ module color_mapper ( input [9:0] BallX1, BallY1, DrawX, DrawY, Ball_size,BallX2
 			end
 			else if(maze)
 			begin 
-					Red_New = DrawX + DrawY;
+					Red_New = DrawY;
 					Green_New = DrawX;
-					Blue_New = DrawY;
+					Blue_New = DrawX + DrawY;
 			end
 	 
 
