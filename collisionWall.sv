@@ -172,7 +172,7 @@ begin
 		isWallRight=1'b0;
 		isWallLeft=1'b1;
 	end 
-	else if ((objectX+objectS)>=10'd635)
+	else if ((objectX+objectS)>=10'd633)
 	begin 
 		isWallBottom=1'b0;
 		isWallTop=1'b0;
