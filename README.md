@@ -22,3 +22,6 @@ Run configurations and run with NIOS II, if soc does not show up refresh connect
 If reset timeout appears in nios II console tap the USB shield
 
 Game controls are arrow keys for the red tank and spacebar to shoot, and wasd for yellow with q to shoot.
+
+Temporary Demo Video:
+https://drive.google.com/file/d/1obI_ZMprXXsMqDU-_ivJkB3LX7j4Vkkq/view
